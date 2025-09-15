@@ -1,1 +1,107 @@
-<h1>Pruebaaa</h1>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameZone Demo Inspirado</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #ffffff;
+            color: #333;
+        }
+        header {
+            background: #34495e;
+            color: #ecf0f1;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        header h1 {
+            margin: 0;
+        }
+        header p {
+            margin: 0.3rem 0 0;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        main {
+            padding: 2rem 1.5rem;
+            max-width: 900px;
+            margin: auto;
+        }
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+        .card {
+            background: #fdfdfd;
+            border-left: 6px solid #e67e22; /* naranja */
+            border-radius: 6px;
+            padding: 1rem;
+        }
+        .card h3 {
+            margin-top: 0;
+        }
+        .fake-button {
+            display: inline-block;
+            margin-top: 0.7rem;
+            padding: 0.5rem 1rem;
+            background: #f0ad4e; /* naranja claro */
+            color: #2c3e50;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            cursor: default;
+        }
+        .integrantes ul {
+            padding-left: 1rem;
+        }
+        .integrantes li::marker {
+            color: #e67e22; /* marcador naranja */
+            font-weight: bold;
+        }
+        footer {
+            background: #34495e;
+            color: #ecf0f1;
+            text-align: center;
+            padding: 1rem;
+            margin-top: 2rem;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <section>
+            <h2>TinyGames</h2>
+            <div class="card-container">
+                <div class="card">
+                    <h3>Prototipo de alta fidelidad modo Editor</h3>
+                    <a>https://www.figma.com/design/fMelMeR7LSlQgFZvuDgtWI/TinyGames?node-id=5-2&t=dqWr5TDlsrk9nt4b-1</a>
+                </div>
+                <div class="card">
+                    <h3>Modo Presentacion</h3>
+                    <a class="fake-button">https://www.figma.com/proto/fMelMeR7LSlQgFZvuDgtWI/TinyGames?node-id=378-2542&t=KTS7hzQDwCCHhtIy-1&scaling=min-zoom&content-scaling=fixed&page-id=5%3A2&starting-point-node-id=154%3A2224</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="integrantes">
+            <h2>Integrantes del Grupo 01:</h2>
+            <ul>
+                <li>Inti Lucas Derose</li>
+                <li>Luca Lanfranqui</li>
+                <li>Lautaro Ouvrard</li>
+            </ul>
+        </section>
+    </main>
+</body>
+</html>
