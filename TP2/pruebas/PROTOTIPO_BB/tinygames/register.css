@@ -1,3 +1,4 @@
+
 :root {
     --header-bg-color: #1E90FF;
     --logo-color: #FFA866;
@@ -69,15 +70,7 @@ body {
 
 /* Botón Hamburguesa */
 .header__hamburger {
-    background: none;
-    border: none;
-    color: var(--text-color-light);
-    cursor: pointer;
-    padding: 0;
-    margin-right: var(--logo-spacing);
-    z-index: 30; /* Asegura que esté por encima del menú lateral */
-    width: 47px;
-    height: 47px;
+   display: none;
 }
 
 .hamburger-icon {
@@ -280,27 +273,7 @@ main {
     align-items: center;
 }
 
-.content-container {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    width: 100%;
-    max-width: 1285px;
-}
 
-.content-box {
-    height: 349px;
-    border-radius: 16.52px;
-    box-shadow: -1.65px 1.65px 7.43px rgba(0, 0, 0, 0.15);
-}
-
-.box-color-1 {
-    background-color: #4BA6FF;
-}
-
-.box-color-2 {
-    background-color: #77BBFF;
-}
 
 /* Estilos del Footer */
 .footer {
@@ -407,71 +380,17 @@ main {
     fill: currentColor;
     stroke: none;
 }
-
-/* Responsive */
-@media (min-width: 768px) {
-    .header__hamburger {
-        display: none;
-    }
+.form-input {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    box-sizing: border-box;
+    display: block;
 }
 
-/* Menú de usuario: oculto por defecto, solo visible cuando aria-hidden="false" */
-.header__menu {
-    display: none;
+form {
+    align-items: center;
 }
 
-.header__menu[aria-hidden="false"] {
-    display: flex;
-    transform: translateX(0);
-
-}
-
-@media (max-width: 992px) {
-    .footer__top {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-    }
-
-    .footer__links {
-        width: 100%;
-        justify-content: space-around;
-    }
-
-    .footer__social {
-        justify-content: center;
-    }
-}
-
-    @media (max-width: 576px) {
-        .content-container {
-            max-width: 100%;
-            padding: 0 10px;
-        }
-        .content-box {
-            padding: 20px !important;
-            min-width: 0;
-            height: auto;
-        }
-        .content-box form {
-            width: 100% !important;
-        }
-        .content-box input,
-        .content-box button {
-            font-size: 1rem !important;
-            padding: 10px !important;
-        }
-        .header__search {
-            width: 100%;
-            min-width: 0;
-            padding: 0 5px;
-        }
-        .header {
-            padding: 0 10px;
-        }
-        .header__center {
-            padding: 0;
-        }
-    }
 
 

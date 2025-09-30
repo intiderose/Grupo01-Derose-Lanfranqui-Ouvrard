@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - TinyGames</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka&family=Luckiest+Guy&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="register.css">
+</head>
+<body>
+<!-- Header igual que en index.html -->
+<header class="header">
+    <div class="header__left">
+        <button class="header__hamburger" aria-label="Abrir menú de navegación" aria-expanded="false" aria-controls="side-menu">
+            <span class="hamburger-icon"></span>
+        </button>
+        <a href="index.html" class="header__logo" aria-label="TinyGames - Página de inicio">TINYGAMES</a>
+    </div>
+    <div class="header__center">
+        <form class="header__search" role="search">
+            <label for="search-input" class="sr-only">Buscar juegos</label>
+            <button type="submit" aria-label="Buscar">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            </button>
+            <input type="search" id="search-input" placeholder="Buscar">
+        </form>
+    </div>
+    <div class="header__right">
+        <button style="background-color:#FF6B00;width:130.19px;height:41px;border:none;border-radius:20px;font-family:'Fredoka', sans-serif;font-size:15.19px;color:#fff;cursor:pointer;">
+            Inicia Sesion
+        </button>
+    </div>
+
+</header>
+
+<nav class="side-menu" id="side-menu" hidden>
+    <!-- Igual que en index.html -->
+    <ul>
+        <li><a href="#"><svg class="side-menu__icon" viewBox="0 0 24 24"><path d="M2 12h2l2-5 2 10 2-5h2l2 5 2-10h2l2 5h2"></path></svg><span>Carreras</span></a></li>
+        <li><a href="#"><svg class="side-menu__icon" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg><span>Aventuras</span></a></li>
+        <li><a href="#"><svg class="side-menu__icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg><span>Disparos</span></a></li>
+        <li><a href="#"><svg class="side-menu__icon" viewBox="0 0 24 24"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg><span>Rol</span></a></li>
+        <li><a href="#"><svg class="side-menu__icon" viewBox="0 0 24 24"><path d="M6 9l6-6 6 6"></path><path d="M12 3v12"></path><rect x="3" y="15" width="18" height="6" rx="2"></rect></svg><span>Arcade</span></a></li>
+        <li><a href="#"><svg class="side-menu__icon" viewBox="0 0 24 24"><path d="M18 10l-2.5-2.5c-.6-.6-1.4-.9-2.2-.9H12V5.5c0-.8-.7-1.5-1.5-1.5S9 4.7 9 5.5V10H7.7c-.8 0-1.6.3-2.2.9L3 10c-1.2 1.2-1.2 3.1 0 4.2L5.5 17c.6.6 1.4.9 2.2.9H9v4.5c0 .8.7 1.5 1.5 1.5s1.5-.7 1.5-1.5V18h1.3c.8 0 1.6-.3 2.2-.9l2.5-2.5c1.2-1.2 1.2-3.1 0-4.2z"></path></svg><span>Combate</span></a></li>
+        <li><a href="#"><svg class="side-menu__icon" viewBox="0 0 24 24"><path d="M20.6,9.2l-8-8a1,1,0,0,0-1.2,0l-8,8A1,1,0,0,0,4,10.8V20a1,1,0,0,0,1,1H19a1,1,0,0,0,1-1V10.8A1,1,0,0,0,20.6,9.2ZM12,3.5l6,6V19H6V9.5Z"></path><path d="M12 11.5a2.5 2.5 0 1 0 2.5 2.5A2.5 2.5 0 0 0 12 11.5z"></path></svg><span>Cartas</span></a></li>
+    </ul>
+</nav>
+
+<main>
+    <div style="width:653px;height:1275px;background-color:#77BBFF;border-radius:20px;box-shadow:0 4px 16px rgba(0,0,0,0.2);margin:auto;">
+        <p style="font-family:'Luckiest Guy', cursive;font-size:48.94px;text-align:center;margin-top:50px;color:#FF6B00;">¡registrate y diviertete!</p>
+    </div>
+</main>
+
+<!-- Footer igual que en index.html -->
+<footer class="footer">
+    <div class="footer__container">
+        <div class="footer__top">
+            <!-- ... igual que en index.html ... -->
+            <div class="footer__links">
+                <div class="footer__links-column">
+                    <h4>Juegos</h4>
+                    <ul>
+                        <li><a href="#">Populares</a></li>
+                        <li><a href="#">Nuevos</a></li>
+                        <li><a href="#">Acción</a></li>
+                        <li><a href="#">Aventura</a></li>
+                    </ul>
+                </div>
+                <div class="footer__links-column">
+                    <h4>Plataformas</h4>
+                    <ul>
+                        <li><a href="#">PC</a></li>
+                        <li><a href="#">Consola</a></li>
+                        <li><a href="#">Móvil</a></li>
+                    </ul>
+                </div>
+                <div class="footer__links-column">
+                    <h4>Soporte</h4>
+                    <ul>
+                        <li><a href="#">Ayuda</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Contacto</a></li>
+                    </ul>
+                </div>
+                <div class="footer__links-column">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Términos</a></li>
+                        <li><a href="#">Privacidad</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer__social">
+                <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg></a>
+                <a href="#" aria-label="Twitter"><svg viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg></a>
+                <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>
+                <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2A29 29 0 0 0 23 11.75a29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg></a>
+            </div>
+        </div>
+        <div class="footer__bottom">
+            <a href="index.html" class="footer__logo" aria-label="TinyGames - Página de inicio">TINYGAMES</a>
+            <p class="footer__copyright">&copy; 2024 TinyGames. Todos los derechos reservados.</p>
+        </div>
+    </div>
+</footer>
+<script src="main.js"></script>
+</body>
+</html>
