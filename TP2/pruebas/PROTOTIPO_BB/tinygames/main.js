@@ -68,7 +68,51 @@ class TinyGamesHeader {
     }
 }
 
+/**
+ * Gestiona la funcionalidad del carrusel.
+ */
+class Carousel {
+    constructor(carouselSelector) {
+        this.carousel = document.querySelector(carouselSelector);
+        if (!this.carousel) return;
+
+        this.track = this.carousel.querySelector('.carousel-track');
+        this.slides = Array.from(this.track.children);
+        this.slideCount = this.slides.length;
+        this.currentIndex = 0;
+
+        this.init();
+    }
+
+    init() {
+        // Clona el primer slide al final para un bucle infinito y suave
+        if (this.slideCount > 1) {
+            const firstClone = this.slides[0].cloneNode(true);
+            this.track.appendChild(firstClone);
+        }
+
+        setInterval(() => this.moveToNextSlide(), 5000);
+    }
+
+    moveToNextSlide() {
+        this.currentIndex++;
+        this.track.style.transition = 'transform 0.5s ease-in-out';
+        this.track.style.transform = `translateX(-${this.currentIndex * 100}%)`;
+
+        // Si hemos llegado al clon, reseteamos al principio sin animación
+        if (this.currentIndex === this.slideCount) {
+            setTimeout(() => {
+                this.track.style.transition = 'none';
+                this.currentIndex = 0;
+                this.track.style.transform = `translateX(0)`;
+            }, 500); // Debe coincidir con la duración de la transición
+        }
+    }
+}
+
+
 // Inicializar el comportamiento del encabezado cuando el DOM esté listo.
 document.addEventListener('DOMContentLoaded', () => {
     new TinyGamesHeader();
+    new Carousel('.carousel-container');
 });
