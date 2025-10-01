@@ -118,12 +118,22 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Form validation function
+    // Form validation functions
     function showError(input) {
+        input.classList.remove('valid');
         input.classList.add('error');
         setTimeout(() => {
             input.classList.remove('error');
         }, 400);
+    }
+
+    function showValid(input) {
+        input.classList.remove('error');
+        input.classList.add('valid');
+    }
+
+    function removeValid(input) {
+        input.classList.remove('valid');
     }
 
     // Example validation listeners (you can customize these)
@@ -134,6 +144,15 @@ document.addEventListener('DOMContentLoaded', () => {
         dateInput.addEventListener('blur', () => {
             if (!dateInput.value) {
                 showError(dateInput);
+            } else {
+                showValid(dateInput);
+            }
+        });
+        dateInput.addEventListener('input', () => {
+            if (dateInput.value) {
+                showValid(dateInput);
+            } else {
+                removeValid(dateInput);
             }
         });
     }
@@ -143,6 +162,16 @@ document.addEventListener('DOMContentLoaded', () => {
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(emailInput.value)) {
                 showError(emailInput);
+            } else {
+                showValid(emailInput);
+            }
+        });
+        emailInput.addEventListener('input', () => {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (emailRegex.test(emailInput.value)) {
+                showValid(emailInput);
+            } else {
+                removeValid(emailInput);
             }
         });
     }
@@ -152,6 +181,16 @@ document.addEventListener('DOMContentLoaded', () => {
             const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[-*$#+])[A-Za-z\d-*$#+]{8,}$/;
             if (!passwordRegex.test(passwordInput.value)) {
                 showError(passwordInput);
+            } else {
+                showValid(passwordInput);
+            }
+        });
+        passwordInput.addEventListener('input', () => {
+            const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[-*$#+])[A-Za-z\d-*$#+]{8,}$/;
+            if (passwordRegex.test(passwordInput.value)) {
+                showValid(passwordInput);
+            } else {
+                removeValid(passwordInput);
             }
         });
     }
@@ -160,6 +199,15 @@ document.addEventListener('DOMContentLoaded', () => {
         repeatPasswordInput.addEventListener('blur', () => {
             if (!repeatPasswordInput.value || (passwordInput && repeatPasswordInput.value !== passwordInput.value)) {
                 showError(repeatPasswordInput);
+            } else {
+                showValid(repeatPasswordInput);
+            }
+        });
+        repeatPasswordInput.addEventListener('input', () => {
+            if (repeatPasswordInput.value && passwordInput && repeatPasswordInput.value === passwordInput.value) {
+                showValid(repeatPasswordInput);
+            } else {
+                removeValid(repeatPasswordInput);
             }
         });
     }
@@ -169,6 +217,26 @@ document.addEventListener('DOMContentLoaded', () => {
         nameInput.addEventListener('blur', () => {
             if (!nameInput.value || nameInput.value.trim().length < 2) {
                 showError(nameInput);
+            } else {
+                showValid(nameInput);
+            }
+        });
+        nameInput.addEventListener('input', () => {
+            if (nameInput.value && nameInput.value.trim().length >= 2) {
+                showValid(nameInput);
+            } else {
+                removeValid(nameInput);
+            }
+        });
+    }
+
+    const nicknameInput = document.getElementById('nickname');
+    if (nicknameInput) {
+        nicknameInput.addEventListener('input', () => {
+            if (nicknameInput.value && nicknameInput.value.length >= 6) {
+                showValid(nicknameInput);
+            } else {
+                removeValid(nicknameInput);
             }
         });
     }
