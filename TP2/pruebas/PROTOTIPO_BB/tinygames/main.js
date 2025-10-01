@@ -71,4 +71,105 @@ class TinyGamesHeader {
 // Inicializar el comportamiento del encabezado cuando el DOM esté listo.
 document.addEventListener('DOMContentLoaded', () => {
     new TinyGamesHeader();
+
+    // Toggle password visibility
+    const togglePasswordBtn = document.querySelector('.toggle-password');
+    const passwordInput = document.getElementById('contraseña');
+
+    if (togglePasswordBtn && passwordInput) {
+        togglePasswordBtn.addEventListener('click', () => {
+            const eyeOpen = togglePasswordBtn.querySelectorAll('.eye-open');
+            const eyeClosed = togglePasswordBtn.querySelector('.eye-closed');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeOpen.forEach(el => el.style.display = 'none');
+                eyeClosed.style.display = 'block';
+                togglePasswordBtn.setAttribute('aria-label', 'Ocultar contraseña');
+            } else {
+                passwordInput.type = 'password';
+                eyeOpen.forEach(el => el.style.display = 'block');
+                eyeClosed.style.display = 'none';
+                togglePasswordBtn.setAttribute('aria-label', 'Mostrar contraseña');
+            }
+        });
+    }
+
+    // Toggle repeat password visibility
+    const togglePasswordRepeatBtn = document.querySelector('.toggle-password-repeat');
+    const repeatPasswordInput = document.getElementById('repetir-contraseña');
+
+    if (togglePasswordRepeatBtn && repeatPasswordInput) {
+        togglePasswordRepeatBtn.addEventListener('click', () => {
+            const eyeOpen = togglePasswordRepeatBtn.querySelectorAll('.eye-open');
+            const eyeClosed = togglePasswordRepeatBtn.querySelector('.eye-closed');
+
+            if (repeatPasswordInput.type === 'password') {
+                repeatPasswordInput.type = 'text';
+                eyeOpen.forEach(el => el.style.display = 'none');
+                eyeClosed.style.display = 'block';
+                togglePasswordRepeatBtn.setAttribute('aria-label', 'Ocultar contraseña');
+            } else {
+                repeatPasswordInput.type = 'password';
+                eyeOpen.forEach(el => el.style.display = 'block');
+                eyeClosed.style.display = 'none';
+                togglePasswordRepeatBtn.setAttribute('aria-label', 'Mostrar contraseña');
+            }
+        });
+    }
+
+    // Form validation function
+    function showError(input) {
+        input.classList.add('error');
+        setTimeout(() => {
+            input.classList.remove('error');
+        }, 400);
+    }
+
+    // Example validation listeners (you can customize these)
+    const dateInput = document.getElementById('fecha-nacimiento');
+    const emailInput = document.getElementById('correo');
+
+    if (dateInput) {
+        dateInput.addEventListener('blur', () => {
+            if (!dateInput.value) {
+                showError(dateInput);
+            }
+        });
+    }
+
+    if (emailInput) {
+        emailInput.addEventListener('blur', () => {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(emailInput.value)) {
+                showError(emailInput);
+            }
+        });
+    }
+
+    if (passwordInput) {
+        passwordInput.addEventListener('blur', () => {
+            const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[-*$#+])[A-Za-z\d-*$#+]{8,}$/;
+            if (!passwordRegex.test(passwordInput.value)) {
+                showError(passwordInput);
+            }
+        });
+    }
+
+    if (repeatPasswordInput) {
+        repeatPasswordInput.addEventListener('blur', () => {
+            if (!repeatPasswordInput.value || (passwordInput && repeatPasswordInput.value !== passwordInput.value)) {
+                showError(repeatPasswordInput);
+            }
+        });
+    }
+
+    const nameInput = document.getElementById('nombre-apellido');
+    if (nameInput) {
+        nameInput.addEventListener('blur', () => {
+            if (!nameInput.value || nameInput.value.trim().length < 2) {
+                showError(nameInput);
+            }
+        });
+    }
 });
