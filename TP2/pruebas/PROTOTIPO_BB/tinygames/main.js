@@ -168,6 +168,8 @@ class ContentBoxGenerator {
                     <a href="proximamente.html" class="content-box__see-all">Ver todos</a>
                 </div>
                 <div class="cards-container"></div>
+                <button class="scroll-arrow scroll-arrow--left" aria-label="Desplazar a la izquierda" hidden>‹</button>
+                <button class="scroll-arrow scroll-arrow--right" aria-label="Desplazar a la derecha">›</button>
             </div>
         `).join('');
 
@@ -214,10 +216,105 @@ class CardGenerator {
     }
 }
 
+/**
+ * Gestiona el desplazamiento horizontal de las tarjetas con botones de flecha.
+ */
+class CardScroller {
+    #contentBox;
+    #cardsContainer;
+    #leftArrow;
+    #rightArrow;
+
+    /**
+     * @param {HTMLElement} contentBoxElement - El elemento de la caja de contenido.
+     */
+    constructor(contentBoxElement) {
+        this.#contentBox = contentBoxElement;
+        this.#cardsContainer = this.#contentBox.querySelector('.cards-container');
+        this.#leftArrow = this.#contentBox.querySelector('.scroll-arrow--left');
+        this.#rightArrow = this.#contentBox.querySelector('.scroll-arrow--right');
+
+        if (!this.#cardsContainer || !this.#leftArrow || !this.#rightArrow) {
+            return;
+        }
+
+        this.#init();
+    }
+
+    /**
+     * Inicializa los listeners de eventos y el estado inicial de las flechas.
+     * @private
+     */
+    #init() {
+        this.#leftArrow.addEventListener('click', () => this.#scroll(-1));
+        this.#rightArrow.addEventListener('click', () => this.#scroll(1));
+        this.#cardsContainer.addEventListener('scroll', () => this.#updateArrowVisibility());
+
+        // Comprobar visibilidad al inicio y en cada cambio de tamaño
+        this.checkScrollable();
+    }
+
+    /**
+     * Desplaza el contenedor de tarjetas.
+     * @private
+     * @param {number} direction - -1 para izquierda, 1 para derecha.
+     */
+    #scroll(direction) {
+        // El valor de desplazamiento es aproximadamente el ancho de una tarjeta + el gap
+        const scrollAmount = (196 + 22) * direction;
+        this.#cardsContainer.scrollBy({
+            left: scrollAmount,
+            behavior: 'smooth'
+        });
+    }
+
+    /**
+     * Comprueba si el contenedor es desplazable y actualiza la visibilidad de las flechas.
+     */
+    checkScrollable() {
+        const container = this.#cardsContainer;
+        const isScrollable = container.scrollWidth > container.clientWidth;
+
+        this.#contentBox.classList.toggle('is-scrollable', isScrollable);
+
+        if (isScrollable) {
+            this.#updateArrowVisibility();
+        }
+    }
+
+    /**
+     * Comprueba la posición del scroll y muestra u oculta las flechas.
+     * @private
+     */
+    #updateArrowVisibility() {
+        const container = this.#cardsContainer;
+        const scrollLeft = container.scrollLeft;
+        const maxScrollLeft = container.scrollWidth - container.clientWidth;
+
+        // Ocultar flecha izquierda si está al principio
+        this.#leftArrow.hidden = scrollLeft <= 0;
+
+        // Ocultar flecha derecha si está al final (con un pequeño margen de error)
+        this.#rightArrow.hidden = scrollLeft >= maxScrollLeft - 1;
+    }
+}
+
+
 // Inicializar todos los componentes cuando el DOM esté listo.
 document.addEventListener('DOMContentLoaded', () => {
     new TinyGamesHeader();
     new Carousel('.carousel-container');
     new ContentBoxGenerator('.content-container');
     new CardGenerator('.cards-container');
+
+    // Inicializar un scroller para cada caja de contenido
+    const scrollers = [];
+    document.querySelectorAll('.content-box').forEach(box => {
+        scrollers.push(new CardScroller(box));
+    });
+
+    // Volver a comprobar la visibilidad de las flechas al redimensionar la ventana
+    window.addEventListener('resize', () => {
+        scrollers.forEach(scroller => scroller.checkScrollable());
+    });
 });

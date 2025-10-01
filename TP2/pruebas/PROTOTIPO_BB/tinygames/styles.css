@@ -8,6 +8,10 @@
     --header-height: 62px; /* Altura del header */
 }
 
+/* ==========================================================================
+   Estilos Base (Mobile First)
+   ========================================================================== */
+
 /* Reset básico y estilos del body */
 body {
     margin: 0;
@@ -53,7 +57,7 @@ body {
 }
 
 .header__center {
-    /* Oculto en móvil por defecto */
+    /* Oculto en móvil por defecto, se muestra en desktop */
     display: none;
     justify-content: center;
     position: absolute;
@@ -102,7 +106,7 @@ body {
     text-decoration: none;
 }
 
-/* Búsqueda */
+/* Búsqueda (Oculta en mobile por defecto) */
 .header__search {
     display: flex;
     align-items: center;
@@ -318,8 +322,8 @@ main {
     padding: 20px;
     min-height: calc(100vh - var(--header-height));
     display: flex;
-    flex-direction: column; /* Cambiado para apilar carrusel y contenido */
-    justify-content: flex-start; /* Alinea el contenido al inicio */
+    flex-direction: column;
+    justify-content: flex-start;
     align-items: center;
 }
 
@@ -339,6 +343,7 @@ main {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    position: relative; /* Necesario para posicionar las flechas */
 }
 
 .content-box__header {
@@ -370,6 +375,13 @@ main {
     width: 100%;
     overflow-x: auto; /* Permite scroll si no caben las tarjetas */
     padding-bottom: 10px; /* Espacio para la sombra del scrollbar */
+    /* Ocultar la barra de scroll */
+    scrollbar-width: none; /* Firefox */
+}
+
+/* Ocultar la barra de scroll para Webkit (Chrome, Safari) */
+.cards-container::-webkit-scrollbar {
+    display: none;
 }
 
 .game-card {
@@ -421,6 +433,11 @@ main {
 
 .box-color-2 {
     background-color: #77BBFF;
+}
+
+/* Estilos de las flechas de scroll (ocultas en mobile) */
+.scroll-arrow {
+    display: none;
 }
 
 /* Estilos del Footer */
@@ -532,7 +549,26 @@ main {
     stroke: none;
 }
 
-/* Responsive - Mobile First */
+/* Página Próximamente */
+.main-proximamente {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: calc(100vh - var(--header-height) - 450px); /* Altura aprox del footer en mobile */
+    padding: 20px;
+}
+
+.proximamente-title {
+    font-family: 'Luckiest Guy', cursive;
+    font-size: 3rem;
+    color: var(--logo-color);
+    text-shadow: 3px 3px 0px #0C3966, 6px 6px 0px rgba(0,0,0,0.2);
+}
+
+/* ==========================================================================
+   Media Queries (Ampliaciones para pantallas más grandes)
+   ========================================================================== */
 
 /* Estilos para tablets pequeñas y superiores */
 @media (min-width: 577px) {
@@ -545,16 +581,16 @@ main {
 
 /* Estilos para tablets y escritorios */
 @media (min-width: 768px) {
+    /* Header */
     .header__center {
-        display: flex; /* Muestra la barra de búsqueda en escritorio */
+        display: flex; /* Muestra la barra de búsqueda */
     }
-    .header__left {
-        flex-grow: 0;
-    }
+    .header__left,
     .header__right {
         flex-grow: 0;
     }
 
+    /* Contenido Principal */
     main {
         padding: 20px 78px;
     }
@@ -572,8 +608,10 @@ main {
     }
 
     .cards-container {
-        justify-content: space-between;
-        gap: 0; /* El espacio lo gestiona space-between */
+        justify-content: flex-start; /* Mantenemos el scroll para tablets */
+        gap: 22px;
+        overflow-x: auto; /* Mantenemos el scroll para tablets */
+        scroll-behavior: smooth; /* Para que el scroll con JS sea suave */
     }
 
     .game-card {
@@ -581,10 +619,56 @@ main {
         height: 267px;
         border-radius: 16.17px;
         padding-bottom: 14px;
+        flex-shrink: 0; /* Aseguramos que las tarjetas no se encojan */
     }
 
     .game-card:hover .game-card__button {
         transform: scale(1.1);
+    }
+
+    /* Estilos para las flechas de scroll en desktop */
+    .scroll-arrow {
+        display: block;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 5;
+        background-color: rgba(0, 0, 0, 0.3);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        font-size: 24px;
+        font-weight: bold;
+        cursor: pointer;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
+    }
+
+    .scroll-arrow:hover {
+        background-color: rgba(0, 0, 0, 0.6);
+    }
+
+    .scroll-arrow--left {
+        left: 5px;
+    }
+
+    .scroll-arrow--right {
+        right: 5px;
+    }
+
+    .content-box.is-scrollable:hover .scroll-arrow {
+        opacity: 0.7;
+        visibility: visible;
+    }
+
+    .scroll-arrow[hidden] {
+        display: block; /* Sobrescribe el 'hidden' de HTML para controlar con opacidad */
+        opacity: 0 !important;
+        visibility: hidden !important;
+        cursor: default;
     }
 
     .game-card__image {
@@ -600,10 +684,19 @@ main {
         font-size: 16px;
         padding: 8px 30px;
     }
+
+    /* Página Próximamente */
+    .proximamente-title {
+        font-size: 5rem;
+    }
+    .main-proximamente {
+        min-height: calc(100vh - var(--header-height) - 285px); /* Altura aprox del footer en desktop */
+    }
 }
 
 /* Estilos para escritorios grandes */
 @media (min-width: 993px) {
+    /* Footer */
     .footer__top {
         flex-direction: row;
         justify-content: space-between;
@@ -622,28 +715,11 @@ main {
     }
 }
 
-/* Página Próximamente */
-.main-proximamente {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    min-height: calc(100vh - var(--header-height) - 285px); /* 285px es una altura aprox del footer */
-    padding: 20px;
-}
-
-.proximamente-title {
-    font-family: 'Luckiest Guy', cursive;
-    font-size: 5rem;
-    color: var(--logo-color);
-    text-shadow: 3px 3px 0px #0C3966, 6px 6px 0px rgba(0,0,0,0.2);
-}
-
-@media (max-width: 768px) {
-    .proximamente-title {
-        font-size: 3rem;
-    }
-    .main-proximamente {
-        min-height: calc(100vh - var(--header-height) - 450px); /* Altura aprox del footer en mobile */
+/* Estilos para escritorios extra grandes donde caben todas las cards */
+@media (min-width: 1700px) {
+    .cards-container {
+        justify-content: space-between;
+        overflow-x: visible;
+        gap: 0;
     }
 }
