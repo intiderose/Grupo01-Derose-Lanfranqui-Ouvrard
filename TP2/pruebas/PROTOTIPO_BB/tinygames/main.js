@@ -139,7 +139,7 @@ class ContentBoxGenerator {
     #container;
     #boxData = [
         { title: 'Para Ti', colorClass: 'box-color-1' },
-        { title: 'Jugados recientemente', colorClass: 'box-color-2' },
+        { title: 'Juegos Premium', colorClass: 'box-color-2', premium: true },
         { title: 'Juegos Online', colorClass: 'box-color-1' },
         { title: 'Juegos de 2 Jugadores', colorClass: 'box-color-2' }
     ];
@@ -161,10 +161,15 @@ class ContentBoxGenerator {
      * @private
      */
     #generate() {
+        const crownIcon = `<img src="logo-premium.png" alt="Premium" class="title-icon">`;
+
         const contentBoxesHTML = this.#boxData.map(data => `
-            <div class="content-box ${data.colorClass}">
+            <div class="content-box ${data.colorClass} ${data.premium ? 'content-box--premium' : ''}">
                 <div class="content-box__header">
-                    <h2 class="content-box__title">${data.title}</h2>
+                    <h2 class="content-box__title">
+                        ${data.title}
+                        ${data.premium ? crownIcon : ''}
+                    </h2>
                     <a href="proximamente.html" class="content-box__see-all">Ver todos</a>
                 </div>
                 <div class="cards-container"></div>
@@ -190,6 +195,18 @@ class CardGenerator {
             <a href="#" class="game-card__button">Jugar</a>
         </div>
     `;
+    #premiumCardHTML = `
+        <div class="game-card game-card--premium">
+            <img src="foto-de-prueba.png" alt="Imagen del juego" class="game-card__image">
+            <h3 class="game-card__title">Nombre del Juego</h3>
+            <div class="game-card__actions">
+                <a href="#" class="game-card__button">Jugar</a>
+                <a href="#" class="game-card__premium-button" aria-label="Juego Premium">
+                    <img src="logo-premium.png" alt="Premium">
+                </a>
+            </div>
+        </div>
+    `;
 
     /**
      * @param {string} containerSelector - El selector CSS para los contenedores de tarjetas.
@@ -210,7 +227,9 @@ class CardGenerator {
      */
     #generate() {
         this.#containers.forEach(container => {
-            const cardsToInsert = Array(this.#numberOfCards).fill(this.#cardHTML).join('');
+            const isPremium = container.closest('.content-box--premium');
+            const cardTemplate = isPremium ? this.#premiumCardHTML : this.#cardHTML;
+            const cardsToInsert = Array(this.#numberOfCards).fill(cardTemplate).join('');
             container.innerHTML = cardsToInsert;
         });
     }
