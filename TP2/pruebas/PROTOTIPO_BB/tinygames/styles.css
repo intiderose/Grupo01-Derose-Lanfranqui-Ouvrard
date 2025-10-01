@@ -300,6 +300,12 @@ body {
     align-items: center;
 }
 
+/* Colores de fondo para cada slide del carrusel */
+.carousel-slide:nth-child(1) { background-color: #FF6347; }
+.carousel-slide:nth-child(2) { background-color: #4682B4; }
+.carousel-slide:nth-child(3) { background-color: #32CD32; }
+.carousel-slide:nth-child(4) { background-color: #FFD700; }
+
 .carousel-caption {
     color: white;
     font-size: 48px;
