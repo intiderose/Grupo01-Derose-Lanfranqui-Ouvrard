@@ -2,10 +2,10 @@
     --header-bg-color: #1E90FF;
     --logo-color: #FFA866;
     --logo-font: 'Luckiest Guy', cursive;
-    --header-edge-gap: 16px;
-    --logo-spacing: 24px;
+    --header-edge-gap: 34px;
+    --logo-spacing: 50px;
     --text-color-light: #FFFFFF;
-    --header-height: 56px;
+    --header-height: 62px;
 }
 
 body {
@@ -22,7 +22,7 @@ header {
     background-color: var(--header-bg-color);
     color: var(--text-color-light);
     display: grid;
-    grid-template-columns: 1fr auto 1fr;
+    grid-template-columns: 1fr auto 1fr; /* 3 columnas */
     align-items: center;
     height: var(--header-height);
     padding: 0 var(--header-edge-gap);
@@ -174,7 +174,7 @@ main {
 .footer {
     background-color: var(--header-bg-color);
     color: var(--text-color-light);
-    padding: 32px var(--header-edge-gap);
+    padding: 40px var(--header-edge-gap);
 }
 
 .footer__container {
@@ -187,26 +187,29 @@ main {
 
 .footer__top {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    text-align: left;
     gap: 32px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     padding-bottom: 24px;
-    align-items: center;
-    text-align: center;
 }
 
 .footer__links {
     display: flex;
-    flex-direction: column;
-    gap: 24px;
+    flex-direction: row;
+    gap: 40px;
+    flex: 3 1 600px;
+    justify-content: space-around;
     width: 100%;
-    align-items: center;
 }
 
 .footer__social {
     display: flex;
     gap: 15px;
-    justify-content: center;
+    flex: 1 1 150px;
+    justify-content: flex-start;
 }
 
 .footer__bottom {
@@ -264,36 +267,4 @@ main {
 .footer__social a[aria-label="YouTube"] svg {
     fill: currentColor;
     stroke: none;
-}
-
-/* Tablet */
-@media (min-width: 768px) {
-    :root {
-        --header-edge-gap: 34px;
-        --logo-spacing: 50px;
-        --header-height: 62px;
-    }
-
-    .footer {
-        padding: 40px var(--header-edge-gap);
-    }
-
-    .footer__top {
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: flex-start;
-        text-align: left;
-    }
-
-    .footer__links {
-        flex-direction: row;
-        gap: 40px;
-        flex: 3 1 600px;
-        justify-content: space-around;
-    }
-
-    .footer__social {
-        flex: 1 1 150px;
-        justify-content: flex-start;
-    }
 }
