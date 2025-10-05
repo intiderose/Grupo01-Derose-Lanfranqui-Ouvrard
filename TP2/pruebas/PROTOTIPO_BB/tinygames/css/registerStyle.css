@@ -696,41 +696,21 @@ form {
 .register-submit-btn {
     width: 380px;
     height: 67.7px;
-    background: #fff;
+    background: #FF6B00; /* Cambiado a naranja fijo */
     border: none;
     border-radius: 20px;
     font-family: 'Roboto', sans-serif;
     font-size: 16px;
-    font-weight: 500;
-    color: #000;
+    font-weight: 800; /* Ajustado para extrabold */
+    color: #fff; /* Cambiado a blanco fijo */
     cursor: pointer;
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     margin-top: 30px;
-    position: relative;
-    overflow: hidden;
-    z-index: 1;
-}
-
-.register-submit-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 0;
-    height: 100%;
-    background-color: #FF6B00;
-    transition: width 0.4s ease;
-    z-index: -1;
-    border-radius: 20px;
+    transition: transform 0.2s ease-in-out; /* Añadido para hover sutil */
 }
 
 .register-submit-btn:hover {
-    color: #fff;
-    transition: color 0.4s ease;
-}
-
-.register-submit-btn:hover::before {
-    width: 100%;
+    transform: scale(1.02); /* Efecto de escala en hover */
 }
 @keyframes shake {
     0%, 100% { transform: translateX(0); }
