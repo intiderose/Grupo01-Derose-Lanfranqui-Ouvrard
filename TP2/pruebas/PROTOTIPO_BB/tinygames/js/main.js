@@ -161,7 +161,7 @@ class ContentBoxGenerator {
      * @private
      */
     #generate() {
-        const crownIcon = `<img src="logo-premium.png" alt="Premium" class="title-icon">`;
+        const crownIcon = `<img src="assets/logo-premium.png" alt="Premium" class="title-icon">`;
 
         const contentBoxesHTML = this.#boxData.map(data => `
             <div class="content-box ${data.colorClass} ${data.premium ? 'content-box--premium' : ''}">
@@ -190,19 +190,19 @@ class CardGenerator {
     #numberOfCards;
     #cardHTML = `
         <div class="game-card">
-            <img src="foto-de-prueba.png" alt="Imagen del juego" class="game-card__image">
+            <img src="assets/foto-de-prueba.png" alt="Imagen del juego" class="game-card__image">
             <h3 class="game-card__title">Nombre del Juego</h3>
             <a href="#" class="game-card__button">Jugar</a>
         </div>
     `;
     #premiumCardHTML = `
         <div class="game-card game-card--premium">
-            <img src="foto-de-prueba.png" alt="Imagen del juego" class="game-card__image">
+            <img src="assets/foto-de-prueba.png" alt="Imagen del juego" class="game-card__image">
             <h3 class="game-card__title">Nombre del Juego</h3>
             <div class="game-card__actions">
                 <a href="#" class="game-card__button">Jugar</a>
                 <a href="#" class="game-card__premium-button" aria-label="Juego Premium">
-                    <img src="logo-premium.png" alt="Premium">
+                    <img src="assets/logo-premium.png" alt="Premium">
                 </a>
             </div>
         </div>

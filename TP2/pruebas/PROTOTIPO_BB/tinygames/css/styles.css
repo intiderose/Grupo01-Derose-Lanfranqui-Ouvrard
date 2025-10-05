@@ -18,6 +18,9 @@ body {
     font-family: 'Fredoka', sans-serif;
     background-color: #A3D1FF;
     overflow-x: hidden; /* Evita que se vea el menú cuando está oculto */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 /* Clase de utilidad para lectores de pantalla */
@@ -89,14 +92,14 @@ body {
     display: inline-block;
     width: 100%;
     height: 100%;
-    background-image: url('HamburgerWhite.png');
+    background-image: url('../assets/HamburgerWhite.png');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
 }
 
 .header__hamburger[aria-expanded="true"] .hamburger-icon {
-    background-image: url('cross-icon.png');
+    background-image: url('../assets/cross-icon.png');
 }
 
 /* Logo */
@@ -350,6 +353,7 @@ main {
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
+    flex-grow: 1;
 }
 
 .content-container {
@@ -704,7 +708,7 @@ main {
     justify-content: center;
     align-items: center;
     text-align: center;
-    min-height: calc(100vh - var(--header-height) - 450px); /* Altura aprox del footer en mobile */
+    /* min-height: calc(100vh - var(--header-height) - 450px); Ya no es necesario */
     padding: 20px;
 }
 
