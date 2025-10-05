@@ -13,7 +13,10 @@ body {
     margin: 0;
     font-family: 'Fredoka', sans-serif;
     background-color: #A3D1FF;
-    overflow-x: hidden; /* Evita que se vea el menú cuando est���� oculto */
+    overflow-x: hidden; /* Evita que se vea el menú cuando est oculto */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 /* Clase de utilidad para lectores de pantalla */
@@ -289,8 +292,8 @@ body {
 
 /* Contenido principal */
 main {
-    padding: 20px;
-    min-height: calc(100vh - var(--header-height));
+    padding: 50px 20px; /* Añadido padding vertical para separación externa */
+    flex: 1; /* Añadido para que ocupe el espacio disponible */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -316,18 +319,18 @@ form {
 /* Registro */
 .register-container {
     width: 653px;
-    height: 1275px;
+    /* height: 1275px; <-- Se elimina la altura fija para permitir el centrado */
     background-color: #77BBFF;
     border-radius: 20px;
     box-shadow: 0 4px 16px rgba(0,0,0,0.2);
-    margin: auto;
+    padding: 50px 0; /* Se añade padding vertical interno */
 }
 
 .register-title {
     font-family: 'Luckiest Guy', cursive;
     font-size: 48.94px;
     text-align: center;
-    margin-top: 50px;
+    margin-top: 0; /* Se ajusta el margen */
     color: #FF6B00;
 }
 
