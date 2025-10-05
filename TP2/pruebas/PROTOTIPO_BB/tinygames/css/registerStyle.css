@@ -292,7 +292,7 @@ body {
 
 /* Contenido principal */
 main {
-    padding: 50px 20px; /* Añadido padding vertical para separación externa */
+    padding: 93px 20px; /* Aumentado el padding vertical para más separación */
     flex: 1; /* Añadido para que ocupe el espacio disponible */
     display: flex;
     justify-content: center;
