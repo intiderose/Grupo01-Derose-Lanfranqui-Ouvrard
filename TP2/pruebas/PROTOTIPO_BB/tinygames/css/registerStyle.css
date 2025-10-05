@@ -33,52 +33,49 @@ body {
 .header {
     background-color: var(--header-bg-color);
     color: var(--text-color-light);
-    display: flex;
+    display: grid; /* Cambiado a grid */
+    grid-template-columns: 1fr auto 1fr; /* 3 columnas como en login */
     align-items: center;
-    justify-content: space-between;
     padding: 0 var(--header-edge-gap);
-    position: relative;
     height: var(--header-height);
     box-sizing: border-box;
 }
 
-.header__left, .header__right, .header__center {
-    display: flex;
-    align-items: center;
+.header__logo {
+    grid-column: 2;
+    text-align: center;
 }
 
-.header__left {
-    flex-grow: 1;
-    justify-content: flex-start;
+.header__logo-link {
+    font-family: var(--logo-font);
+    font-size: 44.11px;
+    color: var(--logo-color);
+    text-decoration: none;
 }
 
-.header__center {
-    display: flex; /* Cambiado de 'none' a 'flex' */
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 100%;
-    height: 100%;
-}
-
-.header__right {
-    flex-grow: 1;
-    justify-content: flex-end;
-}
-
-.header__right button {
+.header__login-btn {
+    grid-column: 3; /* Asignar a la tercera columna */
+    justify-self: end; /* Alinear a la derecha */
     background-color: #FF6B00;
-    width: 130.19px;
-    height: 41px;
+    color: #fff;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 16px;
     border: none;
     border-radius: 20px;
-    font-family: 'Fredoka', sans-serif;
-    font-size: 15.19px;
-    color: #fff;
     cursor: pointer;
+    text-decoration: none;
+    /* Estilos copiados del botón premium */
+    width: 136px;
+    height: 41px;
+    box-shadow: -1.65px 1.65px 7.43px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease-in-out;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.header__login-btn:hover {
+    transform: scale(1.05);
 }
 
 /* Botón Hamburguesa */
@@ -90,14 +87,14 @@ body {
     display: inline-block;
     width: 100%;
     height: 100%;
-    background-image: url('HamburgerWhite.png');
+    background-image: url('../assets/HamburgerWhite.png');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
 }
 
 .header__hamburger[aria-expanded="true"] .hamburger-icon {
-    background-image: url('cross-icon.png');
+    background-image: url('../assets/cross-icon.png');
 }
 
 /* Logo */
@@ -106,8 +103,8 @@ body {
     font-size: 44.11px;
     color: var(--logo-color);
     text-decoration: none;
-    display: flex;
-    align-items: center;
+    grid-column: 2;
+    text-align: center;
 }
 
 .logo-tiny,
@@ -679,6 +676,11 @@ form {
     margin-left: 12px;
     cursor: pointer;
     user-select: none;
+}
+
+.captcha-container.error {
+    border: 2px solid #ff0000;
+    animation: shake 0.4s;
 }
 
 .captcha-logo {

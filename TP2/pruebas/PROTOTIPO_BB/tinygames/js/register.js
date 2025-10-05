@@ -240,6 +240,59 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    const form = document.querySelector('.register-form');
+    if (form) {
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            let isFormValid = true;
+
+            // Re-validar todos los campos al enviar
+            if (!dateInput.value) {
+                showError(dateInput);
+                isFormValid = false;
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(emailInput.value)) {
+                showError(emailInput);
+                isFormValid = false;
+            }
+
+            const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[-*$#+])[A-Za-z\d-*$#+]{8,}$/;
+            if (!passwordRegex.test(passwordInput.value)) {
+                showError(passwordInput);
+                isFormValid = false;
+            }
+
+            if (!repeatPasswordInput.value || repeatPasswordInput.value !== passwordInput.value) {
+                showError(repeatPasswordInput);
+                isFormValid = false;
+            }
+
+            if (!nameInput.value || nameInput.value.trim().length < 2) {
+                showError(nameInput);
+                isFormValid = false;
+            }
+
+            const captchaCheckbox = document.getElementById('captcha-checkbox');
+            if (!captchaCheckbox.checked) {
+                const captchaContainer = document.querySelector('.captcha-container');
+                if (captchaContainer) {
+                    captchaContainer.classList.add('error');
+                     setTimeout(() => {
+                        captchaContainer.classList.remove('error');
+                    }, 400);
+                }
+                isFormValid = false;
+            }
+
+            if (isFormValid) {
+                window.location.href = 'index.html';
+            }
+        });
+    }
 });
 
 // Lógica de JavaScript para la página de registro
