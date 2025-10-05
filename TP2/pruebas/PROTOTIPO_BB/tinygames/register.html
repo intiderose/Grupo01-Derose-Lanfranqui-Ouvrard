@@ -3,50 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TinyGames - Home</title>
+    <title>TinyGames - Register</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka&family=Luckiest+Guy&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/registerStyle.css">
 </head>
 <body>
-
+<!-- Header igual que en index.html -->
 <header class="header">
     <div class="header__left">
         <button class="header__hamburger" aria-label="Abrir menú de navegación" aria-expanded="false" aria-controls="side-menu">
             <span class="hamburger-icon"></span>
         </button>
-        <a href="#" class="header__logo" aria-label="TinyGames - Página de inicio">TINYGAMES</a>
+        <!-- Elimina el logotipo de aquí -->
     </div>
-
     <div class="header__center">
-        <form class="header__search" role="search">
-            <label for="search-input" class="sr-only">Buscar juegos</label>
-            <button type="submit" aria-label="Buscar">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-            </button>
-            <input type="search" id="search-input" placeholder="Buscar">
-        </form>
+        <a href="index.html" class="header__logo" aria-label="TinyGames - Página de inicio">TINYGAMES</a>
+    </div>
+    <div class="header__right">
+        <button>
+            <a href="login.html">Inicia Sesion</a>
+        </button>
     </div>
 
-    <div class="header__right">
-        <a href="#" class="header__premium-button">Hacete Premium</a>
-        <div class="header__avatar-container">
-            <button class="header__avatar" aria-label="Abrir menú de usuario" aria-expanded="false" aria-controls="user-menu">
-                <img src="assets/Avatar.png" alt="Avatar de usuario">
-            </button>
-            <ul class="header__menu" id="user-menu" hidden>
-                <li><a href="#"><svg class="header-menu__icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg><span>Mi perfil</span></a></li>
-                <li><a href="#"><svg class="header-menu__icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M12 11l-4 2 1.5-4.5L6 6l4.5 1 2-4 1 4.5L18 8l-3.5 2.5L16 13z"></path></svg><span>Mis logros</span></a></li>
-                <li><a href="#"><svg class="header-menu__icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg><span>Mis amigos</span></a></li>
-                <li><a href="#"><svg class="header-menu__icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg><span>Soporte</span></a></li>
-                <li><a href="#"><svg class="header-menu__icon" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg><span>Cerrar Sesion</span></a></li>
-            </ul>
-        </div>
-    </div>
 </header>
 
 <nav class="side-menu" id="side-menu" hidden>
+    <!-- Igual que en index.html -->
     <ul>
         <li><a href="#"><svg class="side-menu__icon" viewBox="0 0 24 24"><path d="M2 12h2l2-5 2 10 2-5h2l2 5 2-10h2l2 5h2"></path></svg><span>Carreras</span></a></li>
         <li><a href="#"><svg class="side-menu__icon" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg><span>Aventuras</span></a></li>
@@ -59,26 +44,101 @@
 </nav>
 
 <main>
-    <div class="carousel-container">
-        <div class="carousel-track">
-            <div class="carousel-slide">
-                <div class="carousel-caption">Juegos de Aventura</div>
-            </div>
-            <div class="carousel-slide">
-                <div class="carousel-caption">Juegos de Carreras</div>
-            </div>
-            <div class="carousel-slide">
-                <div class="carousel-caption">Juegos de Arcade</div>
-            </div>
-            <div class="carousel-slide">
-                <div class="carousel-caption">Juegos de Rol</div>
-            </div>
+    <div class="register-container">
+        <p class="register-title">¡registrate y diviertete!</p>
+        <!-- Botones de registro -->
+        <div class="register-buttons">
+            <button class="register-btn google-btn">
+                <span class="btn-icon">
+                    <svg width="20" height="19.5" viewBox="0 0 20 19.5" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g>
+                            <path d="M19.6 10.04c0-.67-.06-1.34-.18-1.98H10v3.75h5.42c-.23 1.23-.93 2.27-1.98 2.96v2.46h3.2c1.87-1.72 2.96-4.25 2.96-7.19z" fill="#4285F4"/>
+                            <path d="M10 19.5c2.7 0 4.97-.89 6.63-2.41l-3.2-2.46c-.89.6-2.03.96-3.43.96-2.64 0-4.88-1.78-5.68-4.18H1.03v2.62C2.77 17.43 6.13 19.5 10 19.5z" fill="#34A853"/>
+                            <path d="M4.32 11.41c-.21-.6-.33-1.24-.33-1.91s.12-1.31.33-1.91V5.97H1.03C.37 7.31 0 8.81 0 10.5s.37 3.19 1.03 4.53l3.29-2.62z" fill="#FBBC05"/>
+                            <path d="M10 4.01c1.47 0 2.78.51 3.81 1.51l2.85-2.85C14.97 1.09 12.7 0 10 0 6.13 0 2.77 2.07 1.03 5.97l3.29 2.62c.8-2.4 3.04-4.18 5.68-4.18z" fill="#EA4335"/>
+                        </g>
+                    </svg>
+                </span>
+                Registrate con Google
+            </button>
+            <button class="register-btn facebook-btn">
+                <span class="btn-icon">
+                    <svg width="20" height="19.5" viewBox="0 0 20 19.5" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g>
+                            <rect width="20" height="19.5" rx="3" fill="#1877F3"/>
+                            <path d="M13.5 10.5h-2v6h-2v-6H8V8.5h1.5V7.5c0-1.1.9-2 2-2h2v2h-2v1h2v2z" fill="#fff"/>
+                        </g>
+                    </svg>
+                </span>
+                Registrate con Facebook
+            </button>
         </div>
-    </div>
-    <div class="content-container">
+        <hr class="register-divider">
+        <!-- Formulario de registro -->
+        <form class="register-form">
+            <div class="form-group">
+                <label for="fecha-nacimiento" class="form-label">Fecha de Nacimiento</label>
+                <input type="date" id="fecha-nacimiento" name="fecha-nacimiento" class="form-input-date">
+            </div>
+            <div class="form-group form-group-email">
+                <label for="correo" class="form-label">Correo electrónico</label>
+                <input type="email" id="correo" name="correo" class="form-input-email">
+            </div>
+            <div class="form-group form-group-password">
+                <label for="contraseña" class="form-label">Contraseña</label>
+                <div class="password-input-wrapper">
+                    <input type="password" id="contraseña" name="contraseña" class="form-input-password">
+                    <button type="button" class="toggle-password" aria-label="Mostrar contraseña">
+                        <svg class="eye-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path class="eye-open" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <circle class="eye-open" cx="12" cy="12" r="3" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <line class="eye-closed" x1="1" y1="1" x2="23" y2="23" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div class="password-requirements">
+                <p>La contraseña debe contener al menos:</p>
+                <ul>
+                    <li>8 caracteres</li>
+                    <li>1 letra mayúscula</li>
+                    <li>1 caracter especial (ej: - * $ # +)</li>
+                    <li>1 número</li>
+                </ul>
+            </div>
+            <div class="form-group form-group-repeat-password">
+                <label for="repetir-contraseña" class="form-label">Repetir Contraseña</label>
+                <div class="password-input-wrapper">
+                    <input type="password" id="repetir-contraseña" name="repetir-contraseña" class="form-input-password">
+                    <button type="button" class="toggle-password-repeat" aria-label="Mostrar contraseña">
+                        <svg class="eye-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path class="eye-open" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <circle class="eye-open" cx="12" cy="12" r="3" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <line class="eye-closed" x1="1" y1="1" x2="23" y2="23" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div class="form-group form-group-name">
+                <label for="nombre-apellido" class="form-label">Nombre y Apellido</label>
+                <input type="text" id="nombre-apellido" name="nombre-apellido" class="form-input-text">
+            </div>
+            <div class="form-group form-group-nickname">
+                <label for="nickname" class="form-label">Nickname <span class="optional-text">(opcional)</span></label>
+                <input type="text" id="nickname" name="nickname" class="form-input-text">
+                <p class="input-hint">Debe contener 6 caracteres o más</p>
+            </div>
+            <div class="captcha-container">
+                <input type="checkbox" id="captcha-checkbox" class="captcha-checkbox">
+                <label for="captcha-checkbox" class="captcha-label">No soy un robot</label>
+                <div class="captcha-logo">reCAPTCHA</div>
+            </div>
+            <button type="submit" id="register-submit-btn" class="register-submit-btn">¡Empecemos!</button>
+        </form>
     </div>
 </main>
 
+<!-- Footer igual que en index.html -->
 <footer class="footer">
     <div class="footer__container">
         <div class="footer__top">
@@ -151,7 +211,6 @@
         </div>
     </div>
 </footer>
-
-<script src="js/index.js"></script>
+<script src="js/register.js"></script>
 </body>
 </html>
