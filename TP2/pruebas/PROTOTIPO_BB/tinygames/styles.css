@@ -69,6 +69,7 @@ body {
 .header__right {
     flex-grow: 1;
     justify-content: flex-end;
+    gap: 15px; /* Espacio entre el botón premium y el avatar */
 }
 
 /* Botón Hamburguesa */
@@ -151,6 +152,30 @@ body {
     padding: 0 5px;
     display: flex;
     align-items: center;
+}
+
+/* Botón Premium en el Header */
+.header__premium-button {
+    display: none; /* Oculto en móvil por defecto */
+    background-color: #F4C542; /* Color amarillo premium */
+    color: white;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 16px;
+    text-decoration: none;
+    width: 136px;
+    height: 41px;
+    border-radius: 20px;
+    box-shadow: -1.65px 1.65px 7.43px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease-in-out;
+    white-space: nowrap; /* Evita que el texto se parta */
+    /* Flex para centrar el contenido */
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.header__premium-button:hover {
+    transform: scale(1.05);
 }
 
 /* Avatar y Menú de Usuario */
@@ -454,7 +479,7 @@ main {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #FFD700; /* Color amarillo */
+    background-color: #F4C542; /* Color amarillo premium */
     width: 34px;
     height: 34px;
     border-radius: 50%;
@@ -629,6 +654,10 @@ main {
     .header__left,
     .header__right {
         flex-grow: 0;
+    }
+
+    .header__premium-button {
+        display: flex; /* Muestra el botón en desktop y permite centrado flex */
     }
 
     /* Contenido Principal */
