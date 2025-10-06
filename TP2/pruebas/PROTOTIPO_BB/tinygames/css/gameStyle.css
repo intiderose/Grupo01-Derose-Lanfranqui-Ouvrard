@@ -5,7 +5,7 @@
     --header-edge-gap: 34px;
     --logo-spacing: 50px;
     --text-color-light: #FFFFFF;
-    --header-height: 62px; /* Altura del header */
+    --header-height: 62px;
 }
 
 /* Reset básico y estilos del body */
@@ -13,7 +13,7 @@ body {
     margin: 0;
     font-family: 'Fredoka', sans-serif;
     background-color: #A3D1FF;
-    overflow-x: hidden; /* Evita que se vea el menú cuando está oculto */
+    overflow-x: hidden;
 }
 
 /* Clase de utilidad para lectores de pantalla */
@@ -53,7 +53,6 @@ body {
 }
 
 .header__center {
-    /* Oculto en móvil por defecto */
     display: none;
     justify-content: center;
     position: absolute;
@@ -75,7 +74,7 @@ body {
     cursor: pointer;
     padding: 0;
     margin-right: var(--logo-spacing);
-    z-index: 30; /* Asegura que esté por encima del menú lateral */
+    z-index: 30;
     width: 47px;
     height: 47px;
 }
@@ -127,7 +126,7 @@ body {
 
 .header__search input::placeholder {
     color: #9EA2AE;
-    opacity: 1; /* Firefox aplica una opacidad por defecto */
+    opacity: 1;
 }
 
 .header__search input::-webkit-search-cancel-button {
@@ -195,7 +194,6 @@ body {
     transform: translateX(0);
 }
 
-
 .header__menu li a {
     color: var(--text-color-light);
     text-decoration: none;
@@ -221,7 +219,7 @@ body {
 
 /* Menú lateral */
 .side-menu {
-    display: block; /* Se controla con 'hidden' */
+    display: block;
     position: absolute;
     top: var(--header-height);
     left: 0;
@@ -264,7 +262,7 @@ body {
     stroke: #000000;
     stroke-width: 1.5;
     fill: none;
-    flex-shrink: 0; /* Evita que el icono se encoja */
+    flex-shrink: 0;
 }
 
 .side-menu li a:hover {
@@ -273,35 +271,56 @@ body {
 
 /* Contenido principal */
 main {
-    padding: 20px;
+    border: 5px solid black;
+    padding-top: 0px;
+    /*padding: 20px;*/
     min-height: calc(100vh - var(--header-height));
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.content-container {
+.game-container {
+    border: 5px solid red;
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    width: 100%;
-    max-width: 1285px;
-}
-
-.content-box {
-    height: 349px;
-    border-radius: 16.52px;
-    box-shadow: -1.65px 1.65px 7.43px rgba(0, 0, 0, 0.15);
-}
-
-.box-color-1 {
+    justify-content: center;
+    align-items: flex-start;
+    /*gap: 15px;*/
+    border-radius: 20px;
+    width: 1550px;
+    height: 733px;
     background-color: #4BA6FF;
+    margin-bottom: 0;
+    margin-top: 0px;
 }
-
-.box-color-2 {
-    background-color: #77BBFF;
+.game-container__image{
+    border: 5px solid black;
+    border-color: black;
+    margin-top: 15px;
+    justify-content: center;
+    align-content: center;
+    width: 1518px;
+    height: 605px;
+    /*object-fit: cover;*/
+    background-image: url('HamburgerWhite.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
 }
+.game-container-botonera{
+    border: 5px solid black;
+    width: 100%;
+    height: 60px;
+    margin-top: 20px;
+    padding-top: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+.game-container-botonera.button{
 
+}
 /* Estilos del Footer */
 .footer {
     background-color: var(--header-bg-color);
@@ -408,13 +427,6 @@ main {
     stroke: none;
 }
 
-/* Responsive */
-@media (min-width: 768px) {
-    .header__hamburger {
-        display: none;
-    }
-}
-
 /* Menú de usuario: oculto por defecto, solo visible cuando aria-hidden="false" */
 .header__menu {
     display: none;
@@ -423,55 +435,6 @@ main {
 .header__menu[aria-hidden="false"] {
     display: flex;
     transform: translateX(0);
-
 }
-
-@media (max-width: 992px) {
-    .footer__top {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-    }
-
-    .footer__links {
-        width: 100%;
-        justify-content: space-around;
-    }
-
-    .footer__social {
-        justify-content: center;
-    }
-}
-
-    @media (max-width: 576px) {
-        .content-container {
-            max-width: 100%;
-            padding: 0 10px;
-        }
-        .content-box {
-            padding: 20px !important;
-            min-width: 0;
-            height: auto;
-        }
-        .content-box form {
-            width: 100% !important;
-        }
-        .content-box input,
-        .content-box button {
-            font-size: 1rem !important;
-            padding: 10px !important;
-        }
-        .header__search {
-            width: 100%;
-            min-width: 0;
-            padding: 0 5px;
-        }
-        .header {
-            padding: 0 10px;
-        }
-        .header__center {
-            padding: 0;
-        }
-    }
 
 

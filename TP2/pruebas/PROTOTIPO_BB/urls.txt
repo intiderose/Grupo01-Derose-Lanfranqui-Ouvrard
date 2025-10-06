@@ -1,3 +1,0 @@
-mockAPI - https://6670525f0900b5f8724a361e.mockapi.io/api/pedidos
-
-HOST en glitch - https://boutiquecakeshop.glitch.me/
