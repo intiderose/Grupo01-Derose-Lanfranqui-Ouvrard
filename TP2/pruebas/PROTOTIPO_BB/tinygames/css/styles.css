@@ -2,7 +2,7 @@
     --header-bg-color: #1E90FF;
     --logo-color: #FFA866;
     --logo-font: 'Luckiest Guy', cursive;
-    --header-edge-gap: 34px;
+    --header-edge-gap: 10px;
     --logo-spacing: 50px;
     --text-color-light: #FFFFFF;
     --header-height: 62px; /* Altura del header */
@@ -158,28 +158,7 @@ body {
 }
 
 /* Botón Premium en el Header */
-.header__premium-button {
-    display: none; /* Oculto en móvil por defecto */
-    background-color: #F4C542; /* Color amarillo premium */
-    color: white;
-    font-family: 'Fredoka', sans-serif;
-    font-size: 16px;
-    text-decoration: none;
-    width: 136px;
-    height: 41px;
-    border-radius: 20px;
-    box-shadow: -1.65px 1.65px 7.43px rgba(0, 0, 0, 0.15);
-    transition: transform 0.2s ease-in-out;
-    white-space: nowrap; /* Evita que el texto se parta */
-    /* Flex para centrar el contenido */
-    justify-content: center;
-    align-items: center;
-    box-sizing: border-box;
-}
-
-.header__premium-button:hover {
-    transform: scale(1.05);
-}
+/* Estilos eliminados ya que el botón se movió al menú */
 
 /* Avatar y Menú de Usuario */
 .header__avatar-container {
@@ -205,16 +184,15 @@ body {
 
 .header__menu {
     position: absolute;
-    top: var(--header-height);
-    right: var(--header-edge-gap);
+    right: 0px;
     background-color: var(--header-bg-color);
     color: var(--text-color-light);
     list-style: none;
-    padding: 20px 0;
+    padding: 0px 0;
     margin: 0;
     border-radius: 0 0 20px 20px;
     width: 275px;
-    height: 333px;
+    height: 380px;
     z-index: 10;
     box-sizing: border-box;
     opacity: 0;
@@ -251,6 +229,10 @@ body {
     flex-shrink: 0;
 }
 
+.header__menu li a img.header-menu__icon {
+    stroke: none; /* Resetea por si acaso */
+}
+
 .header__menu li a:hover {
     background-color: rgba(255, 255, 255, 0.1);
 }
@@ -262,10 +244,10 @@ body {
     top: var(--header-height);
     left: 0;
     width: 275px;
-    height: 413px;
+    height: 433px;
     background-color: var(--header-bg-color);
     color: white;
-    padding: 20px 0;
+    padding: 0 0 20px 0;
     z-index: 20;
     transform: translateX(-100%);
     transition: transform 0.3s ease-in-out;
@@ -280,8 +262,12 @@ body {
 
 .side-menu ul {
     list-style: none;
-    padding: 0;
+    padding: 20px 0 0 0;
     margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    height: 100%;
 }
 
 .side-menu li a {
@@ -483,18 +469,17 @@ main {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #F4C542; /* Color amarillo premium */
-    width: 34px;
-    height: 34px;
+    background-color: #FFD700D9;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
-    box-shadow: -1.65px 1.65px 7.43px rgba(0, 0, 0, 0.15);
     flex-shrink: 0;
     transition: transform 0.2s ease-in-out;
 }
 
 .game-card__premium-button img {
-    width: 20px;
-    height: 20px;
+    width: 40px;
+    height: 40px;
 }
 
 .box-color-1 {
@@ -742,10 +727,6 @@ main {
     .header__left,
     .header__right {
         flex-grow: 0;
-    }
-
-    .header__premium-button {
-        display: flex; /* Muestra el botón en desktop y permite centrado flex */
     }
 
     /* Contenido Principal */
