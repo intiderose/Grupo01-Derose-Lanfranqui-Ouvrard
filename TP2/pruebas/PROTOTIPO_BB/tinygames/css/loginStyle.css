@@ -12,10 +12,14 @@ body {
     margin: 0;
     font-family: 'Fredoka', sans-serif;
     background-color: #A3D1FF;
-    overflow-x: hidden;
-    min-height: 100vh;
+    background-image: url("../assets/Fondo-Logotipo-Completo.png");
+    background-size: 130%;
+    background-repeat: no-repeat;
+    background-position: center;
+    overflow-x: hidden; /* Evita que se vea el menú cuando est oculto */
     display: flex;
     flex-direction: column;
+    min-height: 100vh;
 }
 
 header {
