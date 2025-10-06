@@ -133,7 +133,7 @@ class Carousel {
 }
 
 /**
- * Genera dinámicamente las cajas de contenido en la página.
+ * Genera dinámicamente las cajas de contenido en la p��gina.
  */
 class ContentBoxGenerator {
     #container;
@@ -226,10 +226,46 @@ class CardGenerator {
      * @private
      */
     #generate() {
+        const premiumCounts = {
+            'Para Ti': 3,
+            'Juegos Online': 2,
+            'Juegos de 2 Jugadores': 5
+        };
+
         this.#containers.forEach(container => {
-            const isPremium = container.closest('.content-box--premium');
-            const cardTemplate = isPremium ? this.#premiumCardHTML : this.#cardHTML;
-            const cardsToInsert = Array(this.#numberOfCards).fill(cardTemplate).join('');
+            const contentBox = container.closest('.content-box');
+            const titleElement = contentBox.querySelector('.content-box__title');
+            // Usamos .firstChild.textContent para obtener solo el texto del título, ignorando el icono.
+            const title = titleElement.firstChild.textContent.trim();
+            const isAllPremiumBox = contentBox.classList.contains('content-box--premium');
+
+            let cardsToInsert = '';
+
+            if (isAllPremiumBox) {
+                // Si es la caja "Juegos Premium", todas las tarjetas son premium.
+                cardsToInsert = Array(this.#numberOfCards).fill(this.#premiumCardHTML).join('');
+            } else {
+                const numPremium = premiumCounts[title] || 0;
+                const numNormal = this.#numberOfCards - numPremium;
+
+                // Crear un array con los tipos de tarjeta
+                let cardTypes = [
+                    ...Array(numPremium).fill('premium'),
+                    ...Array(numNormal).fill('normal')
+                ];
+
+                // Mezclar el array para una distribución aleatoria
+                for (let i = cardTypes.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [cardTypes[i], cardTypes[j]] = [cardTypes[j], cardTypes[i]];
+                }
+
+                // Generar el HTML basado en el array mezclado
+                cardsToInsert = cardTypes.map(type => {
+                    return type === 'premium' ? this.#premiumCardHTML : this.#cardHTML;
+                }).join('');
+            }
+
             container.innerHTML = cardsToInsert;
         });
     }
