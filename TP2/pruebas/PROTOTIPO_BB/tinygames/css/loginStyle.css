@@ -97,7 +97,6 @@ main {
     display: flex;
     flex-direction: column;
     gap: 9px; /* Ajustado */
-    margin-bottom: 44px; /* Ajustado */
     width: 380px; /* Ajustado */
 }
 
@@ -132,18 +131,36 @@ main {
 }
 
 .login-divider {
+    display: flex;
+    align-items: center;
     width: 380px;
-    height: 2px;
-    background: #fff;
-    border: none;
-    margin-bottom: 21px;
+    color: #fff;
+}
+
+.login-divider::before,
+.login-divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #fff;
+}
+
+.login-divider span {
+    display: inline-block;
+    padding: 2px 18px;
+    border: 1px solid #fff;
+    border-radius: 50px;
+    margin: 0 1em;
+    background-color: #77BBFF;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
 }
 
 .login-box form {
     width: 380px; /* Ajustado */
     display: flex;
     flex-direction: column;
-    gap: 19px; /* Ajustado */
+    gap: 25px; /* Espaciado simétrico */
 }
 
 .form-group {
@@ -170,6 +187,54 @@ main {
     box-sizing: border-box; /* Ajustado */
     outline: none; /* Ajustado */
     box-shadow: 0 2px 8px rgba(0,0,0,0.08); /* Ajustado */
+    width: 100%;
+}
+
+.login-box input.error {
+    border-color: #ff0000;
+    animation: shake 0.4s;
+}
+
+.login-box input.valid {
+    border-color: #00FF7F;
+}
+
+.password-input-wrapper {
+    position: relative;
+    width: 380px;
+}
+
+#login-pass {
+    padding-right: 50px;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 17px;
+    height: 17px;
+}
+
+.toggle-password:hover {
+    opacity: 0.7;
+}
+
+.eye-icon {
+    width: 17px;
+    height: 17px;
+}
+
+.eye-closed {
+    display: none;
 }
 
 .submit-btn {
@@ -215,3 +280,9 @@ main {
 
 /* Footer */
 /* Se eliminaron los estilos del footer de este archivo para usar los de styles.css */
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}

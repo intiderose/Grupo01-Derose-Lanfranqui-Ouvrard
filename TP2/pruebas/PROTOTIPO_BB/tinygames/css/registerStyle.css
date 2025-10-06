@@ -331,6 +331,7 @@ form {
     font-size: 48.94px;
     text-align: center;
     margin-top: 0; /* Se ajusta el margen */
+    margin-bottom: 10px;
     color: #FF6B00;
 }
 
@@ -339,70 +340,73 @@ form {
     flex-direction: column;
     align-items: center;
     gap: 9px;
-    margin-top: 31px;
+    margin-top: 20px;
+    width: 380px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-.register-btn {
-    width: 380px;
+.social-btn {
     height: 52px;
-    background: #fff;
-    border: none;
     border-radius: 20px;
-    font-family: 'Roboto', sans-serif;
-    font-size: 14.11px;
-    font-weight: 300;
-    color: #333;
+    border: none;
+    background-color: #fff;
     cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    transition: box-shadow 0.2s;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 15px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14.11px;
+    font-weight: 300;
+    color: #333;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    position: relative;
     padding-left: 0;
+    width: 100%;
 }
 
-.btn-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 19.5px;
-}
-
-.register-btn span,
-.register-btn svg {
-    vertical-align: middle;
-}
-
-.register-btn > .btn-icon > svg {
-    display: block;
-    height: 19.5px;
-    width: 20px;
-}
-
-.register-btn:hover {
+.social-btn:hover {
     box-shadow: 0 4px 16px rgba(0,0,0,0.15);
 }
 
-.google-btn {
-    /* Puedes agregar un icono o color especial si lo deseas */
-}
-
-.facebook-btn {
-    padding-left: 19px;
+.social-btn__icon {
+    position: static;
+    transform: none;
+    display: flex;
+    align-items: center;
 }
 
 .register-divider {
+    display: flex;
+    align-items: center;
     width: 380px;
-    height: 2px;
-    background: #fff;
-    border: none;
-    margin: 44px auto 0 auto;
-    display: block;
+    color: #fff;
+    margin: 31px auto;
+}
+
+
+.register-divider::before,
+.register-divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #fff;
+}
+
+.register-divider span {
+    display: inline-block;
+    padding: 2px 18px;
+    border: 1px solid #fff;
+    border-radius: 50px;
+    margin: 0 1em;
+    background-color: #77BBFF;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
 }
 
 .register-form {
-    margin-top: 21px;
+    margin-top: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
