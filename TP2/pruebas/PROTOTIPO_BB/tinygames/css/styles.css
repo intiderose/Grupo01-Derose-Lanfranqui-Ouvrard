@@ -1,0 +1,924 @@
+:root {
+    --header-bg-color: #1E90FF;
+    --logo-color: #FFA866;
+    --logo-font: 'Luckiest Guy', cursive;
+    --header-edge-gap: 34px;
+    --logo-spacing: 50px;
+    --text-color-light: #FFFFFF;
+    --header-height: 62px; /* Altura del header */
+}
+
+/* ==========================================================================
+   Estilos Base (Mobile First)
+   ========================================================================== */
+
+/* Reset básico y estilos del body */
+body {
+    margin: 0;
+    font-family: 'Fredoka', sans-serif;
+    background-color: #A3D1FF;
+    overflow-x: hidden; /* Evita que se vea el menú cuando está oculto */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Clase de utilidad para lectores de pantalla */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Estilos del Header */
+.header {
+    background-color: var(--header-bg-color);
+    color: var(--text-color-light);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--header-edge-gap);
+    position: relative;
+    height: var(--header-height);
+    box-sizing: border-box;
+}
+
+.header__left, .header__right, .header__center {
+    display: flex;
+    align-items: center;
+}
+
+.header__left {
+    flex-grow: 1;
+    justify-content: flex-start;
+}
+
+.header__center {
+    /* Oculto en móvil por defecto, se muestra en desktop */
+    display: none;
+    justify-content: center;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.header__right {
+    flex-grow: 1;
+    justify-content: flex-end;
+    gap: 15px; /* Espacio entre el botón premium y el avatar */
+}
+
+/* Botón Hamburguesa */
+.header__hamburger {
+    background: none;
+    border: none;
+    color: var(--text-color-light);
+    cursor: pointer;
+    padding: 0;
+    margin-right: var(--logo-spacing);
+    z-index: 30; /* Asegura que esté por encima del menú lateral */
+    width: 47px;
+    height: 47px;
+}
+
+.hamburger-icon {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    background-image: url('../assets/HamburgerWhite.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.header__hamburger[aria-expanded="true"] .hamburger-icon {
+    background-image: url('../assets/cross-icon.png');
+}
+
+/* Logo */
+.header__logo {
+    font-family: var(--logo-font);
+    font-size: 44.11px;
+    color: var(--logo-color);
+    text-decoration: none;
+}
+
+/* Búsqueda (Oculta en mobile por defecto) */
+.header__search {
+    display: flex;
+    align-items: center;
+    background-color: #D9D9E0;
+    border-radius: 46.43px;
+    padding: 0 15px;
+    width: 373px;
+    height: 45.66px;
+    box-sizing: border-box;
+    box-shadow: -1.65px 1.65px 7.43px rgba(0, 0, 0, 0.15);
+}
+
+.header__search input {
+    background: transparent;
+    border: none;
+    color: #9EA2AE;
+    outline: none;
+    padding: 5px;
+    font-size: 18.57px;
+    width: 100%;
+}
+
+.header__search input::placeholder {
+    color: #9EA2AE;
+    opacity: 1; /* Firefox aplica una opacidad por defecto */
+}
+
+.header__search input::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    height: 18px;
+    width: 18px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%239EA2AE'><path d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/></svg>");
+    background-size: contain;
+    cursor: pointer;
+}
+
+.header__search button {
+    background: none;
+    border: none;
+    color: #9EA2AE;
+    cursor: pointer;
+    padding: 0 5px;
+    display: flex;
+    align-items: center;
+}
+
+/* Botón Premium en el Header */
+.header__premium-button {
+    display: none; /* Oculto en móvil por defecto */
+    background-color: #F4C542; /* Color amarillo premium */
+    color: white;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 16px;
+    text-decoration: none;
+    width: 136px;
+    height: 41px;
+    border-radius: 20px;
+    box-shadow: -1.65px 1.65px 7.43px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease-in-out;
+    white-space: nowrap; /* Evita que el texto se parta */
+    /* Flex para centrar el contenido */
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.header__premium-button:hover {
+    transform: scale(1.05);
+}
+
+/* Avatar y Menú de Usuario */
+.header__avatar-container {
+    position: relative;
+}
+
+.header__avatar {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    border-radius: 50%;
+    overflow: hidden;
+    width: 47px;
+    height: 47px;
+}
+
+.header__avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.header__menu {
+    position: absolute;
+    top: var(--header-height);
+    right: var(--header-edge-gap);
+    background-color: var(--header-bg-color);
+    color: var(--text-color-light);
+    list-style: none;
+    padding: 20px 0;
+    margin: 0;
+    border-radius: 0 0 20px 20px;
+    width: 275px;
+    height: 333px;
+    z-index: 10;
+    box-sizing: border-box;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out, visibility 0.3s;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+.header__menu[aria-hidden="false"] {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.header__menu li a {
+    color: var(--text-color-light);
+    text-decoration: none;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: 29.57px;
+}
+
+.header-menu__icon {
+    width: 30px;
+    height: 30px;
+    stroke: #000000;
+    stroke-width: 1.5;
+    fill: none;
+    flex-shrink: 0;
+}
+
+.header__menu li a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Menú lateral */
+.side-menu {
+    display: block; /* Se controla con 'hidden' */
+    position: absolute;
+    top: var(--header-height);
+    left: 0;
+    width: 275px;
+    height: 413px;
+    background-color: var(--header-bg-color);
+    color: white;
+    padding: 20px 0;
+    z-index: 20;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    box-sizing: border-box;
+}
+
+.side-menu[aria-hidden="false"] {
+    transform: translateX(0);
+}
+
+.side-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.side-menu li a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: 29.57px;
+}
+
+.side-menu__icon {
+    width: 30px;
+    height: 30px;
+    stroke: #000000;
+    stroke-width: 1.5;
+    fill: none;
+    flex-shrink: 0; /* Evita que el icono se encoja */
+}
+
+.side-menu li a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Carrusel */
+.carousel-container {
+    height: 349px;
+    border-radius: 16.52px;
+    box-shadow: -1.65px 1.65px 7.43px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    margin-bottom: 15px; /* Espacio entre carrusel y las cajas */
+}
+
+.carousel-track {
+    display: flex;
+    height: 100%;
+    transition: transform 0.5s ease-in-out;
+}
+
+.carousel-slide {
+    min-width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Colores de fondo para cada slide del carrusel */
+.carousel-slide:nth-child(1) { background-color: #FF6347; }
+.carousel-slide:nth-child(2) { background-color: #4682B4; }
+.carousel-slide:nth-child(3) { background-color: #32CD32; }
+.carousel-slide:nth-child(4) { background-color: #FFD700; }
+
+.carousel-caption {
+    color: white;
+    font-size: 48px;
+    font-family: var(--logo-font);
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+}
+
+/* Contenido principal */
+main {
+    padding: 20px;
+    min-height: calc(100vh - var(--header-height));
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.content-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+}
+
+.content-box {
+    height: 349px;
+    border-radius: 16.52px;
+    box-shadow: -1.65px 1.65px 7.43px rgba(0, 0, 0, 0.15);
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative; /* Necesario para posicionar las flechas */
+}
+
+.content-box__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.content-box__title {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 24px;
+    color: #0C3966;
+    margin: 0;
+    font-weight: 400; /* Regular */
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.title-icon {
+    width: 24px;
+    height: 24px;
+}
+
+.content-box__see-all {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 16px;
+    color: rgba(0, 0, 0, 0.5);
+    text-decoration: underline;
+}
+
+.cards-container {
+    display: flex;
+    justify-content: flex-start;
+    gap: 15px;
+    width: 100%;
+    overflow-x: auto; /* Permite scroll si no caben las tarjetas */
+    padding-bottom: 10px; /* Espacio para la sombra del scrollbar */
+    /* Ocultar la barra de scroll */
+    scrollbar-width: none; /* Firefox */
+}
+
+/* Ocultar la barra de scroll para Webkit (Chrome, Safari) */
+.cards-container::-webkit-scrollbar {
+    display: none;
+}
+
+.game-card {
+    width: 157px;
+    height: 214px;
+    background-color: white;
+    flex-shrink: 0; /* Evita que las tarjetas se encojan */
+    border-radius: 13px;
+    box-shadow: -1.65px 1.65px 7.43px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden; /* Para que la imagen respete el borde redondeado */
+    padding-bottom: 10px; /* Espacio para el botón */
+    box-sizing: border-box;
+}
+
+.game-card--premium {
+    /* No se necesita posicionamiento relativo */
+}
+
+.game-card__image {
+    width: 100%;
+    height: 125px;
+    object-fit: cover;
+}
+
+.game-card__title {
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 400; /* Regular */
+    font-size: 16px;
+    color: #000000;
+    margin: 10px 0;
+    text-align: center;
+}
+
+.game-card--premium .game-card__title {
+    margin-top: 10px; /* Restablecer margen original */
+    margin-bottom: 10px;
+}
+
+.game-card__actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.game-card__button {
+    background-color: #FF6B00;
+    color: white;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 15px;
+    text-decoration: none;
+    padding: 8px 28px;
+    border-radius: 436.22px;
+    box-shadow: -1.65px 1.65px 7.43px rgba(0, 0, 0, 0.15);
+    display: inline-block;
+    transition: transform 0.2s ease-in-out;
+}
+
+.game-card__premium-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #F4C542; /* Color amarillo premium */
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    box-shadow: -1.65px 1.65px 7.43px rgba(0, 0, 0, 0.15);
+    flex-shrink: 0;
+    transition: transform 0.2s ease-in-out;
+}
+
+.game-card__premium-button img {
+    width: 20px;
+    height: 20px;
+}
+
+.box-color-1 {
+    background-color: #4BA6FF;
+}
+
+.box-color-2 {
+    background-color: #77BBFF;
+}
+
+/* Estilos de las flechas de scroll (ocultas en mobile) */
+.scroll-arrow {
+    display: none;
+}
+
+/* Estilos del Footer */
+.footer {
+    background-color: var(--header-bg-color);
+    color: var(--text-color-light);
+    padding: 60px var(--header-edge-gap) 20px;
+}
+
+.footer__container {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.footer__top {
+    display: grid;
+    gap: 40px;
+    /* Mobile First: 1 columna */
+    grid-template-columns: 1fr;
+    text-align: center;
+}
+
+.footer__about .footer__logo {
+    font-family: var(--logo-font);
+    font-size: 2.5rem;
+    color: var(--logo-color);
+    text-decoration: none;
+    display: inline-block;
+    margin-bottom: 10px;
+}
+
+.footer__about p {
+    color: #ccc;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin: 0;
+    max-width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.footer__links {
+    display: grid;
+    gap: 30px;
+    width: 100%;
+    /* Mobile First: 2 columnas */
+    grid-template-columns: repeat(2, 1fr);
+    text-align: left;
+}
+
+.footer__subscribe h4 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    color: #fff;
+}
+
+.footer__subscribe p {
+    font-size: 0.9rem;
+    color: #ccc;
+    margin-bottom: 20px;
+}
+
+.footer__subscribe-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.footer__subscribe-form input {
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #4A9EFF;
+    background-color: #1A7DDE;
+    color: white;
+    font-family: 'Fredoka', sans-serif;
+}
+
+.footer__subscribe-form input::placeholder {
+    color: #A3D1FF;
+}
+
+.footer__subscribe-form button {
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    background-color: var(--logo-color);
+    color: white;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.footer__subscribe-form button:hover {
+    background-color: #ff8c33;
+}
+
+.footer__bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    text-align: center;
+}
+
+.footer__copyright {
+    font-size: 0.8rem;
+    color: #ccc;
+    margin: 0;
+    order: 1; /* Primero en mobile */
+}
+
+.footer__bottom-links {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+    order: 3; /* Tercero en mobile */
+}
+
+.footer__bottom-links a {
+    color: #ccc;
+    text-decoration: none;
+    font-size: 0.8rem;
+}
+
+.footer__bottom-links a:hover {
+    text-decoration: underline;
+}
+
+.footer__social {
+    display: flex;
+    gap: 15px;
+    order: 2; /* Segundo en mobile */
+}
+
+.footer__links-column h4 {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    color: #fff;
+    font-weight: bold;
+}
+
+.footer__links-column ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer__links-column li {
+    margin-bottom: 10px;
+}
+
+.footer__links-column a {
+    color: #ccc;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.footer__links-column a:hover {
+    color: var(--logo-color);
+    text-decoration: underline;
+}
+
+.footer__social a {
+    color: #fff;
+    transition: color 0.2s;
+}
+
+.footer__social a:hover {
+    color: var(--logo-color);
+}
+
+.footer__social svg {
+    width: 24px;
+    height: 24px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.footer__social a[aria-label="Facebook"] svg,
+.footer__social a[aria-label="YouTube"] svg {
+    fill: currentColor;
+    stroke: none;
+}
+
+/* Página Próximamente */
+.main-proximamente {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    /* min-height: calc(100vh - var(--header-height) - 450px); Ya no es necesario */
+    padding: 20px;
+}
+
+.proximamente-title {
+    font-family: 'Luckiest Guy', cursive;
+    font-size: 3rem;
+    color: var(--logo-color);
+    text-shadow: 3px 3px 0px #0C3966, 6px 6px 0px rgba(0,0,0,0.2);
+}
+
+/* ==========================================================================
+   Media Queries (Ampliaciones para pantallas más grandes)
+   ========================================================================== */
+
+/* Estilos para tablets pequeñas y superiores */
+@media (min-width: 577px) {
+    .footer__subscribe-form {
+        flex-direction: row;
+    }
+    .footer__subscribe-form input {
+        flex-grow: 1;
+    }
+}
+
+/* Estilos para tablets y escritorios */
+@media (min-width: 768px) {
+    /* Header */
+    .header__center {
+        display: flex; /* Muestra la barra de búsqueda */
+    }
+    .header__left,
+    .header__right {
+        flex-grow: 0;
+    }
+
+    .header__premium-button {
+        display: flex; /* Muestra el botón en desktop y permite centrado flex */
+    }
+
+    /* Contenido Principal */
+    main {
+        padding: 20px 78px;
+    }
+
+    .content-box {
+        display: block; /* Restablece el comportamiento para escritorio */
+    }
+
+    .content-box__title {
+        font-size: 30px;
+    }
+
+    .title-icon {
+        width: 30px;
+        height: 30px;
+    }
+
+    .content-box__see-all {
+        font-size: 22px;
+    }
+
+    .cards-container {
+        justify-content: flex-start; /* Mantenemos el scroll para tablets */
+        gap: 22px;
+        overflow-x: auto; /* Mantenemos el scroll para tablets */
+        scroll-behavior: smooth; /* Para que el scroll con JS sea suave */
+    }
+
+    .game-card {
+        width: 196.42px;
+        height: 267px;
+        border-radius: 16.17px;
+        padding-bottom: 14px;
+        flex-shrink: 0; /* Aseguramos que las tarjetas no se encojan */
+    }
+
+    .game-card:hover .game-card__button {
+        transform: scale(1.1);
+    }
+
+    .premium-icon {
+        /* Estilos eliminados de aquí */
+    }
+
+    /* Estilos para las flechas de scroll en desktop */
+    .scroll-arrow {
+        display: block;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 5;
+        background-color: rgba(0, 0, 0, 0.3);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        font-size: 24px;
+        font-weight: bold;
+        cursor: pointer;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
+    }
+
+    .scroll-arrow:hover {
+        background-color: rgba(0, 0, 0, 0.6);
+    }
+
+    .scroll-arrow--left {
+        left: 5px;
+    }
+
+    .scroll-arrow--right {
+        right: 5px;
+    }
+
+    .content-box.is-scrollable:hover .scroll-arrow {
+        opacity: 0.7;
+        visibility: visible;
+    }
+
+    .scroll-arrow[hidden] {
+        display: block; /* Sobrescribe el 'hidden' de HTML para controlar con opacidad */
+        opacity: 0 !important;
+        visibility: hidden !important;
+        cursor: default;
+    }
+
+    .game-card__image {
+        height: 156.64px;
+    }
+
+    .game-card__title {
+        font-size: 19.36px;
+        margin: 14px 0;
+    }
+
+    .game-card__button {
+        font-size: 16px;
+        padding: 8px 30px;
+    }
+
+    .game-card__premium-button {
+        width: 40px;
+        height: 40px;
+    }
+
+    .game-card__premium-button img {
+        width: 24px;
+        height: 24px;
+    }
+
+    /* Página Próximamente */
+    .proximamente-title {
+        font-size: 5rem;
+    }
+    .main-proximamente {
+        min-height: calc(100vh - var(--header-height) - 450px); /* Altura aprox del footer en mobile */
+    }
+
+    /* Footer */
+    .footer__top {
+        /* 3 columnas: about | links | subscribe */
+        grid-template-columns: 1fr 2fr 1fr;
+        text-align: left;
+        align-items: start;
+    }
+
+    .footer__about p {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .footer__links {
+        /* 4 columnas de links */
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .footer__bottom {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .footer__copyright {
+        order: 1;
+    }
+
+    .footer__bottom-links {
+        order: 2;
+    }
+
+    .footer__social {
+        order: 3;
+    }
+}
+
+/* Estilos para escritorios grandes */
+@media (min-width: 993px) {
+    /* Footer */
+    .footer__links {
+        gap: 40px;
+    }
+}
+
+/* Estilos para escritorios extra grandes donde caben todas las cards */
+@media (min-width: 1700px) {
+    .cards-container {
+        justify-content: space-between;
+        overflow-x: visible;
+        gap: 0;
+    }
+}
