@@ -17,7 +17,7 @@ body {
     margin: 0;
     font-family: 'Fredoka', sans-serif;
     background-color: #A3D1FF;
-    overflow-x: hidden; /* Evita que se vea el menú cuando está oculto */
+    overflow-x: hidden; /* Evita que se vea el menú cuando est�� oculto */
     display: flex;
     flex-direction: column;
     min-height: 100vh;
@@ -295,7 +295,7 @@ body {
 
 /* Carrusel */
 .carousel-container {
-    height: 349px;
+    height: 450px;
     border-radius: 16.52px;
     box-shadow: -1.65px 1.65px 7.43px rgba(0, 0, 0, 0.15);
     overflow: hidden;
@@ -312,11 +312,17 @@ body {
 }
 
 .carousel-slide {
-    width: 20%; /* 100% / 5 slides */
+    width: calc(20%); /* 100% / 5 slides, restando los márgenes */
     height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.img-carrusel{
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
 }
 
 /* Colores y delays para cada slide */
@@ -325,23 +331,20 @@ body {
 .carousel-slide:nth-child(3) { background-color: #32CD32; }
 .carousel-slide:nth-child(4) { background-color: #FFD700; }
 
-.carousel-caption {
-    color: white;
-    font-size: 48px;
-    font-family: var(--logo-font);
-    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
-}
-
 /* Animación de carrusel con desplazamiento */
 @keyframes slide {
     0%      { transform: translateX(0%); }
     20%     { transform: translateX(0%); } /* Pausa en slide 1 */
+    22.5%   { transform: translateX(-10%) skewX(-10deg) scale(1.05); }
     25%     { transform: translateX(-20%); }
     45%     { transform: translateX(-20%); } /* Pausa en slide 2 */
+    47.5%   { transform: translateX(-30%) skewX(-10deg) scale(1.05); }
     50%     { transform: translateX(-40%); }
     70%     { transform: translateX(-40%); } /* Pausa en slide 3 */
+    72.5%   { transform: translateX(-50%) skewX(-10deg) scale(1.05); }
     75%     { transform: translateX(-60%); }
     95%     { transform: translateX(-60%); } /* Pausa en slide 4 */
+    97.5%   { transform: translateX(-70%) skewX(-10deg) scale(1.05); }
     100%    { transform: translateX(-80%); } /* Vuelve al inicio (clon) */
 }
 
@@ -457,8 +460,8 @@ main {
 }
 
 .game-card--premium .game-card__title {
-    margin-top: 10px; /* Restablecer margen original */
-    margin-bottom: 10px;
+    margin-top: 14px; /* Restablecer margen original */
+    margin-bottom: 14px;
 }
 
 .game-card__button {
@@ -925,4 +928,48 @@ main {
         overflow-x: visible;
         gap: 0;
     }
+}
+
+
+.game-card__button {
+  $btn-color: #5e5e5e;
+  $btn-hover-color: #dd6395;
+  position: relative;
+  background-color: $btn-color;
+  border-color: $btn-color;
+  color: #fff;
+  overflow: hidden;
+  &::before,
+  &::after {
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translateX(-100px) skewX(-15deg);
+    content: "";
+  }
+  &::before {
+    width: 60px;
+    background: rgba(255, 255, 255, 0.5);
+    filter: blur(30px);
+    opacity: 0.5;
+  }
+  &::after {
+    width: 30px;
+    left: 30px;
+    background: rgba(255, 255, 255, 0.2);
+    filter: blur(5px);
+  }
+  &:hover {
+    background-color: $btn-hover-color;
+    border-color: $btn-hover-color;
+    &::before {
+      opacity: 1;
+    }
+    &::before,
+    &::after {
+      transform: translateX(300px) skewX(-15deg);
+      transition: all 2s ease;
+    }
+  }
 }

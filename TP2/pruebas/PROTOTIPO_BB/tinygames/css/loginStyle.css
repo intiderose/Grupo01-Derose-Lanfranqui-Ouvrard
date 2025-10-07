@@ -333,3 +333,63 @@ main {
     10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
     20%, 40%, 60%, 80% { transform: translateX(5px); }
 }
+
+.loading-screen {
+    position: fixed;
+    inset: 0;
+    background: #FF6B00;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.7s ease;
+  }
+
+  .loading-screen.active {
+    opacity: 1;
+    pointer-events: all;
+    z-index: 1000;
+  }
+
+  .loading-screen.active .progress {
+    animation: loading-progress 6.85s linear forwards;
+  }
+
+  .spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid rgba(255,255,255,0.2);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .progress {
+    font-size: 1.5rem;
+    color: white;
+    font-family: 'Fredoka', sans-serif;
+    counter-reset: progress-counter var(--progress-value, 0);
+  }
+
+  .progress::after {
+    content: counter(progress-counter) '%';
+  }
+
+  @keyframes loading-progress {
+    0%      { --progress-value: 0; }
+    2.9%    { --progress-value: 20; } /* 0.2s */
+    32.1%   { --progress-value: 20; } /* +2s pause */
+    36.5%   { --progress-value: 56; } /* +0.3s */
+    51.1%   { --progress-value: 56; } /* +1s pause */
+    54.0%   { --progress-value: 78; } /* +0.2s */
+    83.2%   { --progress-value: 78; } /* +2s pause */
+    85.4%   { --progress-value: 100; }/* +0.15s */
+    100%    { --progress-value: 100; }/* +1s pause */
+  }
