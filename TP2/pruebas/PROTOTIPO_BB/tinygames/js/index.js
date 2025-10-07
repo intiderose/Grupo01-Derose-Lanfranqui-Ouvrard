@@ -133,14 +133,12 @@ class CardGenerator {
     `;
     #premiumCardHTML = `
         <div class="game-card game-card--premium">
+            <div class="game-card__premium-badge">
+                <img src="assets/logo-premium.png" alt="Premium">
+            </div>
             <img src="assets/foto-de-prueba.png" alt="Imagen del juego" class="game-card__image">
             <h3 class="game-card__title">Nombre del Juego</h3>
-            <div class="game-card__actions">
-                <a href="#" class="game-card__button">Jugar</a>
-                <a href="#" class="game-card__premium-button" aria-label="Juego Premium">
-                    <img src="assets/logo-premium.png" alt="Premium">
-                </a>
-            </div>
+            <a href="#" class="game-card__button">Jugar</a>
         </div>
     `;
 
