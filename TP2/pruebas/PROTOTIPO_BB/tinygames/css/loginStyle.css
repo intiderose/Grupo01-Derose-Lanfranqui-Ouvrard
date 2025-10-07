@@ -242,6 +242,8 @@ main {
 }
 
 .submit-btn {
+    position: relative; /* Necesario para la animación */
+    overflow: hidden; /* Para contener los elementos que se deslizan */
     margin-top: 30px; /* Ajustado */
     background: #FF6B00; /* Cambiado a naranja fijo */
     color: #fff; /* Cambiado a blanco fijo */
@@ -255,7 +257,48 @@ main {
     box-shadow: 0 2px 8px rgba(0,0,0,0.08); /* Ajustado */
     width: 380px; /* Ajustado */
     height: 67.7px; /* Ajustado */
-    transition: transform 0.2s ease-in-out; /* Añadido para hover sutil */
+    transition: all 0.35s; /* Transición general */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.submit-btn span {
+    transition: all 0.25s;
+    position: relative;
+    z-index: 2;
+}
+
+.submit-btn .block {
+    width: 30%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: -30%;
+    background-color: rgba(223, 183, 148, 0.5);
+    border-radius: 0 100px 100px 0;
+    transition: all 0.25s;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.submit-btn .block::before {
+    content: '›';
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.submit-btn:hover span {
+    transform: translateX(1.5em);
+    transition-delay: 0.2s;
+}
+
+.submit-btn:hover .block {
+    transition-delay: 0.2s;
+    left: 0;
 }
 
 .submit-btn a {
