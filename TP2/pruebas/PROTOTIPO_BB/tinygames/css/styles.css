@@ -372,7 +372,7 @@ main {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    position: relative; /* Necesario para posicionar las flechas */
+    position: relative; /* Necesario para la etiqueta premium */
 }
 
 .content-box__header {
@@ -434,6 +434,7 @@ main {
     overflow: hidden; /* Para que la imagen respete el borde redondeado */
     padding-bottom: 10px; /* Espacio para el botón */
     box-sizing: border-box;
+    position: relative; /* Necesario para la etiqueta premium */
 }
 
 .game-card--premium {
@@ -460,12 +461,6 @@ main {
     margin-bottom: 10px;
 }
 
-.game-card__actions {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
 .game-card__button {
     background-color: #FF6B00;
     color: white;
@@ -479,21 +474,24 @@ main {
     transition: transform 0.2s ease-in-out;
 }
 
-.game-card__premium-button {
+.game-card__premium-badge {
+    position: absolute;
+    top: -1px;
+    right: 10px;
+    width: 30px;
+    height: 40px;
+    background-color: #FFBA00;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 80%, 0 100%);
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
-    background-color: #FFD700D9;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    flex-shrink: 0;
-    transition: transform 0.2s ease-in-out;
+    padding-top: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
-.game-card__premium-button img {
-    width: 40px;
-    height: 40px;
+.game-card__premium-badge img {
+    width: 18px;
+    height: 18px;
 }
 
 .box-color-1 {
@@ -847,14 +845,25 @@ main {
         padding: 8px 30px;
     }
 
-    .game-card__premium-button {
-        width: 40px;
+    .game-card__premium-badge {
+        /* Nuevos estilos para la etiqueta premium */
+        position: absolute;
+        top: -1px;
+        right: 10px;
+        width: 30px;
         height: 40px;
+        background-color: #FFBA00;
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 80%, 0 100%);
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        padding-top: 5px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     }
 
-    .game-card__premium-button img {
-        width: 24px;
-        height: 24px;
+    .game-card__premium-badge img {
+        width: 18px;
+        height: 18px;
     }
 
     /* Página Próximamente */
