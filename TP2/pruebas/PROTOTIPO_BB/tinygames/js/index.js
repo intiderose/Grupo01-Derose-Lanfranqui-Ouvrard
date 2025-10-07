@@ -123,36 +123,42 @@ class ContentBoxGenerator {
  */
 class CardGenerator {
     #containers;
-    #numberOfCards;
-    #cardHTML = `
-        <div class="game-card">
-            <img src="assets/foto-de-prueba.png" alt="Imagen del juego" class="game-card__image">
-            <h3 class="game-card__title">Nombre del Juego</h3>
-            <a href="#" class="game-card__button">Jugar</a>
-        </div>
-    `;
-    #premiumCardHTML = `
-        <div class="game-card game-card--premium">
-            <div class="game-card__premium-badge">
-                <img src="assets/logo-premium.png" alt="Premium">
-            </div>
-            <img src="assets/foto-de-prueba.png" alt="Imagen del juego" class="game-card__image">
-            <h3 class="game-card__title">Nombre del Juego</h3>
-            <a href="#" class="game-card__button">Jugar</a>
-        </div>
-    `;
+    #cardData;
 
     /**
      * @param {string} containerSelector - El selector CSS para los contenedores de tarjetas.
-     * @param {number} [numberOfCards=8] - El número de tarjetas a generar en cada contenedor.
+     * @param {Array} cardData - Array de objetos con la información de los juegos.
      */
-    constructor(containerSelector, numberOfCards = 8) {
+    constructor(containerSelector, cardData = []) {
         this.#containers = document.querySelectorAll(containerSelector);
-        this.#numberOfCards = numberOfCards;
+        this.#cardData = cardData;
 
-        if (this.#containers.length > 0) {
+        if (this.#containers.length > 0 && this.#cardData.length > 0) {
             this.#generate();
         }
+    }
+
+    /**
+     * Genera el HTML para una tarjeta de juego.
+     * @private
+     * @param {object} game - El objeto del juego con título e imagen.
+     * @param {boolean} isPremium - Si la tarjeta debe ser premium.
+     * @returns {string} - El HTML de la tarjeta.
+     */
+    #createCardHTML(game, isPremium) {
+        const premiumBadge = `
+            <div class="game-card__premium-badge">
+                <img src="assets/logo-premium.png" alt="Premium">
+            </div>`;
+
+        return `
+            <div class="game-card ${isPremium ? 'game-card--premium' : ''}">
+                ${isPremium ? premiumBadge : ''}
+                <img src="${game.imagen}" alt="Imagen de ${game.titulo}" class="game-card__image">
+                <h3 class="game-card__title">${game.titulo}</h3>
+                <a href="juego.html" class="game-card__button">Jugar</a>
+            </div>
+        `;
     }
 
     /**
@@ -165,38 +171,38 @@ class CardGenerator {
             'Juegos Online': 2,
             'Juegos de 2 Jugadores': 5
         };
+        const cardsPerSection = 8;
+
+        // Clonamos y mezclamos los datos de la API para cada sección para que no se repitan en el mismo orden
+        let availableGames = [...this.#cardData];
+        const shuffleArray = (array) => {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        };
+
 
         this.#containers.forEach(container => {
+            shuffleArray(availableGames); // Mezclar juegos para esta sección
+            const sectionGames = availableGames.slice(0, cardsPerSection);
+
             const contentBox = container.closest('.content-box');
             const titleElement = contentBox.querySelector('.content-box__title');
-            // Usamos .firstChild.textContent para obtener solo el texto del título, ignorando el icono.
             const title = titleElement.firstChild.textContent.trim();
             const isAllPremiumBox = contentBox.classList.contains('content-box--premium');
 
             let cardsToInsert = '';
 
             if (isAllPremiumBox) {
-                // Si es la caja "Juegos Premium", todas las tarjetas son premium.
-                cardsToInsert = Array(this.#numberOfCards).fill(this.#premiumCardHTML).join('');
+                cardsToInsert = sectionGames.map(game => this.#createCardHTML(game, true)).join('');
             } else {
                 const numPremium = premiumCounts[title] || 0;
-                const numNormal = this.#numberOfCards - numPremium;
 
-                // Crear un array con los tipos de tarjeta
-                let cardTypes = [
-                    ...Array(numPremium).fill('premium'),
-                    ...Array(numNormal).fill('normal')
-                ];
-
-                // Mezclar el array para una distribución aleatoria
-                for (let i = cardTypes.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [cardTypes[i], cardTypes[j]] = [cardTypes[j], cardTypes[i]];
-                }
-
-                // Generar el HTML basado en el array mezclado
-                cardsToInsert = cardTypes.map(type => {
-                    return type === 'premium' ? this.#premiumCardHTML : this.#cardHTML;
+                cardsToInsert = sectionGames.map((game, index) => {
+                    // Los primeros 'numPremium' juegos de la lista mezclada serán premium
+                    const isPremium = index < numPremium;
+                    return this.#createCardHTML(game, isPremium);
                 }).join('');
             }
 
@@ -288,12 +294,38 @@ class CardScroller {
     }
 }
 
+async function consumirAPI() {
+    try{
+        const response = await fetch('https://vj.interfaces.jima.com.ar/api/v2');
+        if (!response.ok) { throw new Error(`Error en la API: ${response.status}`); }
+
+        const data = await response.json();
+
+        // Si viene un objeto con "results", por ejemplo: { results: [...] }
+        const juegos = Array.isArray(data) ? data : data.results;
+
+        // Transformamos cada juego al formato que usa CardGenerator
+        const juegosFormateados = juegos.map(juego => ({
+            imagen: juego.background_image,
+            titulo: juego.name,
+
+        }));
+
+        return juegosFormateados;
+    }
+    catch (error){
+        console.error("Error al consumir la API:", error);
+        return [];
+    }
+}
 
 // Inicializar todos los componentes cuando el DOM esté listo.
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     new TinyGamesHeader();
     new ContentBoxGenerator('.content-container');
-    new CardGenerator('.cards-container');
+
+    const cardData = await consumirAPI(); // <-- Usar await aquí
+    new CardGenerator('.cards-container', cardData);
 
     // Inicializar un scroller para cada caja de contenido
     const scrollers = [];
