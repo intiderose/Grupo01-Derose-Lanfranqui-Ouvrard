@@ -458,8 +458,7 @@ main {
 }
 .game-container-botonera button:hover {
     background: #0C3966;
-    transform: translateY(-2px) scale(1.04);
-    box-shadow: 0 4px 16px rgba(255,168,102,0.22);
+    animation: goma 0.4s ease;
 }
 
 /* Footer estilo traído de index */
@@ -1118,4 +1117,13 @@ main {
     object-fit: contain; /* Mostrar la imagen completa */
     border-radius: 20px;
     box-shadow: 0 4px 24px rgba(30,144,255,0.18);
+}
+
+@keyframes goma {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.3, 0.7); }
+  40% { transform: scale(0.7, 1.3); }
+  60% { transform: scale(1.2, 0.8); }
+  80% { transform: scale(0.9, 1.1); }
+  100% { transform: scale(1); }
 }
