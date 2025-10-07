@@ -17,7 +17,7 @@ body {
     margin: 0;
     font-family: 'Fredoka', sans-serif;
     background-color: #A3D1FF;
-    overflow-x: hidden; /* Evita que se vea el menú cuando está oculto */
+    overflow-x: hidden; /* Evita que se vea el menú cuando est�� oculto */
     display: flex;
     flex-direction: column;
     min-height: 100vh;
@@ -295,7 +295,7 @@ body {
 
 /* Carrusel */
 .carousel-container {
-    height: 349px;
+    height: 450px;
     border-radius: 16.52px;
     box-shadow: -1.65px 1.65px 7.43px rgba(0, 0, 0, 0.15);
     overflow: hidden;
@@ -319,18 +319,17 @@ body {
     align-items: center;
 }
 
+.img-carrusel{
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+}
+
 /* Colores y delays para cada slide */
 .carousel-slide:nth-child(1), .carousel-slide:nth-child(5) { background-color: #FF6347; }
 .carousel-slide:nth-child(2) { background-color: #4682B4; }
 .carousel-slide:nth-child(3) { background-color: #32CD32; }
 .carousel-slide:nth-child(4) { background-color: #FFD700; }
-
-.carousel-caption {
-    color: white;
-    font-size: 48px;
-    font-family: var(--logo-font);
-    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
-}
 
 /* Animación de carrusel con desplazamiento */
 @keyframes slide {
