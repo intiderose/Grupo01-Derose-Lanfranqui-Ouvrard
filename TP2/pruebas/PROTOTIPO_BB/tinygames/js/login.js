@@ -32,6 +32,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const emailInput = document.getElementById('login-email');
     const form = document.querySelector('.login-box form');
+    const loading = document.getElementById('loadingScreen');
+    const progress = document.getElementById('progress');
 
     if (form) {
         form.addEventListener('submit', (event) => {
@@ -57,8 +59,18 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (isFormValid) {
-                // Si el formulario es válido, redirigir
-                window.location.href = 'index.html';
+                // Si el formulario es válido, mostrar animación de carga
+                loading.classList.add('active');
+
+
+                // La animación se controla por CSS.
+                // JS solo espera a que termine para redirigir.
+                const animationDuration = 6850; // 6.85 segundos en ms
+
+                setTimeout(() => {
+                    loading.classList.remove('active');
+                    window.location.href = "index.html";
+                }, animationDuration);
             }
         });
     }
