@@ -307,19 +307,20 @@ body {
 .carousel-track {
     display: flex;
     height: 100%;
-    transition: transform 0.5s ease-in-out;
+    width: 500%; /* 100% por cada slide (4 originales + 1 clon) */
+    animation: slide 20s ease-in-out infinite;
 }
 
 .carousel-slide {
-    min-width: 100%;
+    width: 20%; /* 100% / 5 slides */
     height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-/* Colores de fondo para cada slide del carrusel */
-.carousel-slide:nth-child(1) { background-color: #FF6347; }
+/* Colores y delays para cada slide */
+.carousel-slide:nth-child(1), .carousel-slide:nth-child(5) { background-color: #FF6347; }
 .carousel-slide:nth-child(2) { background-color: #4682B4; }
 .carousel-slide:nth-child(3) { background-color: #32CD32; }
 .carousel-slide:nth-child(4) { background-color: #FFD700; }
@@ -329,6 +330,19 @@ body {
     font-size: 48px;
     font-family: var(--logo-font);
     text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+}
+
+/* Animación de carrusel con desplazamiento */
+@keyframes slide {
+    0%      { transform: translateX(0%); }
+    20%     { transform: translateX(0%); } /* Pausa en slide 1 */
+    25%     { transform: translateX(-20%); }
+    45%     { transform: translateX(-20%); } /* Pausa en slide 2 */
+    50%     { transform: translateX(-40%); }
+    70%     { transform: translateX(-40%); } /* Pausa en slide 3 */
+    75%     { transform: translateX(-60%); }
+    95%     { transform: translateX(-60%); } /* Pausa en slide 4 */
+    100%    { transform: translateX(-80%); } /* Vuelve al inicio (clon) */
 }
 
 /* Contenido principal */
