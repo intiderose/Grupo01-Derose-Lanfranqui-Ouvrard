@@ -118,6 +118,21 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Menú de compartir en la botonera
+    const btnShare = document.getElementById('btn-share');
+    const shareMenu = document.getElementById('share-menu');
+    if (btnShare && shareMenu) {
+        btnShare.addEventListener('click', function(e) {
+            e.stopPropagation();
+            shareMenu.hidden = !shareMenu.hidden;
+        });
+        document.addEventListener('click', function(e) {
+            if (!shareMenu.hidden && !shareMenu.contains(e.target) && e.target !== btnShare) {
+                shareMenu.hidden = true;
+            }
+        });
+    }
+
     // Form validation functions
     function showError(input) {
         input.classList.remove('valid');
