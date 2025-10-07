@@ -69,71 +69,7 @@ class TinyGamesHeader {
 }
 
 /**
- * Gestiona la funcionalidad del carrusel automático.
- */
-class Carousel {
-    #carousel;
-    #track;
-    #slides;
-    #slideCount;
-    #currentIndex = 0;
-    #intervalId;
-
-    /**
-     * @param {string} carouselSelector - El selector CSS para el contenedor del carrusel.
-     * @param {number} interval - El tiempo en milisegundos para cambiar de slide.
-     */
-    constructor(carouselSelector, interval = 5000) {
-        this.#carousel = document.querySelector(carouselSelector);
-        if (!this.#carousel) {
-            console.error(`Carousel con selector "${carouselSelector}" no encontrado.`);
-            return;
-        }
-
-        this.#track = this.#carousel.querySelector('.carousel-track');
-        if (!this.#track) return;
-
-        this.#slides = Array.from(this.#track.children);
-        this.#slideCount = this.#slides.length;
-
-        this.#init(interval);
-    }
-
-    /**
-     * Inicializa el carrusel, clonando el primer slide y comenzando el intervalo.
-     * @private
-     * @param {number} interval - El tiempo para el intervalo.
-     */
-    #init(interval) {
-        if (this.#slideCount > 1) {
-            const firstClone = this.#slides[0].cloneNode(true);
-            this.#track.appendChild(firstClone);
-            this.#intervalId = setInterval(() => this.#moveToNextSlide(), interval);
-        }
-    }
-
-    /**
-     * Mueve el carrusel al siguiente slide.
-     * @private
-     */
-    #moveToNextSlide() {
-        this.#currentIndex++;
-        this.#track.style.transition = 'transform 0.5s ease-in-out';
-        this.#track.style.transform = `translateX(-${this.#currentIndex * 100}%)`;
-
-        // Si hemos llegado al clon, reseteamos al principio sin animación.
-        if (this.#currentIndex === this.#slideCount) {
-            setTimeout(() => {
-                this.#track.style.transition = 'none';
-                this.#currentIndex = 0;
-                this.#track.style.transform = `translateX(0)`;
-            }, 500); // Debe coincidir con la duración de la transición CSS.
-        }
-    }
-}
-
-/**
- * Genera dinámicamente las cajas de contenido en la p��gina.
+ * Genera dinámicamente las cajas de contenido en la pgina.
  */
 class ContentBoxGenerator {
     #container;
@@ -358,7 +294,6 @@ class CardScroller {
 // Inicializar todos los componentes cuando el DOM esté listo.
 document.addEventListener('DOMContentLoaded', () => {
     new TinyGamesHeader();
-    new Carousel('.carousel-container');
     new ContentBoxGenerator('.content-container');
     new CardGenerator('.cards-container');
 
