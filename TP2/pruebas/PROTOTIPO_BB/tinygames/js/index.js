@@ -69,71 +69,7 @@ class TinyGamesHeader {
 }
 
 /**
- * Gestiona la funcionalidad del carrusel automático.
- */
-class Carousel {
-    #carousel;
-    #track;
-    #slides;
-    #slideCount;
-    #currentIndex = 0;
-    #intervalId;
-
-    /**
-     * @param {string} carouselSelector - El selector CSS para el contenedor del carrusel.
-     * @param {number} interval - El tiempo en milisegundos para cambiar de slide.
-     */
-    constructor(carouselSelector, interval = 5000) {
-        this.#carousel = document.querySelector(carouselSelector);
-        if (!this.#carousel) {
-            console.error(`Carousel con selector "${carouselSelector}" no encontrado.`);
-            return;
-        }
-
-        this.#track = this.#carousel.querySelector('.carousel-track');
-        if (!this.#track) return;
-
-        this.#slides = Array.from(this.#track.children);
-        this.#slideCount = this.#slides.length;
-
-        this.#init(interval);
-    }
-
-    /**
-     * Inicializa el carrusel, clonando el primer slide y comenzando el intervalo.
-     * @private
-     * @param {number} interval - El tiempo para el intervalo.
-     */
-    #init(interval) {
-        if (this.#slideCount > 1) {
-            const firstClone = this.#slides[0].cloneNode(true);
-            this.#track.appendChild(firstClone);
-            this.#intervalId = setInterval(() => this.#moveToNextSlide(), interval);
-        }
-    }
-
-    /**
-     * Mueve el carrusel al siguiente slide.
-     * @private
-     */
-    #moveToNextSlide() {
-        this.#currentIndex++;
-        this.#track.style.transition = 'transform 0.5s ease-in-out';
-        this.#track.style.transform = `translateX(-${this.#currentIndex * 100}%)`;
-
-        // Si hemos llegado al clon, reseteamos al principio sin animación.
-        if (this.#currentIndex === this.#slideCount) {
-            setTimeout(() => {
-                this.#track.style.transition = 'none';
-                this.#currentIndex = 0;
-                this.#track.style.transform = `translateX(0)`;
-            }, 500); // Debe coincidir con la duración de la transición CSS.
-        }
-    }
-}
-
-/**
- * Genera dinámicamente las cajas de contenido en la página.
+ * Genera dinámicamente las cajas de contenido en la pgina.
  */
 class ContentBoxGenerator {
     #container;
@@ -197,14 +133,12 @@ class CardGenerator {
     `;
     #premiumCardHTML = `
         <div class="game-card game-card--premium">
+            <div class="game-card__premium-badge">
+                <img src="assets/logo-premium.png" alt="Premium">
+            </div>
             <img src="assets/foto-de-prueba.png" alt="Imagen del juego" class="game-card__image">
             <h3 class="game-card__title">Nombre del Juego</h3>
-            <div class="game-card__actions">
-                <a href="#" class="game-card__button">Jugar</a>
-                <a href="#" class="game-card__premium-button" aria-label="Juego Premium">
-                    <img src="assets/logo-premium.png" alt="Premium">
-                </a>
-            </div>
+            <a href="#" class="game-card__button">Jugar</a>
         </div>
     `;
 
@@ -226,10 +160,46 @@ class CardGenerator {
      * @private
      */
     #generate() {
+        const premiumCounts = {
+            'Para Ti': 3,
+            'Juegos Online': 2,
+            'Juegos de 2 Jugadores': 5
+        };
+
         this.#containers.forEach(container => {
-            const isPremium = container.closest('.content-box--premium');
-            const cardTemplate = isPremium ? this.#premiumCardHTML : this.#cardHTML;
-            const cardsToInsert = Array(this.#numberOfCards).fill(cardTemplate).join('');
+            const contentBox = container.closest('.content-box');
+            const titleElement = contentBox.querySelector('.content-box__title');
+            // Usamos .firstChild.textContent para obtener solo el texto del título, ignorando el icono.
+            const title = titleElement.firstChild.textContent.trim();
+            const isAllPremiumBox = contentBox.classList.contains('content-box--premium');
+
+            let cardsToInsert = '';
+
+            if (isAllPremiumBox) {
+                // Si es la caja "Juegos Premium", todas las tarjetas son premium.
+                cardsToInsert = Array(this.#numberOfCards).fill(this.#premiumCardHTML).join('');
+            } else {
+                const numPremium = premiumCounts[title] || 0;
+                const numNormal = this.#numberOfCards - numPremium;
+
+                // Crear un array con los tipos de tarjeta
+                let cardTypes = [
+                    ...Array(numPremium).fill('premium'),
+                    ...Array(numNormal).fill('normal')
+                ];
+
+                // Mezclar el array para una distribución aleatoria
+                for (let i = cardTypes.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [cardTypes[i], cardTypes[j]] = [cardTypes[j], cardTypes[i]];
+                }
+
+                // Generar el HTML basado en el array mezclado
+                cardsToInsert = cardTypes.map(type => {
+                    return type === 'premium' ? this.#premiumCardHTML : this.#cardHTML;
+                }).join('');
+            }
+
             container.innerHTML = cardsToInsert;
         });
     }
@@ -322,7 +292,6 @@ class CardScroller {
 // Inicializar todos los componentes cuando el DOM esté listo.
 document.addEventListener('DOMContentLoaded', () => {
     new TinyGamesHeader();
-    new Carousel('.carousel-container');
     new ContentBoxGenerator('.content-container');
     new CardGenerator('.cards-container');
 

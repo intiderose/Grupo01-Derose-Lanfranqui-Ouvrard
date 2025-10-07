@@ -2,7 +2,7 @@
     --header-bg-color: #1E90FF;
     --logo-color: #FFA866;
     --logo-font: 'Luckiest Guy', cursive;
-    --header-edge-gap: 34px;
+    --header-edge-gap: 10px;
     --logo-spacing: 50px;
     --text-color-light: #FFFFFF;
     --header-height: 62px; /* Altura del header */
@@ -158,28 +158,7 @@ body {
 }
 
 /* Botón Premium en el Header */
-.header__premium-button {
-    display: none; /* Oculto en móvil por defecto */
-    background-color: #F4C542; /* Color amarillo premium */
-    color: white;
-    font-family: 'Fredoka', sans-serif;
-    font-size: 16px;
-    text-decoration: none;
-    width: 136px;
-    height: 41px;
-    border-radius: 20px;
-    box-shadow: -1.65px 1.65px 7.43px rgba(0, 0, 0, 0.15);
-    transition: transform 0.2s ease-in-out;
-    white-space: nowrap; /* Evita que el texto se parta */
-    /* Flex para centrar el contenido */
-    justify-content: center;
-    align-items: center;
-    box-sizing: border-box;
-}
-
-.header__premium-button:hover {
-    transform: scale(1.05);
-}
+/* Estilos eliminados ya que el botón se movió al menú */
 
 /* Avatar y Menú de Usuario */
 .header__avatar-container {
@@ -205,16 +184,15 @@ body {
 
 .header__menu {
     position: absolute;
-    top: var(--header-height);
-    right: var(--header-edge-gap);
+    right: 0px;
     background-color: var(--header-bg-color);
     color: var(--text-color-light);
     list-style: none;
-    padding: 20px 0;
+    padding: 0px 0;
     margin: 0;
     border-radius: 0 0 20px 20px;
     width: 275px;
-    height: 333px;
+    height: 380px;
     z-index: 10;
     box-sizing: border-box;
     opacity: 0;
@@ -251,6 +229,10 @@ body {
     flex-shrink: 0;
 }
 
+.header__menu li a img.header-menu__icon {
+    stroke: none; /* Resetea por si acaso */
+}
+
 .header__menu li a:hover {
     background-color: rgba(255, 255, 255, 0.1);
 }
@@ -262,10 +244,10 @@ body {
     top: var(--header-height);
     left: 0;
     width: 275px;
-    height: 413px;
+    height: 433px;
     background-color: var(--header-bg-color);
     color: white;
-    padding: 20px 0;
+    padding: 0 0 20px 0;
     z-index: 20;
     transform: translateX(-100%);
     transition: transform 0.3s ease-in-out;
@@ -280,8 +262,12 @@ body {
 
 .side-menu ul {
     list-style: none;
-    padding: 0;
+    padding: 20px 0 0 0;
     margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    height: 100%;
 }
 
 .side-menu li a {
@@ -321,19 +307,20 @@ body {
 .carousel-track {
     display: flex;
     height: 100%;
-    transition: transform 0.5s ease-in-out;
+    width: 500%; /* 100% por cada slide (4 originales + 1 clon) */
+    animation: slide 20s ease-in-out infinite;
 }
 
 .carousel-slide {
-    min-width: 100%;
+    width: 20%; /* 100% / 5 slides */
     height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-/* Colores de fondo para cada slide del carrusel */
-.carousel-slide:nth-child(1) { background-color: #FF6347; }
+/* Colores y delays para cada slide */
+.carousel-slide:nth-child(1), .carousel-slide:nth-child(5) { background-color: #FF6347; }
 .carousel-slide:nth-child(2) { background-color: #4682B4; }
 .carousel-slide:nth-child(3) { background-color: #32CD32; }
 .carousel-slide:nth-child(4) { background-color: #FFD700; }
@@ -343,6 +330,19 @@ body {
     font-size: 48px;
     font-family: var(--logo-font);
     text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+}
+
+/* Animación de carrusel con desplazamiento */
+@keyframes slide {
+    0%      { transform: translateX(0%); }
+    20%     { transform: translateX(0%); } /* Pausa en slide 1 */
+    25%     { transform: translateX(-20%); }
+    45%     { transform: translateX(-20%); } /* Pausa en slide 2 */
+    50%     { transform: translateX(-40%); }
+    70%     { transform: translateX(-40%); } /* Pausa en slide 3 */
+    75%     { transform: translateX(-60%); }
+    95%     { transform: translateX(-60%); } /* Pausa en slide 4 */
+    100%    { transform: translateX(-80%); } /* Vuelve al inicio (clon) */
 }
 
 /* Contenido principal */
@@ -372,7 +372,7 @@ main {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    position: relative; /* Necesario para posicionar las flechas */
+    position: relative; /* Necesario para la etiqueta premium */
 }
 
 .content-box__header {
@@ -434,6 +434,7 @@ main {
     overflow: hidden; /* Para que la imagen respete el borde redondeado */
     padding-bottom: 10px; /* Espacio para el botón */
     box-sizing: border-box;
+    position: relative; /* Necesario para la etiqueta premium */
 }
 
 .game-card--premium {
@@ -460,12 +461,6 @@ main {
     margin-bottom: 10px;
 }
 
-.game-card__actions {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
 .game-card__button {
     background-color: #FF6B00;
     color: white;
@@ -479,22 +474,24 @@ main {
     transition: transform 0.2s ease-in-out;
 }
 
-.game-card__premium-button {
+.game-card__premium-badge {
+    position: absolute;
+    top: -1px;
+    right: 10px;
+    width: 30px;
+    height: 40px;
+    background-color: #FFBA00;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 80%, 0 100%);
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
-    background-color: #F4C542; /* Color amarillo premium */
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    box-shadow: -1.65px 1.65px 7.43px rgba(0, 0, 0, 0.15);
-    flex-shrink: 0;
-    transition: transform 0.2s ease-in-out;
+    padding-top: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
-.game-card__premium-button img {
-    width: 20px;
-    height: 20px;
+.game-card__premium-badge img {
+    width: 18px;
+    height: 18px;
 }
 
 .box-color-1 {
@@ -744,10 +741,6 @@ main {
         flex-grow: 0;
     }
 
-    .header__premium-button {
-        display: flex; /* Muestra el botón en desktop y permite centrado flex */
-    }
-
     /* Contenido Principal */
     main {
         padding: 20px 78px;
@@ -852,14 +845,25 @@ main {
         padding: 8px 30px;
     }
 
-    .game-card__premium-button {
-        width: 40px;
+    .game-card__premium-badge {
+        /* Nuevos estilos para la etiqueta premium */
+        position: absolute;
+        top: -1px;
+        right: 10px;
+        width: 30px;
         height: 40px;
+        background-color: #FFBA00;
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 80%, 0 100%);
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        padding-top: 5px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     }
 
-    .game-card__premium-button img {
-        width: 24px;
-        height: 24px;
+    .game-card__premium-badge img {
+        width: 18px;
+        height: 18px;
     }
 
     /* Página Próximamente */

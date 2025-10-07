@@ -33,16 +33,28 @@
                     <span>Iniciar sesión con Facebook</span>
                 </button>
             </div>
-            <div class="login-divider"></div>
+            <div class="login-divider"><span>O</span></div>
             <div class="form-group">
-                <label for="login-user">Nickname/Correo electrónico</label>
-                <input id="login-user" name="login-user" type="text" required autocomplete="username">
+                <label for="login-email">Correo electrónico</label>
+                <input id="login-email" name="login-email" type="email" required autocomplete="email">
             </div>
             <div class="form-group">
                 <label for="login-pass">Contraseña</label>
-                <input id="login-pass" name="login-pass" type="password" required autocomplete="current-password" >
+                <div class="password-input-wrapper">
+                    <input id="login-pass" name="login-pass" type="password" required autocomplete="current-password" >
+                    <button type="button" class="toggle-password" aria-label="Mostrar contraseña">
+                        <svg class="eye-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path class="eye-open" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <circle class="eye-open" cx="12" cy="12" r="3" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <line class="eye-closed" x1="1" y1="1" x2="23" y2="23" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
             </div>
-            <button type="submit" class="submit-btn"><a href="index.html">¡VAMOS!</a></button>
+            <button type="submit" class="submit-btn">
+                <div class="block"></div>
+                <span>¡VAMOS!</span>
+            </button>
         </form>
     </div>
 </main>
@@ -119,6 +131,6 @@
         </div>
     </div>
 </footer>
-<script src="js/index.js"></script>
+<script src="js/login.js"></script>
 </body>
 </html>

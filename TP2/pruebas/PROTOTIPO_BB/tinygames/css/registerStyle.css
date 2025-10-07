@@ -13,6 +13,10 @@ body {
     margin: 0;
     font-family: 'Fredoka', sans-serif;
     background-color: #A3D1FF;
+    background-image: url("../assets/Fondo-Logotipo-Completo.png");
+    background-size: 130%;
+    background-repeat: no-repeat;
+    background-position: center;
     overflow-x: hidden; /* Evita que se vea el menú cuando est oculto */
     display: flex;
     flex-direction: column;
@@ -331,6 +335,7 @@ form {
     font-size: 48.94px;
     text-align: center;
     margin-top: 0; /* Se ajusta el margen */
+    margin-bottom: 10px;
     color: #FF6B00;
 }
 
@@ -339,70 +344,73 @@ form {
     flex-direction: column;
     align-items: center;
     gap: 9px;
-    margin-top: 31px;
+    margin-top: 20px;
+    width: 380px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-.register-btn {
-    width: 380px;
+.social-btn {
     height: 52px;
-    background: #fff;
-    border: none;
     border-radius: 20px;
-    font-family: 'Roboto', sans-serif;
-    font-size: 14.11px;
-    font-weight: 300;
-    color: #333;
+    border: none;
+    background-color: #fff;
     cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    transition: box-shadow 0.2s;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 15px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14.11px;
+    font-weight: 300;
+    color: #333;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    position: relative;
     padding-left: 0;
+    width: 100%;
 }
 
-.btn-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 19.5px;
-}
-
-.register-btn span,
-.register-btn svg {
-    vertical-align: middle;
-}
-
-.register-btn > .btn-icon > svg {
-    display: block;
-    height: 19.5px;
-    width: 20px;
-}
-
-.register-btn:hover {
+.social-btn:hover {
     box-shadow: 0 4px 16px rgba(0,0,0,0.15);
 }
 
-.google-btn {
-    /* Puedes agregar un icono o color especial si lo deseas */
-}
-
-.facebook-btn {
-    padding-left: 19px;
+.social-btn__icon {
+    position: static;
+    transform: none;
+    display: flex;
+    align-items: center;
 }
 
 .register-divider {
+    display: flex;
+    align-items: center;
     width: 380px;
-    height: 2px;
-    background: #fff;
-    border: none;
-    margin: 44px auto 0 auto;
-    display: block;
+    color: #fff;
+    margin: 31px auto;
+}
+
+
+.register-divider::before,
+.register-divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #fff;
+}
+
+.register-divider span {
+    display: inline-block;
+    padding: 2px 18px;
+    border: 1px solid #fff;
+    border-radius: 50px;
+    margin: 0 1em;
+    background-color: #77BBFF;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
 }
 
 .register-form {
-    margin-top: 21px;
+    margin-top: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -697,6 +705,8 @@ form {
 
 /*BOTON DE REGISTRO DEL FORMULARIO CON SU ANIMATION*/
 .register-submit-btn {
+    position: relative;
+    overflow: hidden;
     width: 380px;
     height: 67.7px;
     background: #FF6B00; /* Cambiado a naranja fijo */
@@ -709,12 +719,55 @@ form {
     cursor: pointer;
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     margin-top: 30px;
-    transition: transform 0.2s ease-in-out; /* Añadido para hover sutil */
+    transition: all 0.35s; /* Añadido para hover sutil */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+}
+
+.register-submit-btn span {
+    transition: all 0.25s;
+    position: relative;
+    z-index: 2;
+}
+
+.register-submit-btn .block {
+    width: 30%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: -30%;
+    background-color: rgba(223, 183, 148, 0.5);
+    border-radius: 0 100px 100px 0;
+    transition: all 0.25s;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.register-submit-btn .block::before {
+    content: '›';
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff;
 }
 
 .register-submit-btn:hover {
     transform: scale(1.02); /* Efecto de escala en hover */
 }
+
+.register-submit-btn:hover span {
+    transform: translateX(1.5em);
+    transition-delay: 0.2s;
+}
+
+.register-submit-btn:hover .block {
+    transition-delay: 0.2s;
+    left: 0;
+}
+
 @keyframes shake {
     0%, 100% { transform: translateX(0); }
     10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
