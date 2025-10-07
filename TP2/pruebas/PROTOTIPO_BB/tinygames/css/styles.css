@@ -930,3 +930,47 @@ main {
         gap: 0;
     }
 }
+
+
+.game-card__button {
+  $btn-color: #5e5e5e;
+  $btn-hover-color: #dd6395;
+  position: relative;
+  background-color: $btn-color;
+  border-color: $btn-color;
+  color: #fff;
+  overflow: hidden;
+  &::before,
+  &::after {
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translateX(-100px) skewX(-15deg);
+    content: "";
+  }
+  &::before {
+    width: 60px;
+    background: rgba(255, 255, 255, 0.5);
+    filter: blur(30px);
+    opacity: 0.5;
+  }
+  &::after {
+    width: 30px;
+    left: 30px;
+    background: rgba(255, 255, 255, 0.2);
+    filter: blur(5px);
+  }
+  &:hover {
+    background-color: $btn-hover-color;
+    border-color: $btn-hover-color;
+    &::before {
+      opacity: 1;
+    }
+    &::before,
+    &::after {
+      transform: translateX(300px) skewX(-15deg);
+      transition: all 2s ease;
+    }
+  }
+}
