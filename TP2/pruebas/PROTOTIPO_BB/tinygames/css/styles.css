@@ -461,8 +461,8 @@ main {
 }
 
 .game-card--premium .game-card__title {
-    margin-top: 10px; /* Restablecer margen original */
-    margin-bottom: 10px;
+    margin-top: 14px; /* Restablecer margen original */
+    margin-bottom: 14px;
 }
 
 .game-card__button {
