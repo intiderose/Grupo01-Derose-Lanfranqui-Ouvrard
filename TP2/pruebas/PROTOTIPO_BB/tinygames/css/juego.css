@@ -26,15 +26,17 @@ body {
     border-radius: 10px;
 }
 .breadcrumbs p{
-    padding-left: 40px;
+    color: #0C3966;
+    opacity: 0.7;
+    padding-left: 60px;
     font-family: 'Fredoka', sans-serif;
     font-weight: bold;
     font-size: 1.1rem;
-    margin: 0;
+    margin-top: 50px;
     letter-spacing: 0.5px;
 }
 .breadcrumbs p a{
-    color: #000; /* Negro para "Home" */
+    color: #0C3966;
     text-decoration: none;
     transition: color 0.2s;
 }

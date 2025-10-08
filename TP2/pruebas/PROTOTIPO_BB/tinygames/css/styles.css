@@ -317,12 +317,74 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative; /* Necesario para el overlay */
+}
+
+.carousel-slide__link {
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
 }
 
 .img-carrusel{
     width: 100%;
     height: 100%;
-    object-fit: fill;
+    object-fit: fill; /* Cambiado a cover para mejor ajuste */
+    transition: filter 0.3s;
+    border-radius: 10px;
+}
+
+/* Overlay y botón para el carrusel (copiado de juego.css) */
+.game-image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(30, 30, 30, 0.38);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+}
+
+.btn-jugar {
+    width: 310px;
+    height: 110px;
+    background: #FF6B00;
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    font-size: 2.2rem;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(255,168,102,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, transform 0.15s;
+    outline: none;
+    z-index: 2;
+}
+
+.btn-jugar:hover {
+    background: #FF6B00;
+    transform: scale(1.04);
+}
+
+/* Efecto hover para el carrusel */
+.carousel-slide__link:hover .img-carrusel {
+    filter: brightness(0.55);
+}
+
+.carousel-slide__link:hover .game-image-overlay {
+    opacity: 1;
+    pointer-events: auto;
 }
 
 /* Colores y delays para cada slide */
