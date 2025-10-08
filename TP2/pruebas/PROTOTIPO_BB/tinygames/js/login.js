@@ -33,7 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const emailInput = document.getElementById('login-email');
     const form = document.querySelector('.login-box form');
     const loading = document.getElementById('loadingScreen');
-    const progress = document.getElementById('progress');
 
     if (form) {
         form.addEventListener('submit', (event) => {

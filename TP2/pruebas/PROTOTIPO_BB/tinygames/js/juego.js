@@ -72,6 +72,26 @@ class TinyGamesHeader {
 document.addEventListener('DOMContentLoaded', () => {
     new TinyGamesHeader();
 
+    // Scroll suave para botones de la página de juego
+    const instructionsButton = document.getElementById('btn-instructions');
+    const howToPlaySection = document.getElementById('howToPlay');
+    const commentButton = document.getElementById('btn-comment');
+    const commentsSection = document.getElementById('comments-section');
+
+    if (instructionsButton && howToPlaySection) {
+        instructionsButton.addEventListener('click', (event) => {
+            event.preventDefault();
+            howToPlaySection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+    }
+
+    if (commentButton && commentsSection) {
+        commentButton.addEventListener('click', (event) => {
+            event.preventDefault();
+            commentsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+    }
+
     // Toggle password visibility
     const togglePasswordBtn = document.querySelector('.toggle-password');
     const passwordInput = document.getElementById('contraseña');

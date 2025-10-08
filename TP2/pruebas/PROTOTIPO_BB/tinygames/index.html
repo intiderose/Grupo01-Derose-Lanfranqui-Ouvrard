@@ -35,10 +35,10 @@
                 <img src="assets/Avatar.png" alt="Avatar de usuario">
             </button>
             <ul class="header__menu" id="user-menu" hidden>
+                <li><a href="#"><img src="assets/logo-premium.png" alt="Premium" class="header-menu__icon"><span>Premium</span></a></li>
                 <li><a href="#"><svg class="header-menu__icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg><span>Mi perfil</span></a></li>
                 <li><a href="#"><svg class="header-menu__icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M12 11l-4 2 1.5-4.5L6 6l4.5 1 2-4 1 4.5L18 8l-3.5 2.5L16 13z"></path></svg><span>Mis logros</span></a></li>
                 <li><a href="#"><svg class="header-menu__icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg><span>Mis amigos</span></a></li>
-                <li><a href="#"><img src="assets/logo-premium.png" alt="Premium" class="header-menu__icon"><span>Premium</span></a></li>
                 <li><a href="#"><svg class="header-menu__icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg><span>Soporte</span></a></li>
                 <li><a href="login.html"><svg class="header-menu__icon" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg><span>Cerrar Sesion</span></a></li>
             </ul>
@@ -62,20 +62,45 @@
     <div class="carousel-container">
         <div class="carousel-track">
             <div class="carousel-slide">
-                <a class="img-carrusel" href="juego.html"><img class="img-carrusel" src="assets/solitaire-peg.png" alt="homero"></a>
+                <a href="juego.html" class="carousel-slide__link">
+                    <img class="img-carrusel" src="assets/solitaire-peg.png" alt="homero">
+                    <div class="game-image-overlay">
+                        <button class="btn-jugar">Jugar</button>
+                    </div>
+                </a>
             </div>
             <div class="carousel-slide">
-                <img class="img-carrusel" src="assets/MotoX3M.jpg" alt="MotoX3M">
+                <a href="proximamente.html" class="carousel-slide__link">
+                    <img class="img-carrusel" src="assets/MotoX3M.jpg" alt="MotoX3M">
+                    <div class="game-image-overlay">
+                        <button class="btn-jugar">Jugar</button>
+                    </div>
+                </a>
             </div>
             <div class="carousel-slide">
-                <img class="img-carrusel" src="assets/fyg.jpeg" alt="fyg">
+                <a href="proximamente.html" class="carousel-slide__link">
+                    <img class="img-carrusel" src="assets/fyg.jpeg" alt="fyg">
+                    <div class="game-image-overlay">
+                        <button class="btn-jugar">Jugar</button>
+                    </div>
+                </a>
             </div>
             <div class="carousel-slide">
-                <img class="img-carrusel" src="assets/pamplona.jpg" alt="pamplona">
+                <a href="proximamente.html" class="carousel-slide__link">
+                    <img class="img-carrusel" src="assets/pamplona.jpg" alt="pamplona">
+                    <div class="game-image-overlay">
+                        <button class="btn-jugar">Jugar</button>
+                    </div>
+                </a>
             </div>
             <!-- Clon del primer slide para el bucle de animación CSS -->
             <div class="carousel-slide">
-                <img class="img-carrusel" src="assets/solitaire-peg.png" alt="homero">
+                <a href="juego.html" class="carousel-slide__link">
+                    <img class="img-carrusel" src="assets/solitaire-peg.png" alt="homero">
+                    <div class="game-image-overlay">
+                        <button class="btn-jugar">Jugar</button>
+                    </div>
+                </a>
             </div>
         </div>
     </div>
@@ -150,7 +175,6 @@
                 <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg></a>
                 <a href="#" aria-label="Twitter"><svg viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg></a>
                 <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>
-                <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2A29 29 0 0 0 23 11.75a29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg></a>
             </div>
         </div>
     </div>

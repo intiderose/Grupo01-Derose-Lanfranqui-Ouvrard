@@ -139,6 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Example validation listeners (you can customize these)
     const dateInput = document.getElementById('fecha-nacimiento');
     const emailInput = document.getElementById('correo');
+    const loading = document.getElementById('loadingScreen');
 
     if (dateInput) {
         dateInput.addEventListener('blur', () => {
@@ -289,7 +290,15 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (isFormValid) {
-                window.location.href = 'index.html';
+                loading.classList.add('active');
+                 // La animación se controla por CSS.
+                 // JS solo espera a que termine para redirigir.
+                 const animationDuration = 6850; // 6.85 segundos en ms
+
+                 setTimeout(() => {
+                     loading.classList.remove('active');
+                     window.location.href = "index.html";
+                 }, animationDuration);
             }
         });
     }
