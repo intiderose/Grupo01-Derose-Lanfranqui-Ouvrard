@@ -72,8 +72,7 @@
                 </div>
             </div>
             <div class="game-container-botonera">
-                <button>Mira las instrucciones</button>
-                <button>Deja un Comentario</button>
+                <button id="btn-instructions">Mira las instrucciones</button>
                 <div class="share-menu-wrapper">
                     <button id="btn-share" type="button">Comparte este juego</button>
                     <div id="share-menu" class="share-menu" hidden>
@@ -88,6 +87,7 @@
                         </a>
                     </div>
                 </div>
+                <button id="btn-comment">Deja un Comentario</button>
             </div>
         </div>
     </main>
@@ -105,7 +105,7 @@
         <!-- Aquí puedes agregar más contenido de galería si lo necesitas -->
     </div>
 
-    <div class="controls-block">
+    <div class="controls-block" id="howToPlay">
         <div class="controls-block__header">
             <span class="controls-block__title">Controles</span>
             <div class="controls-block__line"></div>
@@ -138,7 +138,7 @@
         <!-- Aquí puedes agregar más contenido si lo necesitas -->
     </div>
 
-    <div class="comments-block">
+    <div class="comments-block" id="comments-section">
         <div class="comments-block__header">
             <img src="assets/Avatar.png" alt="Avatar usuario" class="comments-block__avatar">
             <input type="text" class="comments-block__input" placeholder="Añade un comentario">
@@ -281,5 +281,27 @@
     </footer>
 
     <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const instructionsButton = document.getElementById('btn-instructions');
+            const howToPlaySection = document.getElementById('howToPlay');
+            const commentButton = document.getElementById('btn-comment');
+            const commentsSection = document.getElementById('comments-section');
+
+            if (instructionsButton && howToPlaySection) {
+                instructionsButton.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    howToPlaySection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
+            }
+
+            if (commentButton && commentsSection) {
+                commentButton.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    commentsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
+            }
+        });
+    </script>
 </body>
 </html>

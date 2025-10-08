@@ -455,8 +455,13 @@ main {
     font-weight: 400; /* Regular */
     font-size: 16px;
     color: #000000;
-    margin: 10px 0;
+    margin: 10px 5px; /* Añadido margen horizontal para que el texto no toque los bordes */
     text-align: center;
+    /* Propiedades para truncar el texto */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: calc(100% - 10px); /* Asegura que el ancho se ajuste al margen */
 }
 
 .game-card--premium .game-card__title {
@@ -483,7 +488,7 @@ main {
     right: 10px;
     width: 30px;
     height: 40px;
-    background-color: #FFBA00;
+    background-color: #FF6B00;
     clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 80%, 0 100%);
     display: flex;
     align-items: flex-start;
@@ -848,21 +853,7 @@ main {
         padding: 8px 30px;
     }
 
-    .game-card__premium-badge {
-        /* Nuevos estilos para la etiqueta premium */
-        position: absolute;
-        top: -1px;
-        right: 10px;
-        width: 30px;
-        height: 40px;
-        background-color: #FFBA00;
-        clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 80%, 0 100%);
-        display: flex;
-        align-items: flex-start;
-        justify-content: center;
-        padding-top: 5px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    }
+
 
     .game-card__premium-badge img {
         width: 18px;
