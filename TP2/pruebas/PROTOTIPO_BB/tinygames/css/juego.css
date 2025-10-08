@@ -67,7 +67,6 @@ main {
     margin-top: 0; /* Ahora está pegado al borde superior del main */
     padding-bottom: 24px;
     padding-top: 12px;
-    overflow: hidden;
 }
 .game-container__image{
     border: none; /* Eliminado el borde blanco */
@@ -765,18 +764,32 @@ main {
 /* Menú flotante de compartir superpuesto al costado del botón dentro de la botonera */
 .share-menu {
     position: absolute;
-    top: 0;
-    left: 110%;
-    border-radius: 16px;
+    top: calc(100% + 15px); /* Posiciona el menú debajo del botón con un espacio de 15px */
+    left: 50%;
+    transform: translateX(-50%);
+    background: #0C3966;
+    border-radius: 28px; /* Bordes más redondeados para efecto nube */
     box-shadow: 0 8px 32px rgba(30,144,255,0.22);
-    padding: 0px 0px;
+    padding: 10px 20px;
     display: flex;
-    gap: 24px;
+    gap: 16px;
     z-index: 999;
-    min-width: 140px;
+    min-width: auto;
     justify-content: center;
     align-items: center;
 }
+
+.share-menu::after {
+    content: '';
+    position: absolute;
+    bottom: 100%; /* Se posiciona en la parte superior del menú */
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 8px;
+    border-style: solid;
+    border-color: transparent transparent #0C3966 transparent; /* Crea un triángulo apuntando hacia arriba */
+}
+
 
 .share-menu[hidden] {
     display: none !important;
@@ -789,7 +802,7 @@ main {
     width: 44px;
     height: 44px;
     border-radius: 50%;
-    background: #A3D1FF;
+    background: #0C3966;
     transition: background 0.2s;
     text-decoration: none;
 }
