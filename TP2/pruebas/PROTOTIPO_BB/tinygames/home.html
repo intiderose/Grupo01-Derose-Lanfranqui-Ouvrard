@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TinyGames - Home</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka&family=Luckiest+Guy&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<header class="header">
+    <div class="header__left">
+        <button class="header__hamburger" aria-label="Abrir menú de navegación" aria-expanded="false" aria-controls="side-menu">
+            <span class="hamburger-icon"></span>
+        </button>
+        <a href="#" class="header__logo" aria-label="TinyGames - Página de inicio">TINYGAMES</a>
+    </div>
+
+    <div class="header__center">
+        <form class="header__search" role="search">
+            <label for="search-input" class="sr-only">Buscar juegos</label>
+            <button type="submit" aria-label="Buscar">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            </button>
+            <input type="search" id="search-input" placeholder="Buscar">
+        </form>
+    </div>
+
+    <div class="header__right">
+        <div class="header__avatar-container">
+            <button class="header__avatar" aria-label="Abrir menú de usuario" aria-expanded="false" aria-controls="user-menu">
+                <img src="assets/Avatar.png" alt="Avatar de usuario">
+            </button>
+            <ul class="header__menu" id="user-menu" hidden>
+                <li><a href="#"><img src="assets/logo-premium.png" alt="Premium" class="header-menu__icon"><span>Premium</span></a></li>
+                <li><a href="#"><svg class="header-menu__icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg><span>Mi perfil</span></a></li>
+                <li><a href="#"><svg class="header-menu__icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M12 11l-4 2 1.5-4.5L6 6l4.5 1 2-4 1 4.5L18 8l-3.5 2.5L16 13z"></path></svg><span>Mis logros</span></a></li>
+                <li><a href="#"><svg class="header-menu__icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg><span>Mis amigos</span></a></li>
+                <li><a href="#"><svg class="header-menu__icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg><span>Soporte</span></a></li>
+                <li><a href="login.html"><svg class="header-menu__icon" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg><span>Cerrar Sesion</span></a></li>
+            </ul>
+        </div>
+    </div>
+</header>
+
+<nav class="side-menu" id="side-menu" hidden>
+    <ul>
+        <li><a href="#"><img src="assets/Car-Icon.png" class="side-menu__icon" alt="Icono de Carreras"><span>Carreras</span></a></li>
+        <li><a href="#"><img src="assets/Aventure-Icon.png" class="side-menu__icon" alt="Icono de Aventuras"><span>Aventuras</span></a></li>
+        <li><a href="#"><img src="assets/mdi_gun.png" class="side-menu__icon" alt="Icono de Disparos"><span>Disparos</span></a></li>
+        <li><a href="#"><img src="assets/simple-icons_roll20.png" class="side-menu__icon" alt="Icono de Rol"><span>Rol</span></a></li>
+        <li><a href="#"><img src="assets/Arcade-Icon.png" class="side-menu__icon" alt="Icono de Arcade"><span>Arcade</span></a></li>
+        <li><a href="#"><img src="assets/Combat-Icon.png" class="side-menu__icon" alt="Icono de Combate"><span>Combate</span></a></li>
+        <li><a href="#"><img src="assets/Frame.png" class="side-menu__icon" alt="Icono de Cartas"><span>Cartas</span></a></li>
+    </ul>
+</nav>
+
+<main>
+    <div class="carousel-container">
+        <div class="carousel-track">
+            <div class="carousel-slide">
+                <a href="juego.html" class="carousel-slide__link">
+                    <img class="img-carrusel" src="assets/solitaire-peg.png" alt="homero">
+                    <div class="game-image-overlay">
+                        <button class="btn-jugar">Jugar</button>
+                    </div>
+                </a>
+            </div>
+            <div class="carousel-slide">
+                <a href="proximamente.html" class="carousel-slide__link">
+                    <img class="img-carrusel" src="assets/MotoX3M.jpg" alt="MotoX3M">
+                    <div class="game-image-overlay">
+                        <button class="btn-jugar">Jugar</button>
+                    </div>
+                </a>
+            </div>
+            <div class="carousel-slide">
+                <a href="proximamente.html" class="carousel-slide__link">
+                    <img class="img-carrusel" src="assets/fyg.jpeg" alt="fyg">
+                    <div class="game-image-overlay">
+                        <button class="btn-jugar">Jugar</button>
+                    </div>
+                </a>
+            </div>
+            <div class="carousel-slide">
+                <a href="proximamente.html" class="carousel-slide__link">
+                    <img class="img-carrusel" src="assets/pamplona.jpg" alt="pamplona">
+                    <div class="game-image-overlay">
+                        <button class="btn-jugar">Jugar</button>
+                    </div>
+                </a>
+            </div>
+            <!-- Clon del primer slide para el bucle de animación CSS -->
+            <div class="carousel-slide">
+                <a href="juego.html" class="carousel-slide__link">
+                    <img class="img-carrusel" src="assets/solitaire-peg.png" alt="homero">
+                    <div class="game-image-overlay">
+                        <button class="btn-jugar">Jugar</button>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="content-container">
+    </div>
+</main>
+
+<footer class="footer">
+    <div class="footer__container">
+        <div class="footer__top">
+            <div class="footer__about">
+                <a href="#" class="footer__logo" aria-label="TinyGames - Página de inicio">TINYGAMES</a>
+                <p>La plataforma definitiva para descubrir y jugar miles de mini-juegos gratis online. ¡Diversión para todas las edades!</p>
+            </div>
+            <div class="footer__links">
+                <div class="footer__links-column">
+                    <h4>Juegos</h4>
+                    <ul>
+                        <li><a href="#">Populares</a></li>
+                        <li><a href="#">Nuevos</a></li>
+                        <li><a href="#">Acción</a></li>
+                        <li><a href="#">Aventura</a></li>
+                        <li><a href="#">Carreras</a></li>
+                        <li><a href="#">Puzzle</a></li>
+                    </ul>
+                </div>
+                <div class="footer__links-column">
+                    <h4>Plataformas</h4>
+                    <ul>
+                        <li><a href="#">PC</a></li>
+                        <li><a href="#">Consola</a></li>
+                        <li><a href="#">Móvil</a></li>
+                        <li><a href="#">VR</a></li>
+                    </ul>
+                </div>
+                <div class="footer__links-column">
+                    <h4>Comunidad</h4>
+                    <ul>
+                        <li><a href="#">Foros</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Eventos</a></li>
+                        <li><a href="#">Creadores</a></li>
+                    </ul>
+                </div>
+                <div class="footer__links-column">
+                    <h4>Soporte</h4>
+                    <ul>
+                        <li><a href="#">Ayuda</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Contacto</a></li>
+                        <li><a href="#">Estado del servicio</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer__subscribe">
+                <h4>¡No te pierdas de nada!</h4>
+                <p>Suscribite a nuestro boletín para recibir las últimas noticias y ofertas.</p>
+                <form class="footer__subscribe-form">
+                    <input type="email" placeholder="tuemail@ejemplo.com" aria-label="Tu correo electrónico">
+                    <button type="submit">Suscribirse</button>
+                </form>
+            </div>
+        </div>
+        <div class="footer__bottom">
+            <p class="footer__copyright">&copy; 2024 TinyGames. Todos los derechos reservados.</p>
+            <div class="footer__bottom-links">
+                <a href="#">Términos de Servicio</a>
+                <a href="#">Política de Privacidad</a>
+                <a href="#">Política de Cookies</a>
+            </div>
+            <div class="footer__social">
+                <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg></a>
+                <a href="#" aria-label="Twitter"><svg viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg></a>
+                <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script src="js/index.js"></script>
+</body>
+</html>

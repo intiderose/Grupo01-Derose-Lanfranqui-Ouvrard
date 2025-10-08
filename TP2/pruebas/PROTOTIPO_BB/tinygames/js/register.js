@@ -297,7 +297,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                  setTimeout(() => {
                      loading.classList.remove('active');
-                     window.location.href = "index.html";
+                     window.location.href = "home.html";
                  }, animationDuration);
             }
         });

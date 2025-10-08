@@ -156,7 +156,7 @@ class CardGenerator {
                 ${isPremium ? premiumBadge : ''}
                 <img src="${game.imagen}" alt="Imagen de ${game.titulo}" class="game-card__image">
                 <h3 class="game-card__title">${game.titulo}</h3>
-                <a href="juego.html" class="game-card__button">Jugar</a>
+                <a href="proximamente.html" class="game-card__button">Jugar</a>
             </div>
         `;
     }
