@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Blocka</title>
+    <link rel="stylesheet" href="css/blocka.css">
+</head>
+<body>
+<div class="app">
+    <header>
+        <h1>Rompecabezas Blocka - TinyGames</h1>
+        <div class="small">Arrastra piezas para resolver. Usa filtros o preset RGBA.</div>
+    </header>
+
+    <div class="controls">
+        <select id="imageSelect" aria-label="Seleccionar imagen">
+            <!-- Usar imágenes locales en assets/ -->
+            <option value="assets/MotoX3M.jpg">MotoX3M</option>
+            <option value="assets/pamplona.jpg" selected>Pamplona</option>
+            <option value="assets/solitaire-peg.png">Solitaire Peg</option>
+        </select>
+
+        <label style="display:inline-flex;align-items:center;gap:8px">
+            Piezas:
+            <select id="piecesCount">
+                <option value="3">3 x 3</option>
+                <option value="4" selected>4 x 4</option>
+                <option value="5">5 x 5</option>
+                <option value="6">6 x 6</option>
+            </select>
+        </label>
+
+        <button id="shuffleBtn">Mezclar</button>
+        <button id="solveBtn">Resolver</button>
+        <button id="exportBtn">Exportar imagen</button>
+    </div>
+
+    <div class="layout">
+        <div class="left">
+            <canvas id="puzzleCanvas" width="720" height="480"></canvas>
+            <div id="status" class="small" style="margin-top:8px">Estado: esperando imagen...</div>
+            <div id="warn" class="warning" style="display:none"></div>
+        </div>
+
+        <div class="right">
+            <div class="panel">
+                <div class="section">
+                    <label>Presets de filtro</label>
+                    <div class="preset">
+                        <button data-preset="none">Ninguno</button>
+                        <button data-preset="grayscale">Blanco y negro</button>
+                        <button data-preset="sepia">Sepia</button>
+                        <button data-preset="invert">Invertir</button>
+                        <button data-preset="reddish">Rojizo</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="js/blocka.js"></script>
+</body>
+</html>
