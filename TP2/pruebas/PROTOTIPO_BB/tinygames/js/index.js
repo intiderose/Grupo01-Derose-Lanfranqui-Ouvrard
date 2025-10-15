@@ -23,14 +23,38 @@ class TinyGamesHeader {
      */
     #init() {
         if (this.#hamburgerButton && this.#sideMenu) {
-            this.#hamburgerButton.addEventListener('click', () => this.#toggleMenu(this.#hamburgerButton, this.#sideMenu, true));
+            this.#hamburgerButton.addEventListener('click', (e) => {
+                e.stopPropagation(); // Evita que el clic se propague al documento
+                this.#toggleMenu(this.#hamburgerButton, this.#sideMenu);
+                // Si el menú de usuario está abierto, ciérralo
+                if (this.#userMenu.getAttribute('aria-hidden') === 'false') {
+                    this.#closeMenu(this.#avatarButton, this.#userMenu);
+                }
+            });
         }
 
         if (this.#avatarButton && this.#userMenu) {
-            this.#avatarButton.addEventListener('click', () => this.#toggleMenu(this.#avatarButton, this.#userMenu));
+            this.#avatarButton.addEventListener('click', (e) => {
+                e.stopPropagation(); // Evita que el clic se propague al documento
+                this.#toggleMenu(this.#avatarButton, this.#userMenu);
+                // Si el menú lateral está abierto, ciérralo
+                if (this.#sideMenu.getAttribute('aria-hidden') === 'false') {
+                    this.#closeMenu(this.#hamburgerButton, this.#sideMenu);
+                }
+            });
         }
 
-        document.addEventListener('click', (event) => this.#closeMenusOnClickOutside(event));
+        // Cierra los menús si se hace clic fuera de ellos
+        document.addEventListener('click', (e) => {
+            // Cierra el menú lateral si está abierto y el clic fue fuera
+            if (this.#sideMenu && this.#sideMenu.getAttribute('aria-hidden') === 'false' && !this.#sideMenu.contains(e.target)) {
+                this.#closeMenu(this.#hamburgerButton, this.#sideMenu);
+            }
+            // Cierra el menú de usuario si está abierto y el clic fue fuera
+            if (this.#userMenu && this.#userMenu.getAttribute('aria-hidden') === 'false' && !this.#userMenu.contains(e.target)) {
+                this.#closeMenu(this.#avatarButton, this.#userMenu);
+            }
+        });
     }
 
     /**
@@ -53,18 +77,14 @@ class TinyGamesHeader {
     }
 
     /**
-     * Cierra los menús si el clic ocurre fuera de ellos.
+     * Cierra un menú.
      * @private
-     * @param {MouseEvent} event - El objeto de evento de clic.
+     * @param {HTMLElement} button - El botón que controla el menú.
+     * @param {HTMLElement} menu - El menú a cerrar.
      */
-    #closeMenusOnClickOutside(event) {
-        if (this.#userMenu && !this.#userMenu.hidden && !this.#avatarButton.contains(event.target) && !this.#userMenu.contains(event.target)) {
-            this.#toggleMenu(this.#avatarButton, this.#userMenu);
-        }
-
-        if (this.#sideMenu && !this.#sideMenu.hidden && !this.#hamburgerButton.contains(event.target) && !this.#sideMenu.contains(event.target)) {
-            this.#toggleMenu(this.#hamburgerButton, this.#sideMenu, true);
-        }
+    #closeMenu(button, menu) {
+        button.setAttribute('aria-expanded', 'false');
+        menu.setAttribute('aria-hidden', 'true');
     }
 }
 

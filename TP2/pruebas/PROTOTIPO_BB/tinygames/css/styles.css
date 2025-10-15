@@ -708,9 +708,10 @@ main {
         top: var(--header-height);
         left: 0;
         width: 275px;
-        height: 433px;
+        height: 400px;
         background-color: var(--header-bg-color);
-        padding: 0 0 20px 0;
+        padding: 0; /* <-- Eliminado el padding inferior */
+        padding-bottom: 20px; /* Añadido padding inferior al contenedor del menú */
         z-index: 20;
         transform: translateX(-100%);
         transition: transform 0.3s ease-in-out;
@@ -725,8 +726,8 @@ main {
 
     .side-menu ul {
         flex-flow: column;
-        padding: 20px 0 0 0;
-        height: 100%;
+        padding: 20px 0 0; /* Eliminado el padding inferior del UL */
+        height: auto; /* La altura se ajustará al contenido */
         justify-content: flex-start;
     }
 
@@ -1028,4 +1029,3 @@ main {
         gap: 0;
     }
 }
-
