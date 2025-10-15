@@ -383,11 +383,19 @@ main {
 
 /* Animación de carrusel */
 @keyframes slide {
-    0%, 20% { transform: translateX(0%); }
-    25%, 45% { transform: translateX(-20%); }
-    50%, 70% { transform: translateX(-40%); }
-    75%, 95% { transform: translateX(-60%); }
-    100%    { transform: translateX(-80%); }
+    0%      { transform: translateX(0%); }
+    20%     { transform: translateX(0%); } /* Pausa en slide 1 */
+    22.5%   { transform: translateX(-10%) skewX(-10deg) scale(1.05); }
+    25%     { transform: translateX(-20%); }
+    45%     { transform: translateX(-20%); } /* Pausa en slide 2 */
+    47.5%   { transform: translateX(-30%) skewX(-10deg) scale(1.05); }
+    50%     { transform: translateX(-40%); }
+    70%     { transform: translateX(-40%); } /* Pausa en slide 3 */
+    72.5%   { transform: translateX(-50%) skewX(-10deg) scale(1.05); }
+    75%     { transform: translateX(-60%); }
+    95%     { transform: translateX(-60%); } /* Pausa en slide 4 */
+    97.5%   { transform: translateX(-70%) skewX(-10deg) scale(1.05); }
+    100%    { transform: translateX(-80%); } /* Vuelve al inicio (clon) */
 }
 
 /* --------------------------------------------------------------------------
