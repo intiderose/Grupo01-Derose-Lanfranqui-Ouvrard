@@ -1,7 +1,8 @@
 const canvas = document.getElementById('puzzleCanvas');
 const ctx = canvas.getContext('2d');
 
-let pieceSize = 0;
+let pieceSizeW = 0;
+let pieceSizeH = 0;
 let originalOrder = [];
 let pieces = [];
 let grid = 4;
@@ -11,7 +12,6 @@ const FALLBACK_DATAURL = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAB
 
 
 // Controles
-const imageSelect = document.getElementById('imageSelect');
 const piecesCount = document.getElementById('piecesCount');
 const shuffleBtn = document.getElementById('shuffleBtn');
 const solveBtn = document.getElementById('solveBtn');
@@ -39,6 +39,10 @@ img.onload = () => {
     statusEl.textContent = 'Estado: imagen cargada';
     fitCanvasToImage();
     createPieces();
+    // Mezclar rotaciones al cargar la imagen
+    for(let i=0;i<pieces.length;i++){
+        pieces[i].rotation = [0,90,180,270][Math.floor(Math.random()*4)];
+    }
     draw();
 };
 img.onerror = (e)=>{
@@ -59,19 +63,17 @@ function fitCanvasToImage(){
 
 function createPieces(){
     grid = parseInt(piecesCount.value, 10) || 4;
-    // cuadrado perfecto: usar el menor entre ancho y alto
-    pieceSize = Math.floor(Math.min(canvas.width, canvas.height) / grid);
-    // centrar el área de piezas en el canvas
-    const offsetX = Math.floor((canvas.width - pieceSize * grid) / 2);
-    const offsetY = Math.floor((canvas.height - pieceSize * grid) / 2);
+    // Dividir toda la imagen en grid x grid (puede no ser cuadrado perfecto)
+    pieceSizeW = canvas.width / grid;
+    pieceSizeH = canvas.height / grid;
     pieces = [];
     for(let y=0;y<grid;y++){
         for(let x=0;x<grid;x++){
             pieces.push({
-                sx: x*pieceSize, // posición en canvas
-                sy: y*pieceSize,
-                x: offsetX + x*pieceSize, // posición en canvas
-                y: offsetY + y*pieceSize,
+                sx: x*pieceSizeW,
+                sy: y*pieceSizeH,
+                x: x*pieceSizeW,
+                y: y*pieceSizeH,
                 correctIndex: y*grid + x,
                 rotation: 0 // rotación individual en grados (0, 90, 180, 270)
             });
@@ -91,35 +93,37 @@ function draw(){
         return;
     }
 
-    // Dibujar fondo
-    ctx.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight, 0, 0, canvas.width, canvas.height);
+    // Dibujar fondo general
+    ctx.fillStyle = '#111827';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Dibujar cada pieza como cuadrado perfecto, con su rotación individual
+    // Dibujar cada pieza según la cuadrícula completa
     for(let i=0;i<pieces.length;i++){
         const p = pieces[i];
         ctx.save();
-        // Mover al centro del cuadrado
-        ctx.translate(p.x + pieceSize/2, p.y + pieceSize/2);
-        // Rotar según la rotación de la pieza
+        ctx.translate(p.x + pieceSizeW/2, p.y + pieceSizeH/2);
         ctx.rotate((p.rotation * Math.PI) / 180);
-        // Dibujar la porción de la imagen correspondiente
-        // Calcular la porción de la imagen original que corresponde al cuadrado perfecto
+
+        // Rellenar fondo del cuadrado antes de dibujar la imagen
+        ctx.fillStyle = '#111827';
+        ctx.fillRect(-pieceSizeW/2, -pieceSizeH/2, pieceSizeW, pieceSizeH);
+
+        // Calcular la porción de la imagen original que corresponde a la pieza
         const imgW = img.naturalWidth || img.width;
         const imgH = img.naturalHeight || img.height;
-        const imgPieceSize = Math.floor(Math.min(imgW, imgH) / grid);
-        const imgOffsetX = Math.floor((imgW - imgPieceSize * grid) / 2);
-        const imgOffsetY = Math.floor((imgH - imgPieceSize * grid) / 2);
+        const imgPieceW = imgW / grid;
+        const imgPieceH = imgH / grid;
 
         ctx.drawImage(
             img,
-            imgOffsetX + (p.correctIndex % grid) * imgPieceSize,
-            imgOffsetY + Math.floor(p.correctIndex / grid) * imgPieceSize,
-            imgPieceSize, imgPieceSize,
-            -pieceSize/2, -pieceSize/2, pieceSize, pieceSize
+            (p.correctIndex % grid) * imgPieceW,
+            Math.floor(p.correctIndex / grid) * imgPieceH,
+            imgPieceW, imgPieceH,
+            -pieceSizeW/2, -pieceSizeH/2, pieceSizeW, pieceSizeH
         );
         ctx.strokeStyle = 'rgba(255,255,255,0.12)';
         ctx.lineWidth = 2;
-        ctx.strokeRect(-pieceSize/2+1, -pieceSize/2+1, pieceSize-2, pieceSize-2);
+        ctx.strokeRect(-pieceSizeW/2+1, -pieceSizeH/2+1, pieceSizeW-2, pieceSizeH-2);
         ctx.restore();
     }
 }
@@ -127,14 +131,13 @@ function draw(){
 function checkSolved(){
     for(let i=0;i<pieces.length;i++){
         const p = pieces[i];
-        const expectedX = (p.correctIndex % grid) * pieceSize;
-        const expectedY = Math.floor(p.correctIndex / grid) * pieceSize;
+        const expectedX = (p.correctIndex % grid) * pieceSizeW;
+        const expectedY = Math.floor(p.correctIndex / grid) * pieceSizeH;
         if(Math.abs(p.x - expectedX) > 2 || Math.abs(p.y - expectedY) > 2) return false;
+        if(p.rotation !== 0) return false;
     }
     return true;
 }
-
-// Eliminar todos los eventos de arrastre y touch
 
 // Evento click izquierdo: rotar 90° a la izquierda la pieza clickeada
 canvas.addEventListener('click', (ev)=>{
@@ -143,9 +146,24 @@ canvas.addEventListener('click', (ev)=>{
     const my = ev.clientY - rect.top;
     for(let i=0;i<pieces.length;i++){
         const p = pieces[i];
-        if(mx >= p.x && mx < p.x + pieceSize && my >= p.y && my < p.y + pieceSize){
+        if(mx >= p.x && mx < p.x + pieceSizeW && my >= p.y && my < p.y + pieceSizeH){
             p.rotation = (p.rotation + 270) % 360;
             draw();
+            if(checkSolved()){
+                setTimeout(()=>{
+                    if (usedImages.length < imageList.length) {
+                        statusEl.textContent = '¡Felicidades! Puzzle resuelto. Pasando al siguiente nivel...';
+                        setTimeout(()=>{
+                            loadImage(getNextImage());
+                        }, 1200);
+                    } else {
+                        statusEl.textContent = '¡Felicidades! Has completado todos los niveles.';
+                        shuffleBtn.disabled = true;
+                        solveBtn.disabled = true;
+                        exportBtn.disabled = true;
+                    }
+                }, 100);
+            }
             break;
         }
     }
@@ -159,47 +177,62 @@ canvas.addEventListener('contextmenu', (ev)=>{
     const my = ev.clientY - rect.top;
     for(let i=0;i<pieces.length;i++){
         const p = pieces[i];
-        if(mx >= p.x && mx < p.x + pieceSize && my >= p.y && my < p.y + pieceSize){
+        if(mx >= p.x && mx < p.x + pieceSizeW && my >= p.y && my < p.y + pieceSizeH){
             p.rotation = (p.rotation + 90) % 360;
             draw();
+            if(checkSolved()){
+                setTimeout(()=>{
+                    if (usedImages.length < imageList.length) {
+                        statusEl.textContent = '¡Felicidades! Puzzle resuelto. Pasando al siguiente nivel...';
+                        setTimeout(()=>{
+                            loadImage(getNextImage());
+                        }, 1200);
+                    } else {
+                        statusEl.textContent = '¡Felicidades! Has completado todos los niveles.';
+                        shuffleBtn.disabled = true;
+                        solveBtn.disabled = true;
+                        exportBtn.disabled = true;
+                    }
+                }, 100);
+            }
             break;
         }
     }
 });
 
 // Eventos controles
-imageSelect.addEventListener('change', ()=>loadImage(imageSelect.value));
-piecesCount.addEventListener('change', ()=>{ createPieces(); draw(); });
+piecesCount.addEventListener('change', ()=>{
+    createPieces();
+    for(let i=0;i<pieces.length;i++){
+        pieces[i].rotation = [0,90,180,270][Math.floor(Math.random()*4)];
+    }
+    draw();
+});
 shuffleBtn.addEventListener('click', ()=>{
-    // Mantener posiciones originales y rotar cada pieza aleatoriamente
     grid = parseInt(piecesCount.value, 10) || 4;
-    pieceSize = Math.floor(Math.min(canvas.width, canvas.height) / grid);
-    const offsetX = Math.floor((canvas.width - pieceSize * grid) / 2);
-    const offsetY = Math.floor((canvas.height - pieceSize * grid) / 2);
+    pieceSizeW = canvas.width / grid;
+    pieceSizeH = canvas.height / grid;
     for(let i=0;i<pieces.length;i++){
         const p = pieces[i];
-        p.x = offsetX + (p.correctIndex % grid)*pieceSize;
-        p.y = offsetY + Math.floor(p.correctIndex / grid) * pieceSize;
-        // Rotación aleatoria: 0, 90, 180, 270
+        p.x = (p.correctIndex % grid)*pieceSizeW;
+        p.y = Math.floor(p.correctIndex / grid) * pieceSizeH;
         p.rotation = [0,90,180,270][Math.floor(Math.random()*4)];
     }
     draw();
 });
 
 solveBtn.addEventListener('click', ()=>{
-    // Restaurar posiciones y rotaciones
     grid = parseInt(piecesCount.value, 10) || 4;
-    pieceSize = Math.floor(Math.min(canvas.width, canvas.height) / grid);
-    const offsetX = Math.floor((canvas.width - pieceSize * grid) / 2);
-    const offsetY = Math.floor((canvas.height - pieceSize * grid) / 2);
+    pieceSizeW = canvas.width / grid;
+    pieceSizeH = canvas.height / grid;
     for(let i=0;i<pieces.length;i++){
         const p = pieces[i];
-        p.x = offsetX + (p.correctIndex % grid)*pieceSize;
-        p.y = offsetY + Math.floor(p.correctIndex / grid) * pieceSize;
+        p.x = (p.correctIndex % grid)*pieceSizeW;
+        p.y = Math.floor(p.correctIndex / grid) * pieceSizeH;
         p.rotation = 0;
     }
     draw();
-    statusEl.textContent = 'Estado: ordenado';
+    statusEl.textContent = 'Nivel ' + (currentLevel+1) + ': ordenado';
 });
 
 exportBtn.addEventListener('click', ()=>{
@@ -217,17 +250,50 @@ presetButtons.forEach(btn=>{
     });
 });
 
+// Lista de imágenes disponibles
+const imageList = [
+    "assets/MotoX3M.jpg",
+    "assets/pamplona.jpg",
+    "assets/solitaire-peg.png"
+];
+let currentLevel = 0;
+let usedImages = [];
+
+function getNextImage() {
+    // Si ya jugó todas las imágenes, no hay más niveles
+    if (usedImages.length >= imageList.length) {
+        return null;
+    }
+    // Selecciona una imagen que no se haya jugado aún
+    let available = imageList.filter(img => !usedImages.includes(img));
+    const next = available[Math.floor(Math.random() * available.length)];
+    usedImages.push(next);
+    currentLevel = usedImages.length;
+    return next;
+}
+
 function loadImage(url){
+    if (!url) {
+        statusEl.textContent = '¡Felicidades! Has completado todos los niveles.';
+        // Opcional: deshabilitar controles
+        shuffleBtn.disabled = true;
+        solveBtn.disabled = true;
+        exportBtn.disabled = true;
+        return;
+    }
     imageLoaded = false;
-    statusEl.textContent = 'Estado: cargando imagen...';
+    statusEl.textContent = 'Nivel ' + currentLevel + ' de ' + imageList.length + ': cargando imagen...';
     try{
         img = new Image();
         if(shouldUseCORS()) img.crossOrigin = 'Anonymous';
         img.onload = () => {
             imageLoaded = true;
-            statusEl.textContent = 'Estado: imagen cargada';
+            statusEl.textContent = 'Nivel ' + currentLevel + ' de ' + imageList.length + ': imagen cargada';
             fitCanvasToImage();
             createPieces();
+            for(let i=0;i<pieces.length;i++){
+                pieces[i].rotation = [0,90,180,270][Math.floor(Math.random()*4)];
+            }
             draw();
         };
         img.onerror = (e)=>{
@@ -242,5 +308,7 @@ function loadImage(url){
     }
 }
 
-// Cargar imagen inicial (usar valor por defecto select)
-loadImage(imageSelect.value);
+// Al iniciar, cargar una imagen aleatoria y preparar niveles
+usedImages = [];
+currentLevel = 0;
+loadImage(getNextImage());
