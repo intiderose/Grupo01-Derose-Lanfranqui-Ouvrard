@@ -19,6 +19,8 @@ const exportBtn = document.getElementById('exportBtn');
 const presetButtons = document.querySelectorAll('[data-preset]');
 const statusEl = document.getElementById('status');
 const warnEl = document.getElementById('warn');
+const timerBarContainer = document.getElementById('timer-bar-container'); /* timer de los ultimos juegos*/
+const timerBar = document.getElementById('timer-bar');
 
 
 canvas.addEventListener('contextmenu', (e)=>e.preventDefault());
@@ -139,6 +141,52 @@ function checkSolved(){
     return true;
 }
 
+let timerInterval = null;
+let timerTimeout = null;
+let timerActive = false;
+let timerDuration = 0;
+let timerStart = 0;
+
+function startTimer(duration) {
+    timerDuration = duration;
+    timerStart = Date.now();
+    timerActive = true;
+    timerBarContainer.style.display = 'block';
+    timerBarContainer.classList.remove('timeout');
+    timerBar.style.width = '100%';
+    clearInterval(timerInterval);
+    clearTimeout(timerTimeout);
+
+    timerInterval = setInterval(()=>{
+        const elapsed = (Date.now() - timerStart) / 1000;
+        let percent = Math.max(0, 1 - elapsed / timerDuration);
+        timerBar.style.width = (percent*100) + '%';
+        if(percent <= 0){
+            clearInterval(timerInterval);
+            timerBar.style.width = '0%';
+            timerBarContainer.classList.add('timeout');
+            timerActive = false;
+            setTimeout(()=>{
+                timerBarContainer.style.display = 'none';
+                timerBarContainer.classList.remove('timeout');
+            }, 800);
+            statusEl.textContent = '¡Tiempo agotado! Pasando al siguiente nivel...';
+            setTimeout(()=>{
+                loadImage(getNextImage());
+            }, 1200);
+        }
+    }, 100);
+}
+
+function stopTimer() {
+    timerActive = false;
+    clearInterval(timerInterval);
+    clearTimeout(timerTimeout);
+    timerBarContainer.style.display = 'none';
+    timerBar.style.width = '100%';
+    timerBarContainer.classList.remove('timeout');
+}
+
 // Evento click izquierdo: rotar 90° a la izquierda la pieza clickeada
 canvas.addEventListener('click', (ev)=>{
     const rect = canvas.getBoundingClientRect();
@@ -151,6 +199,7 @@ canvas.addEventListener('click', (ev)=>{
             draw();
             if(checkSolved()){
                 setTimeout(()=>{
+                    stopTimer();
                     if (usedImages.length < imageList.length) {
                         statusEl.textContent = '¡Felicidades! Puzzle resuelto. Pasando al siguiente nivel...';
                         setTimeout(()=>{
@@ -182,6 +231,7 @@ canvas.addEventListener('contextmenu', (ev)=>{
             draw();
             if(checkSolved()){
                 setTimeout(()=>{
+                    stopTimer();
                     if (usedImages.length < imageList.length) {
                         statusEl.textContent = '¡Felicidades! Puzzle resuelto. Pasando al siguiente nivel...';
                         setTimeout(()=>{
@@ -275,14 +325,15 @@ function getNextImage() {
 function loadImage(url){
     if (!url) {
         statusEl.textContent = '¡Felicidades! Has completado todos los niveles.';
-        // Opcional: deshabilitar controles
         shuffleBtn.disabled = true;
         solveBtn.disabled = true;
         exportBtn.disabled = true;
+        stopTimer();
         return;
     }
     imageLoaded = false;
     statusEl.textContent = 'Nivel ' + currentLevel + ' de ' + imageList.length + ': cargando imagen...';
+    stopTimer();
     try{
         img = new Image();
         if(shouldUseCORS()) img.crossOrigin = 'Anonymous';
@@ -295,6 +346,13 @@ function loadImage(url){
                 pieces[i].rotation = [0,90,180,270][Math.floor(Math.random()*4)];
             }
             draw();
+
+            // Temporizador para los dos últimos niveles
+            if (currentLevel === imageList.length - 1) {
+                startTimer(40);
+            } else if (currentLevel === imageList.length) {
+                startTimer(20);
+            }
         };
         img.onerror = (e)=>{
             console.warn('Error al cargar imagen', e);

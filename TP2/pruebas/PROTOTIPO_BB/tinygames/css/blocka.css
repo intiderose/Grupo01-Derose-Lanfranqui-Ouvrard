@@ -20,3 +20,48 @@ footer{font-size:12px;color:#9fb4da;margin-top:12px}
 .warning{color:#ffcccb;font-size:13px;margin-top:8px}
 details{margin-top:16px;background:rgba(255,255,255,0.02);padding:12px;border-radius:8px}
 pre{white-space:pre-wrap;color:#dbeafe}
+
+/* Estilos trasladados del HTML */
+.pieces-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Timer Bar Styles (ajustados para el layout) */
+#timer-bar-container {
+    width: 100%;
+    max-width: 720px;
+    height: 18px;
+    margin-bottom: 8px;
+    background: #23395d;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    display: none;
+}
+#timer-bar {
+    height: 100%;
+    background: linear-gradient(90deg,#60a5fa 0%,#2563eb 100%);
+    border-radius: 8px;
+    transition: width 0.2s;
+    width: 100%;
+}
+#timer-bar-container.timeout {
+    animation: shake 0.5s;
+}
+@keyframes shake {
+    0% { transform: translateX(0);}
+    25% { transform: translateX(-4px);}
+    50% { transform: translateX(4px);}
+    75% { transform: translateX(-4px);}
+    100% { transform: translateX(0);}
+}
+
+/* Ajustes para status y warning */
+#status.small {
+    margin-top: 8px;
+}
+#warn.warning {
+    display: none;
+}
