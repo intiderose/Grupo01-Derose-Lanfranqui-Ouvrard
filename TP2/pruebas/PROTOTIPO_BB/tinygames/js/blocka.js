@@ -13,9 +13,6 @@ const FALLBACK_DATAURL = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAB
 
 // Controles
 const piecesCount = document.getElementById('piecesCount');
-const shuffleBtn = document.getElementById('shuffleBtn');
-const solveBtn = document.getElementById('solveBtn');
-const exportBtn = document.getElementById('exportBtn');
 const statusEl = document.getElementById('status');
 const warnEl = document.getElementById('warn');
 const timerBarContainer = document.getElementById('timer-bar-container'); /* timer de los ultimos juegos*/
@@ -206,9 +203,6 @@ canvas.addEventListener('click', (ev)=>{
                         }, 1200);
                     } else {
                         statusEl.textContent = '¡Felicidades! Has completado todos los niveles.';
-                        shuffleBtn.disabled = true;
-                        solveBtn.disabled = true;
-                        exportBtn.disabled = true;
                     }
                 }, 100);
             }
@@ -238,9 +232,6 @@ canvas.addEventListener('contextmenu', (ev)=>{
                         }, 1200);
                     } else {
                         statusEl.textContent = '¡Felicidades! Has completado todos los niveles.';
-                        shuffleBtn.disabled = true;
-                        solveBtn.disabled = true;
-                        exportBtn.disabled = true;
                     }
                 }, 100);
             }
@@ -256,41 +247,6 @@ piecesCount.addEventListener('change', ()=>{
         pieces[i].rotation = [0,90,180,270][Math.floor(Math.random()*4)];
     }
     draw();
-});
-shuffleBtn.addEventListener('click', ()=>{
-    grid = parseInt(piecesCount.value, 10) || 4;
-    pieceSizeW = canvas.width / grid;
-    pieceSizeH = canvas.height / grid;
-    for(let i=0;i<pieces.length;i++){
-        const p = pieces[i];
-        p.x = (p.correctIndex % grid)*pieceSizeW;
-        p.y = Math.floor(p.correctIndex / grid) * pieceSizeH;
-        p.rotation = [0,90,180,270][Math.floor(Math.random()*4)];
-    }
-    draw();
-});
-
-solveBtn.addEventListener('click', ()=>{
-    grid = parseInt(piecesCount.value, 10) || 4;
-    pieceSizeW = canvas.width / grid;
-    pieceSizeH = canvas.height / grid;
-    for(let i=0;i<pieces.length;i++){
-        const p = pieces[i];
-        p.x = (p.correctIndex % grid)*pieceSizeW;
-        p.y = Math.floor(p.correctIndex / grid) * pieceSizeH;
-        p.rotation = 0;
-    }
-    draw();
-    statusEl.textContent = 'Nivel ' + (currentLevel+1) + ': ordenado';
-});
-
-exportBtn.addEventListener('click', ()=>{
-    const a = document.createElement('a');
-    a.href = canvas.toDataURL('image/png');
-    a.download = 'rompecabezas.png';
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
 });
 
 // Lista de imágenes disponibles
@@ -318,9 +274,6 @@ function getNextImage() {
 function loadImage(url){
     if (!url) {
         statusEl.textContent = '¡Felicidades! Has completado todos los niveles.';
-        shuffleBtn.disabled = true;
-        solveBtn.disabled = true;
-        exportBtn.disabled = true;
         stopTimer();
         return;
     }
