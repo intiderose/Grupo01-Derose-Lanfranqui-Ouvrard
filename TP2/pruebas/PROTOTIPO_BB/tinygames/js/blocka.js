@@ -16,7 +16,6 @@ const piecesCount = document.getElementById('piecesCount');
 const shuffleBtn = document.getElementById('shuffleBtn');
 const solveBtn = document.getElementById('solveBtn');
 const exportBtn = document.getElementById('exportBtn');
-const presetButtons = document.querySelectorAll('[data-preset]');
 const statusEl = document.getElementById('status');
 const warnEl = document.getElementById('warn');
 const timerBarContainer = document.getElementById('timer-bar-container'); /* timer de los ultimos juegos*/
@@ -292,12 +291,6 @@ exportBtn.addEventListener('click', ()=>{
     document.body.appendChild(a);
     a.click();
     a.remove();
-});
-
-presetButtons.forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-        draw();
-    });
 });
 
 // Lista de imágenes disponibles

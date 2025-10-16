@@ -9,11 +9,9 @@
 <div class="app">
     <header>
         <h1>Rompecabezas Blocka - TinyGames</h1>
-        <div class="small">Arrastra piezas para resolver. Usa filtros o preset RGBA.</div>
     </header>
 
     <div class="controls">
-        <!-- Eliminado el selector de imágenes -->
         <label class="pieces-label">
             Piezas:
             <select id="piecesCount">
@@ -29,7 +27,7 @@
         <button id="exportBtn">Exportar imagen</button>
     </div>
 
-    <div class="layout">
+    <div class="layout layout-centered">
         <div class="left">
             <div id="timer-bar-container">
                 <div id="timer-bar"></div>
@@ -37,21 +35,6 @@
             <canvas id="puzzleCanvas" width="720" height="480"></canvas>
             <div id="status" class="small">Estado: esperando imagen...</div>
             <div id="warn" class="warning"></div>
-        </div>
-
-        <div class="right">
-            <div class="panel">
-                <div class="section">
-                    <label>Presets de filtro</label>
-                    <div class="preset">
-                        <button data-preset="none">Ninguno</button>
-                        <button data-preset="grayscale">Blanco y negro</button>
-                        <button data-preset="sepia">Sepia</button>
-                        <button data-preset="invert">Invertir</button>
-                        <button data-preset="reddish">Rojizo</button>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>
