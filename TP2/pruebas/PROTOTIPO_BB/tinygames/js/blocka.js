@@ -82,19 +82,183 @@ function createPieces(){
 
 function draw(){
     ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    // Fondo general
+    ctx.fillStyle = '#111827';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
     if(!imageLoaded){
-        ctx.fillStyle = '#111827';
-        ctx.fillRect(0,0,canvas.width,canvas.height);
         ctx.fillStyle = '#cbd5e1';
         ctx.font = '16px sans-serif';
         ctx.fillText('Cargando imagen...', 10, 30);
         return;
     }
 
-    // Dibujar fondo general
-    ctx.fillStyle = '#111827';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    // --- PRIMER NIVEL: filtro gris por pieza ---
+    if(currentLevel === 1){
+        const width = canvas.width;
+        const height = canvas.height;
 
+        // Crear un canvas temporal para obtener los datos de la imagen original
+        const tempCanvas = document.createElement('canvas');
+        tempCanvas.width = width;
+        tempCanvas.height = height;
+        const tempCtx = tempCanvas.getContext('2d');
+        tempCtx.drawImage(img, 0, 0, width, height);
+
+        // Dibuja cada pieza con filtro gris y rotación
+        for(let i=0;i<pieces.length;i++){
+            const p = pieces[i];
+            // Extraer la imagen de la pieza
+            const sx = (p.correctIndex % grid) * pieceSizeW;
+            const sy = Math.floor(p.correctIndex / grid) * pieceSizeH;
+
+            // Crear canvas temporal para la pieza
+            const pieceCanvas = document.createElement('canvas');
+            pieceCanvas.width = pieceSizeW;
+            pieceCanvas.height = pieceSizeH;
+            const pieceCtx = pieceCanvas.getContext('2d');
+            pieceCtx.drawImage(
+                tempCanvas,
+                sx, sy, pieceSizeW, pieceSizeH,
+                0, 0, pieceSizeW, pieceSizeH
+            );
+
+            // Obtener datos y aplicar filtro gris
+            const pieceImageData = pieceCtx.getImageData(0, 0, pieceSizeW, pieceSizeH);
+            for (let j = 0; j < pieceImageData.data.length; j += 4) {
+                const r = pieceImageData.data[j];
+                const g = pieceImageData.data[j + 1];
+                const b = pieceImageData.data[j + 2];
+                const a = pieceImageData.data[j + 3];
+                const gray = Math.round(0.299 * r + 0.587 * g + 0.114 * b);
+                pieceImageData.data[j] = gray;
+                pieceImageData.data[j + 1] = gray;
+                pieceImageData.data[j + 2] = gray;
+                pieceImageData.data[j + 3] = a;
+            }
+            pieceCtx.putImageData(pieceImageData, 0, 0);
+
+            // Dibuja la pieza rotada en el canvas principal
+            ctx.save();
+            ctx.translate(p.x + pieceSizeW/2, p.y + pieceSizeH/2);
+            ctx.rotate((p.rotation * Math.PI) / 180);
+            ctx.drawImage(pieceCanvas, -pieceSizeW/2, -pieceSizeH/2, pieceSizeW, pieceSizeH);
+            ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(-pieceSizeW/2+1, -pieceSizeH/2+1, pieceSizeW-2, pieceSizeH-2);
+            ctx.restore();
+        }
+        return;
+    }
+
+    // --- SEGUNDO NIVEL: filtro brillo +30% por pieza ---
+    if(currentLevel === 2){
+        const width = canvas.width;
+        const height = canvas.height;
+
+        // Crear un canvas temporal para obtener los datos de la imagen original
+        const tempCanvas = document.createElement('canvas');
+        tempCanvas.width = width;
+        tempCanvas.height = height;
+        const tempCtx = tempCanvas.getContext('2d');
+        tempCtx.drawImage(img, 0, 0, width, height);
+
+        // Dibuja cada pieza con filtro brillo y rotación
+        for(let i=0;i<pieces.length;i++){
+            const p = pieces[i];
+            // Extraer la imagen de la pieza
+            const sx = (p.correctIndex % grid) * pieceSizeW;
+            const sy = Math.floor(p.correctIndex / grid) * pieceSizeH;
+
+            // Crear canvas temporal para la pieza
+            const pieceCanvas = document.createElement('canvas');
+            pieceCanvas.width = pieceSizeW;
+            pieceCanvas.height = pieceSizeH;
+            const pieceCtx = pieceCanvas.getContext('2d');
+            pieceCtx.drawImage(
+                tempCanvas,
+                sx, sy, pieceSizeW, pieceSizeH,
+                0, 0, pieceSizeW, pieceSizeH
+            );
+
+            // Obtener datos y aplicar filtro brillo +30%
+            const pieceImageData = pieceCtx.getImageData(0, 0, pieceSizeW, pieceSizeH);
+            for (let j = 0; j < pieceImageData.data.length; j += 4) {
+                pieceImageData.data[j]     = Math.min(255, Math.round(pieceImageData.data[j] * 1.3));     // R
+                pieceImageData.data[j + 1] = Math.min(255, Math.round(pieceImageData.data[j + 1] * 1.3)); // G
+                pieceImageData.data[j + 2] = Math.min(255, Math.round(pieceImageData.data[j + 2] * 1.3)); // B
+                // Alpha no se modifica
+            }
+            pieceCtx.putImageData(pieceImageData, 0, 0);
+
+            // Dibuja la pieza rotada en el canvas principal
+            ctx.save();
+            ctx.translate(p.x + pieceSizeW/2, p.y + pieceSizeH/2);
+            ctx.rotate((p.rotation * Math.PI) / 180);
+            ctx.drawImage(pieceCanvas, -pieceSizeW/2, -pieceSizeH/2, pieceSizeW, pieceSizeH);
+            ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(-pieceSizeW/2+1, -pieceSizeH/2+1, pieceSizeW-2, pieceSizeH-2);
+            ctx.restore();
+        }
+        return;
+    }
+
+    // --- TERCER NIVEL: filtro negativo por pieza ---
+    if(currentLevel === 3){
+        const width = canvas.width;
+        const height = canvas.height;
+
+        // Crear un canvas temporal para obtener los datos de la imagen original
+        const tempCanvas = document.createElement('canvas');
+        tempCanvas.width = width;
+        tempCanvas.height = height;
+        const tempCtx = tempCanvas.getContext('2d');
+        tempCtx.drawImage(img, 0, 0, width, height);
+
+        // Dibuja cada pieza con filtro negativo y rotación
+        for(let i=0;i<pieces.length;i++){
+            const p = pieces[i];
+            // Extraer la imagen de la pieza
+            const sx = (p.correctIndex % grid) * pieceSizeW;
+            const sy = Math.floor(p.correctIndex / grid) * pieceSizeH;
+
+            // Crear canvas temporal para la pieza
+            const pieceCanvas = document.createElement('canvas');
+            pieceCanvas.width = pieceSizeW;
+            pieceCanvas.height = pieceSizeH;
+            const pieceCtx = pieceCanvas.getContext('2d');
+            pieceCtx.drawImage(
+                tempCanvas,
+                sx, sy, pieceSizeW, pieceSizeH,
+                0, 0, pieceSizeW, pieceSizeH
+            );
+
+            // Obtener datos y aplicar filtro negativo
+            const pieceImageData = pieceCtx.getImageData(0, 0, pieceSizeW, pieceSizeH);
+            for (let j = 0; j < pieceImageData.data.length; j += 4) {
+                pieceImageData.data[j]     = 255 - pieceImageData.data[j];     // R
+                pieceImageData.data[j + 1] = 255 - pieceImageData.data[j + 1]; // G
+                pieceImageData.data[j + 2] = 255 - pieceImageData.data[j + 2]; // B
+                // Alpha no se modifica
+            }
+            pieceCtx.putImageData(pieceImageData, 0, 0);
+
+            // Dibuja la pieza rotada en el canvas principal
+            ctx.save();
+            ctx.translate(p.x + pieceSizeW/2, p.y + pieceSizeH/2);
+            ctx.rotate((p.rotation * Math.PI) / 180);
+            ctx.drawImage(pieceCanvas, -pieceSizeW/2, -pieceSizeH/2, pieceSizeW, pieceSizeH);
+            ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(-pieceSizeW/2+1, -pieceSizeH/2+1, pieceSizeW-2, pieceSizeH-2);
+            ctx.restore();
+        }
+        return;
+    }
+
+    // --- RESTO DE NIVELES: imagen normal por piezas ---
     // Dibujar cada pieza según la cuadrícula completa
     for(let i=0;i<pieces.length;i++){
         const p = pieces[i];
@@ -102,11 +266,9 @@ function draw(){
         ctx.translate(p.x + pieceSizeW/2, p.y + pieceSizeH/2);
         ctx.rotate((p.rotation * Math.PI) / 180);
 
-        // Rellenar fondo del cuadrado antes de dibujar la imagen
         ctx.fillStyle = '#111827';
         ctx.fillRect(-pieceSizeW/2, -pieceSizeH/2, pieceSizeW, pieceSizeH);
 
-        // Calcular la porción de la imagen original que corresponde a la pieza
         const imgW = img.naturalWidth || img.width;
         const imgH = img.naturalHeight || img.height;
         const imgPieceW = imgW / grid;
@@ -316,3 +478,12 @@ function loadImage(url){
 usedImages = [];
 currentLevel = 0;
 loadImage(getNextImage());
+
+function setPixel(imageData, x, y, r, g, b, a) {
+    let index = (x + y * imageData.width) * 4;
+    imageData.data[index + 0] = r;
+    imageData.data[index + 1] = g;
+    imageData.data[index + 2] = b;
+    imageData.data[index + 3] = a;
+}
+
