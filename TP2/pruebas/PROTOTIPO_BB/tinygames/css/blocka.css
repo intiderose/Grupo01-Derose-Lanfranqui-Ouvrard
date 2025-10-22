@@ -7,11 +7,25 @@ h1{font-size:18px;margin:0}
 select,input,button{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);color:inherit;padding:8px;border-radius:8px}
 button{cursor:pointer}
 
-.layout{display:flex;gap:14px;justify-content:center;align-items:center}
+.layout{display:flex;gap:14px;justify-content:center;align-items:flex-start}
 .layout-centered{justify-content:center;align-items:center}
 .left{flex:none;display:flex;flex-direction:column;align-items:center}
 canvas{background:#111827;border-radius:8px;box-shadow:0 6px 18px rgba(2,6,23,0.6)}
-.right,.panel{display:none!important}
+.right{flex:0 0 180px; display:flex; align-items:flex-start; justify-content:center; margin-left:12px;}
+.side-buttons{display:flex;flex-direction:column;gap:12px;margin-top:40px;}
+.side-button{
+    width:160px;
+    height:48px;
+    background:#0C3966;
+    color:#ffffff;
+    border:none;
+    border-radius:12px;
+    font-weight:700;
+    font-family: Inter, Roboto, Arial, sans-serif;
+    font-size:15px;
+    cursor:pointer;
+    box-shadow: 0 6px 18px rgba(12,57,102,0.2);
+}
 .section{margin-bottom:12px}
 label{display:block;font-size:12px;margin-bottom:6px;color:#bcd3ff}
 footer{font-size:12px;color:#9fb4da;margin-top:12px}

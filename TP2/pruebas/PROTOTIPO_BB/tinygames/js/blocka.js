@@ -292,6 +292,23 @@ let timerActive = false;
 let timerDuration = 0;
 let timerStart = 0;
 
+function returnToMenu(message){
+    // Detener cualquier temporizador/animación
+    stopTimer();
+    // Reiniciar estado de niveles
+    usedImages = [];
+    currentLevel = 0;
+    // Marcar imagen como no cargada y limpiar canvas
+    imageLoaded = false;
+    img = new Image();
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    // Mostrar mensaje de estado
+    statusEl.textContent = message || 'Tiempo agotado. Volviendo al menú...';
+    // Mostrar el botón Jugar (obtener directamente del DOM por seguridad)
+    const btn = document.getElementById('playButton');
+    if(btn) btn.classList.remove('hidden');
+}
+
 function startTimer(duration) {
     timerDuration = duration;
     timerStart = Date.now();
@@ -315,9 +332,10 @@ function startTimer(duration) {
                 timerBarContainer.style.display = 'none';
                 timerBarContainer.classList.remove('timeout');
             }, 800);
-            statusEl.textContent = '¡Tiempo agotado! Pasando al siguiente nivel...';
+            statusEl.textContent = '¡Tiempo agotado!';
+            // En lugar de pasar al siguiente nivel, volver al menú y mostrar botón Jugar
             setTimeout(()=>{
-                loadImage(getNextImage());
+                returnToMenu('¡Tiempo agotado! Reiniciando y volviendo al menú.');
             }, 1200);
         }
     }, 100);
@@ -498,4 +516,44 @@ function setPixel(imageData, x, y, r, g, b, a) {
     imageData.data[index + 1] = g;
     imageData.data[index + 2] = b;
     imageData.data[index + 3] = a;
+}
+
+// Conectar botones laterales (agregados en HTML)
+const restartLevelBtn = document.getElementById('restartLevelBtn');
+const returnMenuBtn = document.getElementById('returnMenuBtn');
+
+function restartLevel(){
+    // Si no hay un nivel activo, solo mostrar mensaje
+    if(currentLevel === 0){
+        statusEl.textContent = 'No hay nivel activo. Presiona Jugar para comenzar.';
+        return;
+    }
+
+    // Detener temporizador y recrear piezas manteniendo currentLevel y usedImages
+    stopTimer();
+    fitCanvasToImage(); // asegurar dimensiones correctas
+    createPieces();
+    // re-aleatorizar rotaciones
+    for(let i=0;i<pieces.length;i++){
+        pieces[i].rotation = [0,90,180,270][Math.floor(Math.random()*4)];
+    }
+    draw();
+    statusEl.textContent = 'Nivel ' + currentLevel + ' reiniciado';
+
+    // Reiniciar temporizador para los niveles que lo usaban
+    if (currentLevel === MAX_LEVELS - 1) {
+        startTimer(40);
+    } else if (currentLevel === MAX_LEVELS) {
+        startTimer(20);
+    }
+}
+
+// Conectar eventos de los botones (si existen)
+if (restartLevelBtn) {
+    restartLevelBtn.addEventListener('click', restartLevel);
+}
+if (returnMenuBtn) {
+    returnMenuBtn.addEventListener('click', ()=>{
+        returnToMenu('Volviendo al menú...');
+    });
 }
