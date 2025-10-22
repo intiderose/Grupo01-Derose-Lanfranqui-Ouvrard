@@ -22,7 +22,8 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
-    justify-content: center; /* nuevo: centrar verticalmente el contenido (canvas) dentro de la columna izquierda */
+    justify-content: center; /* centrar verticalmente el contenido (canvas) dentro de la columna izquierda */
+    padding-left: 150px; /* MODIFICADO: antes 35px, ahora +20px = 55px */
 }
 
 /* Columna derecha: mantener los botones centrados verticalmente junto al canvas */
@@ -115,4 +116,42 @@ canvas {
 .side-button:focus {
     outline: 3px solid rgba(255,107,0,0.18);
     outline-offset: 2px;
+}
+
+/* ============================
+   NUEVOS ESTILOS: Barra de tiempo visible y naranja
+   ============================ */
+
+/* Contenedor de la barra: tamaño responsivo, fondo tenue y redondeo */
+#timer-bar-container {
+    width: min(420px, 90%); /* responsivo: máximo 420px o 90% del contenedor */
+    height: 12px;
+    background: rgba(255,255,255,0.08); /* fondo tenue para contraste */
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.03), 0 4px 10px rgba(0,0,0,0.45);
+    transition: opacity 0.25s ease;
+    display: none; /* controlado por JS: startTimer / stopTimer */
+    margin-bottom: 6px;
+}
+
+/* Barra interna: degradado naranja y transición suave al reducirse */
+#timer-bar {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(90deg, #FF8A00 0%, #FF6B00 60%, #FF4B00 100%);
+    box-shadow: 0 6px 14px rgba(255,107,0,0.14);
+    transition: width 0.1s linear;
+    transform-origin: left center;
+}
+
+/* Estado de timeout: borde más visible (JS añade la clase .timeout) */
+#timer-bar-container.timeout {
+    box-shadow: inset 0 0 0 2px rgba(255,107,0,0.12), 0 6px 18px rgba(255,107,0,0.08);
+}
+
+/* Versión compacta para pantallas muy pequeñas */
+@media (max-width: 420px) {
+    #timer-bar-container { height: 10px; border-radius: 10px; }
+    #timer-bar-container { width: 100%; }
 }

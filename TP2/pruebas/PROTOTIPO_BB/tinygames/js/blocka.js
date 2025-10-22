@@ -369,7 +369,11 @@ canvas.addEventListener('click', (ev)=>{
                             loadImage(getNextImage());
                         }, 1200);
                     } else {
-                        statusEl.textContent = '¡Felicidades! Has completado todos los niveles.';
+                        // cambiado: volver al menú cuando se completaron todos los niveles
+                        statusEl.textContent = '¡Felicidades! Has completado todos los niveles. Volviendo al menú...';
+                        setTimeout(()=>{
+                            returnToMenu('¡Felicidades! Has completado todos los niveles.');
+                        }, 1200);
                     }
                 }, 100);
             }
@@ -398,7 +402,11 @@ canvas.addEventListener('contextmenu', (ev)=>{
                             loadImage(getNextImage());
                         }, 1200);
                     } else {
-                        statusEl.textContent = '¡Felicidades! Has completado todos los niveles.';
+                        // cambiado: volver al menú cuando se completaron todos los niveles
+                        statusEl.textContent = '¡Felicidades! Has completado todos los niveles. Volviendo al menú...';
+                        setTimeout(()=>{
+                            returnToMenu('¡Felicidades! Has completado todos los niveles.');
+                        }, 1200);
                     }
                 }, 100);
             }
@@ -446,8 +454,12 @@ function getNextImage() {
 
 function loadImage(url){
     if (!url) {
-        statusEl.textContent = '¡Felicidades! Has completado todos los niveles.';
+        // cambiado: cuando no hay más imagenes, volver al menú igual que el botón
+        statusEl.textContent = '¡Felicidades! Has completado todos los niveles. Volviendo al menú...';
         stopTimer();
+        setTimeout(()=>{
+            returnToMenu('¡Felicidades! Has completado todos los niveles.');
+        }, 800);
         return;
     }
     imageLoaded = false;
