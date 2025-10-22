@@ -155,3 +155,159 @@ canvas {
     #timer-bar-container { height: 10px; border-radius: 10px; }
     #timer-bar-container { width: 100%; }
 }
+
+/* ============================
+   Estilos para el selector de piezas (mejora visual)
+   ============================ */
+
+.controls { /* contenedor donde está .pieces-label */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Etiqueta wrapper: fondo oscuro, texto claro y borde redondeado */
+.pieces-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(90deg, #FF8A00 0%, #FF6B00 60%, #FF4B00 100%);
+    padding: 8px 10px;
+    border-radius: 12px;
+    color: #e6eef8;
+    font-weight: 600;
+    font-family: 'Fredoka', sans-serif;
+    box-shadow: 0 6px 18px rgba(2,6,23,0.45);
+    border: 1px solid rgba(255,107,0,0.06);
+    user-select: none;
+    font-size: 14px;
+}
+
+/* Select estilizado: fondo naranja, texto blanco y flecha SVG personalizada */
+#piecesCount {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: linear-gradient(90deg, #FF8A00 0%, #FF6B00 60%, #FF4B00 100%);
+    color: #fff;
+    border: none;
+    padding: 6px 36px 6px 10px; /* espacio extra a la derecha para la flecha */
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 6px 14px rgba(255,107,0,0.12);
+    min-width: 110px;
+    font-size: 13px;
+    line-height: 1;
+    transition: transform 120ms ease, box-shadow 120ms ease;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px;
+}
+
+/* Hover y active para sensación interactiva */
+#piecesCount:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 22px rgba(255,107,0,0.15);
+}
+#piecesCount:active {
+    transform: translateY(0);
+}
+
+/* Focus accesible (mismo estilo que otros botones) */
+#piecesCount:focus {
+    outline: 3px solid rgba(255,107,0,0.18);
+    outline-offset: 2px;
+    box-shadow: 0 10px 26px rgba(255,107,0,0.12);
+}
+
+/* Opciones: asegurar legibilidad cuando se abre el menú nativo */
+#piecesCount option {
+    color: #111827;
+    background: #fff;
+    font-weight: 600;
+}
+
+/* Ajustes para pantallas pequeñas */
+@media (max-width: 520px) {
+    .pieces-label { font-size: 13px; gap:8px; padding:6px 8px; }
+    #piecesCount { min-width: 90px; padding-right: 34px; font-size: 12px; }
+}
+
+/* ============================
+   Inputs: hacerlos naranja como los botones
+   ============================ */
+
+/* Aplica a buscador, inputs de comentarios y suscripción */
+input[type="text"],
+input[type="email"],
+input[type="search"],
+.comments-block__input,
+.footer__subscribe-form input {
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 10px;
+    box-shadow: 0 6px 14px rgba(255,107,0,0.12);
+    font-weight: 600;
+    font-family: 'Fredoka', sans-serif;
+    outline: none;
+    transition: box-shadow 120ms ease, transform 120ms ease;
+    min-width: 160px;
+}
+
+/* Ajustes para el buscador (layout distinto) */
+.header__search input[type="search"] {
+    min-width: 180px;
+    padding: 8px 10px;
+    background: rgba(255,255,255,0.06); /* mantener contraste en header pero cambiar texto a naranja */
+    color: #ffedd6;
+    box-shadow: none;
+    border-radius: 8px;
+}
+
+/* Hover/active sensible en inputs principales */
+input[type="text"]:hover,
+input[type="email"]:hover,
+.comments-block__input:hover,
+.footer__subscribe-form input:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 22px rgba(255,107,0,0.16);
+}
+input[type="text"]:active,
+input[type="email"]:active,
+.comments-block__input:active,
+.footer__subscribe-form input:active {
+    transform: translateY(0);
+}
+
+/* Focus accesible: misma familia de outline que botones */
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="search"]:focus,
+.comments-block__input:focus,
+.footer__subscribe-form input:focus {
+    outline: 3px solid rgba(255,107,0,0.18);
+    outline-offset: 2px;
+    box-shadow: 0 10px 26px rgba(255,107,0,0.12);
+}
+
+/* Placeholder más tenue para mantener legibilidad */
+input::placeholder,
+textarea::placeholder {
+    color: rgba(255,255,255,0.7);
+}
+
+/* En pantallas pequeñas ajustar anchuras */
+@media (max-width: 520px) {
+    input[type="text"],
+    input[type="email"],
+    .comments-block__input,
+    .footer__subscribe-form input {
+        min-width: 120px;
+        padding: 7px 10px;
+        border-radius: 8px;
+    }
+    .header__search input[type="search"] { min-width: 120px; }
+}
