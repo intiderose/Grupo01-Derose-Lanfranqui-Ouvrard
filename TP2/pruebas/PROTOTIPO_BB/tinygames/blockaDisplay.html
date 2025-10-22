@@ -72,11 +72,9 @@
         <div class="game-container">
             <div class="game-container__image" id="blocka-embed-target">
                 <!-- ...existing layout code... -->
+
                 <div class="layout layout-centered" style="gap:24px;">
                     <div class="left">
-                        <div id="timer-bar-container">
-                            <div id="timer-bar"></div>
-                        </div>
                         <!-- Añadido: controls igual que en blocka.html -->
                         <div class="controls">
                             <label class="pieces-label">
@@ -90,6 +88,10 @@
                                 </select>
                             </label>
                         </div>
+                        <div id="timer-bar-container">
+                            <div id="timer-bar"></div>
+                        </div>
+
                         <!-- Fin añadido -->
                         <div class="canvas-wrapper">
                             <canvas id="puzzleCanvas" width="480" height="480" aria-label="Puzzle"></canvas>
