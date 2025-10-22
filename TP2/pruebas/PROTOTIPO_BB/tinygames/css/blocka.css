@@ -64,3 +64,34 @@ pre{white-space:pre-wrap;color:#dbeafe}
 #warn.warning {
     display: none;
 }
+
+/* --- Estilos para botón Jugar sobre el canvas --- */
+/* .canvas-wrapper posicionado para permitir overlay centrado */
+.canvas-wrapper {
+    position: relative;
+    display: inline-block;
+    line-height: 0; /* evita espacio extra alrededor del canvas */
+}
+
+/* Botón grande centrado sobre el canvas al inicio */
+.play-button {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: #FF6B00; /* color pedido */
+    color: #fff; /* texto blanco */
+    border: none;
+    padding: 12px 22px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 16px;
+    box-shadow: 0 6px 18px rgba(255,107,0,0.25);
+    z-index: 10;
+    cursor: pointer;
+}
+
+/* Clase utilitaria para ocultar cuando empieza el juego */
+.hidden { display: none }
+
+/* Nota: se usa este botón solo para iniciar; una vez oculto, el juego carga normalmente */

@@ -29,7 +29,13 @@
             <div id="timer-bar-container">
                 <div id="timer-bar"></div>
             </div>
-            <canvas id="puzzleCanvas" width="720" height="480"></canvas>
+
+            <!-- Se envuelve el canvas y se agrega el botón Jugar -->
+            <div class="canvas-wrapper">
+                <canvas id="puzzleCanvas" width="720" height="480"></canvas>
+                <button id="playButton" class="play-button">Jugar</button>
+            </div>
+
             <div id="status" class="small">Estado: esperando imagen...</div>
             <div id="warn" class="warning"></div>
         </div>

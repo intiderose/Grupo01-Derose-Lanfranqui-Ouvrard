@@ -10,6 +10,9 @@ let img = new Image();
 let imageLoaded = false;
 const FALLBACK_DATAURL = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGNgYAAAAAMAASsJTYQAAAAASUVORK5CYII=';
 
+// Nuevo: recorte cuadrado en coordenadas de la imagen original
+let srcCrop = { x: 0, y: 0, size: 0 };
+
 
 // Controles
 const piecesCount = document.getElementById('piecesCount');
@@ -54,16 +57,37 @@ function fitCanvasToImage(){
     const maxW = 720, maxH = 480;
     let w = img.naturalWidth || img.width || maxW;
     let h = img.naturalHeight || img.height || maxH;
-    const ratio = Math.min(maxW / w, maxH / h, 1);
-    canvas.width = Math.round(w * ratio);
-    canvas.height = Math.round(h * ratio);
+
+    // Escalar la imagen si es más grande que el máximo
+    const scale = Math.min(maxW / w, maxH / h, 1);
+    const scaledW = Math.round(w * scale);
+    const scaledH = Math.round(h * scale);
+
+    // Hacer el canvas cuadrado: tamaño = el menor lado escalado
+    const size = Math.min(scaledW, scaledH);
+    canvas.width = size;
+    canvas.height = size;
+
+    // Calcular recorte cuadrado centrado en la imagen original (coordenadas en la imagen original)
+    if ((img.naturalWidth || img.width) >= (img.naturalHeight || img.height)) {
+        srcCrop.size = img.naturalHeight || img.height;
+        srcCrop.x = Math.floor(((img.naturalWidth || img.width) - srcCrop.size) / 2);
+        srcCrop.y = 0;
+    } else {
+        srcCrop.size = img.naturalWidth || img.width;
+        srcCrop.x = 0;
+        srcCrop.y = Math.floor(((img.naturalHeight || img.height) - srcCrop.size) / 2);
+    }
 }
 
 function createPieces(){
     grid = parseInt(piecesCount.value, 10) || 4;
-    // Dividir toda la imagen en grid x grid (puede no ser cuadrado perfecto)
-    pieceSizeW = canvas.width / grid;
-    pieceSizeH = canvas.height / grid;
+
+    // Usar tamaño cuadrado de pieza para que sean "cuadrados perfectos"
+    const pieceSize = canvas.width / grid;
+    pieceSizeW = pieceSize;
+    pieceSizeH = pieceSize;
+
     pieces = [];
     for(let y=0;y<grid;y++){
         for(let x=0;x<grid;x++){
@@ -94,38 +118,35 @@ function draw(){
         return;
     }
 
+    // Helper: tamaño en la imagen fuente por pieza (en coordenadas originales)
+    const imgPieceSize = srcCrop.size / grid;
+    const pieceSize = pieceSizeW; // square
+
     // --- PRIMER NIVEL: filtro gris por pieza ---
     if(currentLevel === 1){
-        const width = canvas.width;
-        const height = canvas.height;
-
-        // Crear un canvas temporal para obtener los datos de la imagen original
-        const tempCanvas = document.createElement('canvas');
-        tempCanvas.width = width;
-        tempCanvas.height = height;
-        const tempCtx = tempCanvas.getContext('2d');
-        tempCtx.drawImage(img, 0, 0, width, height);
-
-        // Dibuja cada pieza con filtro gris y rotación
+        // Crear un canvas temporal para obtener la pieza escalada y luego procesarla píxel a píxel
         for(let i=0;i<pieces.length;i++){
             const p = pieces[i];
-            // Extraer la imagen de la pieza
-            const sx = (p.correctIndex % grid) * pieceSizeW;
-            const sy = Math.floor(p.correctIndex / grid) * pieceSizeH;
 
-            // Crear canvas temporal para la pieza
+            // Coordenadas fuente en la imagen original (recortada a cuadrado)
+            const srcX = Math.floor(srcCrop.x + (p.correctIndex % grid) * imgPieceSize);
+            const srcY = Math.floor(srcCrop.y + Math.floor(p.correctIndex / grid) * imgPieceSize);
+
+            // Canvas temporal por pieza (tamaño en destino = pieceSize x pieceSize)
             const pieceCanvas = document.createElement('canvas');
-            pieceCanvas.width = pieceSizeW;
-            pieceCanvas.height = pieceSizeH;
+            pieceCanvas.width = pieceSize;
+            pieceCanvas.height = pieceSize;
             const pieceCtx = pieceCanvas.getContext('2d');
+
+            // Dibujar la porción de la imagen original recortada y escalada a tamaño cuadrado de la pieza
             pieceCtx.drawImage(
-                tempCanvas,
-                sx, sy, pieceSizeW, pieceSizeH,
-                0, 0, pieceSizeW, pieceSizeH
+                img,
+                srcX, srcY, imgPieceSize, imgPieceSize,
+                0, 0, pieceSize, pieceSize
             );
 
-            // Obtener datos y aplicar filtro gris
-            const pieceImageData = pieceCtx.getImageData(0, 0, pieceSizeW, pieceSizeH);
+            // Obtener los datos y convertir a escala de grises píxel a píxel
+            const pieceImageData = pieceCtx.getImageData(0, 0, pieceSize, pieceSize);
             for (let j = 0; j < pieceImageData.data.length; j += 4) {
                 const r = pieceImageData.data[j];
                 const g = pieceImageData.data[j + 1];
@@ -141,12 +162,12 @@ function draw(){
 
             // Dibuja la pieza rotada en el canvas principal
             ctx.save();
-            ctx.translate(p.x + pieceSizeW/2, p.y + pieceSizeH/2);
+            ctx.translate(p.x + pieceSize/2, p.y + pieceSize/2);
             ctx.rotate((p.rotation * Math.PI) / 180);
-            ctx.drawImage(pieceCanvas, -pieceSizeW/2, -pieceSizeH/2, pieceSizeW, pieceSizeH);
-            ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+            ctx.drawImage(pieceCanvas, -pieceSize/2, -pieceSize/2, pieceSize, pieceSize);
+            ctx.strokeStyle = 'rgba(255,255,255,0.5)';
             ctx.lineWidth = 2;
-            ctx.strokeRect(-pieceSizeW/2+1, -pieceSizeH/2+1, pieceSizeW-2, pieceSizeH-2);
+            ctx.strokeRect(-pieceSize/2+1, -pieceSize/2+1, pieceSize-2, pieceSize-2);
             ctx.restore();
         }
         return;
@@ -154,52 +175,37 @@ function draw(){
 
     // --- SEGUNDO NIVEL: filtro brillo +30% por pieza ---
     if(currentLevel === 2){
-        const width = canvas.width;
-        const height = canvas.height;
-
-        // Crear un canvas temporal para obtener los datos de la imagen original
-        const tempCanvas = document.createElement('canvas');
-        tempCanvas.width = width;
-        tempCanvas.height = height;
-        const tempCtx = tempCanvas.getContext('2d');
-        tempCtx.drawImage(img, 0, 0, width, height);
-
-        // Dibuja cada pieza con filtro brillo y rotación
         for(let i=0;i<pieces.length;i++){
             const p = pieces[i];
-            // Extraer la imagen de la pieza
-            const sx = (p.correctIndex % grid) * pieceSizeW;
-            const sy = Math.floor(p.correctIndex / grid) * pieceSizeH;
+            const srcX = Math.floor(srcCrop.x + (p.correctIndex % grid) * imgPieceSize);
+            const srcY = Math.floor(srcCrop.y + Math.floor(p.correctIndex / grid) * imgPieceSize);
 
-            // Crear canvas temporal para la pieza
             const pieceCanvas = document.createElement('canvas');
-            pieceCanvas.width = pieceSizeW;
-            pieceCanvas.height = pieceSizeH;
+            pieceCanvas.width = pieceSize;
+            pieceCanvas.height = pieceSize;
             const pieceCtx = pieceCanvas.getContext('2d');
+
             pieceCtx.drawImage(
-                tempCanvas,
-                sx, sy, pieceSizeW, pieceSizeH,
-                0, 0, pieceSizeW, pieceSizeH
+                img,
+                srcX, srcY, imgPieceSize, imgPieceSize,
+                0, 0, pieceSize, pieceSize
             );
 
-            // Obtener datos y aplicar filtro brillo +30%
-            const pieceImageData = pieceCtx.getImageData(0, 0, pieceSizeW, pieceSizeH);
+            const pieceImageData = pieceCtx.getImageData(0, 0, pieceSize, pieceSize);
             for (let j = 0; j < pieceImageData.data.length; j += 4) {
                 pieceImageData.data[j]     = Math.min(255, Math.round(pieceImageData.data[j] * 1.3));     // R
                 pieceImageData.data[j + 1] = Math.min(255, Math.round(pieceImageData.data[j + 1] * 1.3)); // G
                 pieceImageData.data[j + 2] = Math.min(255, Math.round(pieceImageData.data[j + 2] * 1.3)); // B
-                // Alpha no se modifica
             }
             pieceCtx.putImageData(pieceImageData, 0, 0);
 
-            // Dibuja la pieza rotada en el canvas principal
             ctx.save();
-            ctx.translate(p.x + pieceSizeW/2, p.y + pieceSizeH/2);
+            ctx.translate(p.x + pieceSize/2, p.y + pieceSize/2);
             ctx.rotate((p.rotation * Math.PI) / 180);
-            ctx.drawImage(pieceCanvas, -pieceSizeW/2, -pieceSizeH/2, pieceSizeW, pieceSizeH);
-            ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+            ctx.drawImage(pieceCanvas, -pieceSize/2, -pieceSize/2, pieceSize, pieceSize);
+            ctx.strokeStyle = 'rgba(255,255,255,0,5)';
             ctx.lineWidth = 2;
-            ctx.strokeRect(-pieceSizeW/2+1, -pieceSizeH/2+1, pieceSizeW-2, pieceSizeH-2);
+            ctx.strokeRect(-pieceSize/2+1, -pieceSize/2+1, pieceSize-2, pieceSize-2);
             ctx.restore();
         }
         return;
@@ -207,83 +213,64 @@ function draw(){
 
     // --- TERCER NIVEL: filtro negativo por pieza ---
     if(currentLevel === 3){
-        const width = canvas.width;
-        const height = canvas.height;
-
-        // Crear un canvas temporal para obtener los datos de la imagen original
-        const tempCanvas = document.createElement('canvas');
-        tempCanvas.width = width;
-        tempCanvas.height = height;
-        const tempCtx = tempCanvas.getContext('2d');
-        tempCtx.drawImage(img, 0, 0, width, height);
-
-        // Dibuja cada pieza con filtro negativo y rotación
         for(let i=0;i<pieces.length;i++){
             const p = pieces[i];
-            // Extraer la imagen de la pieza
-            const sx = (p.correctIndex % grid) * pieceSizeW;
-            const sy = Math.floor(p.correctIndex / grid) * pieceSizeH;
+            const srcX = Math.floor(srcCrop.x + (p.correctIndex % grid) * imgPieceSize);
+            const srcY = Math.floor(srcCrop.y + Math.floor(p.correctIndex / grid) * imgPieceSize);
 
-            // Crear canvas temporal para la pieza
             const pieceCanvas = document.createElement('canvas');
-            pieceCanvas.width = pieceSizeW;
-            pieceCanvas.height = pieceSizeH;
+            pieceCanvas.width = pieceSize;
+            pieceCanvas.height = pieceSize;
             const pieceCtx = pieceCanvas.getContext('2d');
+
             pieceCtx.drawImage(
-                tempCanvas,
-                sx, sy, pieceSizeW, pieceSizeH,
-                0, 0, pieceSizeW, pieceSizeH
+                img,
+                srcX, srcY, imgPieceSize, imgPieceSize,
+                0, 0, pieceSize, pieceSize
             );
 
-            // Obtener datos y aplicar filtro negativo
-            const pieceImageData = pieceCtx.getImageData(0, 0, pieceSizeW, pieceSizeH);
+            const pieceImageData = pieceCtx.getImageData(0, 0, pieceSize, pieceSize);
             for (let j = 0; j < pieceImageData.data.length; j += 4) {
                 pieceImageData.data[j]     = 255 - pieceImageData.data[j];     // R
                 pieceImageData.data[j + 1] = 255 - pieceImageData.data[j + 1]; // G
                 pieceImageData.data[j + 2] = 255 - pieceImageData.data[j + 2]; // B
-                // Alpha no se modifica
             }
             pieceCtx.putImageData(pieceImageData, 0, 0);
 
-            // Dibuja la pieza rotada en el canvas principal
             ctx.save();
-            ctx.translate(p.x + pieceSizeW/2, p.y + pieceSizeH/2);
+            ctx.translate(p.x + pieceSize/2, p.y + pieceSize/2);
             ctx.rotate((p.rotation * Math.PI) / 180);
-            ctx.drawImage(pieceCanvas, -pieceSizeW/2, -pieceSizeH/2, pieceSizeW, pieceSizeH);
+            ctx.drawImage(pieceCanvas, -pieceSize/2, -pieceSize/2, pieceSize, pieceSize);
             ctx.strokeStyle = 'rgba(255,255,255,0.12)';
             ctx.lineWidth = 2;
-            ctx.strokeRect(-pieceSizeW/2+1, -pieceSizeH/2+1, pieceSizeW-2, pieceSizeH-2);
+            ctx.strokeRect(-pieceSize/2+1, -pieceSize/2+1, pieceSize-2, pieceSize-2);
             ctx.restore();
         }
         return;
     }
 
     // --- RESTO DE NIVELES: imagen normal por piezas ---
-    // Dibujar cada pieza según la cuadrícula completa
     for(let i=0;i<pieces.length;i++){
         const p = pieces[i];
         ctx.save();
-        ctx.translate(p.x + pieceSizeW/2, p.y + pieceSizeH/2);
+        ctx.translate(p.x + pieceSize/2, p.y + pieceSize/2);
         ctx.rotate((p.rotation * Math.PI) / 180);
 
         ctx.fillStyle = '#111827';
-        ctx.fillRect(-pieceSizeW/2, -pieceSizeH/2, pieceSizeW, pieceSizeH);
+        ctx.fillRect(-pieceSize/2, -pieceSize/2, pieceSize, pieceSize);
 
-        const imgW = img.naturalWidth || img.width;
-        const imgH = img.naturalHeight || img.height;
-        const imgPieceW = imgW / grid;
-        const imgPieceH = imgH / grid;
+        // Usar recorte cuadrado de la imagen original para cada pieza
+        const srcX = srcCrop.x + (p.correctIndex % grid) * imgPieceSize;
+        const srcY = srcCrop.y + Math.floor(p.correctIndex / grid) * imgPieceSize;
 
         ctx.drawImage(
             img,
-            (p.correctIndex % grid) * imgPieceW,
-            Math.floor(p.correctIndex / grid) * imgPieceH,
-            imgPieceW, imgPieceH,
-            -pieceSizeW/2, -pieceSizeH/2, pieceSizeW, pieceSizeH
+            srcX, srcY, imgPieceSize, imgPieceSize,
+            -pieceSize/2, -pieceSize/2, pieceSize, pieceSize
         );
-        ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+        ctx.strokeStyle = 'rgba(255,255,255,0.5)';
         ctx.lineWidth = 2;
-        ctx.strokeRect(-pieceSizeW/2+1, -pieceSizeH/2+1, pieceSizeW-2, pieceSizeH-2);
+        ctx.strokeRect(-pieceSize/2+1, -pieceSize/2+1, pieceSize-2, pieceSize-2);
         ctx.restore();
     }
 }
@@ -358,7 +345,7 @@ canvas.addEventListener('click', (ev)=>{
             if(checkSolved()){
                 setTimeout(()=>{
                     stopTimer();
-                    if (usedImages.length < imageList.length) {
+                    if (usedImages.length < MAX_LEVELS) {
                         statusEl.textContent = '¡Felicidades! Puzzle resuelto. Pasando al siguiente nivel...';
                         setTimeout(()=>{
                             loadImage(getNextImage());
@@ -387,7 +374,7 @@ canvas.addEventListener('contextmenu', (ev)=>{
             if(checkSolved()){
                 setTimeout(()=>{
                     stopTimer();
-                    if (usedImages.length < imageList.length) {
+                    if (usedImages.length < MAX_LEVELS) {
                         statusEl.textContent = '¡Felicidades! Puzzle resuelto. Pasando al siguiente nivel...';
                         setTimeout(()=>{
                             loadImage(getNextImage());
@@ -413,19 +400,25 @@ piecesCount.addEventListener('change', ()=>{
 
 // Lista de imágenes disponibles
 const imageList = [
-    "assets/MotoX3M.jpg",
-    "assets/pamplona.jpg",
-    "assets/solitaire-peg.png"
+    "assets/ac-fondo.jpg",
+    "assets/ff-fondo.jpg",
+    "assets/hk-fondo.jpg",
+    "assets/loz-fondo.jpg",
+    "assets/minecraft-fondo.jpg",
+    "assets/sekiro-fondo.jpg"
 ];
+
+// Nuevo: límite máximo de niveles con filtro
+const MAX_LEVELS = 3;
+
 let currentLevel = 0;
 let usedImages = [];
 
 function getNextImage() {
-    // Si ya jugó todas las imágenes, no hay más niveles
-    if (usedImages.length >= imageList.length) {
+    // Limitar a MAX_LEVELS niveles (selección aleatoria sin repetir hasta MAX_LEVELS)
+    if (usedImages.length >= MAX_LEVELS) {
         return null;
     }
-    // Selecciona una imagen que no se haya jugado aún
     let available = imageList.filter(img => !usedImages.includes(img));
     const next = available[Math.floor(Math.random() * available.length)];
     usedImages.push(next);
@@ -440,14 +433,14 @@ function loadImage(url){
         return;
     }
     imageLoaded = false;
-    statusEl.textContent = 'Nivel ' + currentLevel + ' de ' + imageList.length + ': cargando imagen...';
+    statusEl.textContent = 'Nivel ' + currentLevel + ' de ' + MAX_LEVELS + ': cargando imagen...';
     stopTimer();
     try{
         img = new Image();
         if(shouldUseCORS()) img.crossOrigin = 'Anonymous';
         img.onload = () => {
             imageLoaded = true;
-            statusEl.textContent = 'Nivel ' + currentLevel + ' de ' + imageList.length + ': imagen cargada';
+            statusEl.textContent = 'Nivel ' + currentLevel + ' de ' + MAX_LEVELS + ': imagen cargada';
             fitCanvasToImage();
             createPieces();
             for(let i=0;i<pieces.length;i++){
@@ -455,10 +448,10 @@ function loadImage(url){
             }
             draw();
 
-            // Temporizador para los dos últimos niveles
-            if (currentLevel === imageList.length - 1) {
+            // Temporizador para los dos últimos niveles (relativo a MAX_LEVELS)
+            if (currentLevel === MAX_LEVELS - 1) {
                 startTimer(40);
-            } else if (currentLevel === imageList.length) {
+            } else if (currentLevel === MAX_LEVELS) {
                 startTimer(20);
             }
         };
@@ -474,10 +467,30 @@ function loadImage(url){
     }
 }
 
-// Al iniciar, cargar una imagen aleatoria y preparar niveles
+// --- Cambios ---
+// Antes: al iniciar se cargaba automáticamente una imagen.
+// Ahora: no cargamos al cargar la página; esperamos a que el usuario haga click en "Jugar".
+// Inicializar arrays/contadores pero no lanzar loadImage automáticamente.
 usedImages = [];
 currentLevel = 0;
-loadImage(getNextImage());
+
+// Conectar el botón "Jugar" (está en el HTML encima del canvas)
+const playButton = document.getElementById('playButton');
+
+function startGame(){
+    // Reiniciar estado de niveles y lista de usados
+    usedImages = [];
+    currentLevel = 0;
+    // Ocultar el botón y comenzar el primer nivel
+    if (playButton) playButton.classList.add('hidden');
+    loadImage(getNextImage());
+}
+
+// Si el botón existe, conectar el evento click para iniciar el juego.
+// Si no existe (por cambios futuros), no hace nada y la carga manual puede hacerse con loadImage().
+if (playButton) {
+    playButton.addEventListener('click', startGame);
+}
 
 function setPixel(imageData, x, y, r, g, b, a) {
     let index = (x + y * imageData.width) * 4;
@@ -486,4 +499,3 @@ function setPixel(imageData, x, y, r, g, b, a) {
     imageData.data[index + 2] = b;
     imageData.data[index + 3] = a;
 }
-
