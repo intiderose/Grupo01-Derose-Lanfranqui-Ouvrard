@@ -293,3 +293,43 @@ textarea::placeholder {
     color: white;
 }
 
+/* Estilos popup de victoria (ajustados para caja rectángulo y tipografía mayor) */
+.win-popup {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    pointer-events: none; /* overlay no captura clics; la caja sí */
+    opacity: 0;
+    transition: opacity 180ms ease;
+    background: rgba(0,0,0,0.40); /* overlay semitransparente */
+}
+.win-popup[hidden] { display: none; } /* mantener hidden por accesibilidad inicial */
+
+.win-popup .win-box {
+    pointer-events: auto;
+    background: linear-gradient(90deg,#FF8A00,#FF6B00);
+    color: #fff;
+    padding: 18px 28px;
+    border-radius: 12px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.45);
+    font-weight: 800;
+    font-size: 28px; /* aumentado: tipografía más grande */
+    font-family: 'Fredoka', sans-serif;
+    min-width: 260px;
+    max-width: 86%;
+    text-align: center;
+    transform: translateY(-8px) scale(0.98);
+    transition: transform 200ms ease, opacity 180ms ease;
+    opacity: 0.98;
+}
+
+/* estado visible (JS remueve hidden y añade clase .show) */
+.win-popup.show {
+    opacity: 1;
+}
+.win-popup.show .win-box {
+    transform: translateY(0) scale(1);
+}

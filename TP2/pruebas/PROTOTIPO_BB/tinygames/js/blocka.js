@@ -14,7 +14,7 @@ const FALLBACK_DATAURL = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAB
 let srcCrop = { x: 0, y: 0, size: 0 };
 
 
-// Controles
+ // Controles
 const piecesCount = document.getElementById('piecesCount');
 const statusEl = document.getElementById('status');
 const warnEl = document.getElementById('warn');
@@ -295,6 +295,8 @@ let timerStart = 0;
 function returnToMenu(message){
     // Detener cualquier temporizador/animación
     stopTimer();
+    // Ocultar popup si está visible
+    hideWinPopup();
     // Reiniciar estado de niveles
     usedImages = [];
     currentLevel = 0;
@@ -350,6 +352,51 @@ function stopTimer() {
     timerBarContainer.classList.remove('timeout');
 }
 
+// Nuevo: mostrar/ocultar popup de victoria y regresar al menú después de X ms
+function hideWinPopup() {
+    const p = document.getElementById('winPopup');
+    if (!p) return;
+    p.classList.remove('show');
+    // dejarlo hidden por accesibilidad tras animación corta
+    setTimeout(()=>{ p.hidden = true; }, 220);
+}
+
+function showWinPopup(message = '¡Felicidades, ganaste!', duration = 2000) {
+    const p = document.getElementById('winPopup');
+    if (!p) {
+        // fallback directo si el elemento no existe
+        returnToMenu(message);
+        return;
+    }
+
+    // asegurar que exista la caja interna .win-box
+    let box = p.querySelector('.win-box');
+    if (!box) {
+        box = document.createElement('div');
+        box.className = 'win-box';
+        p.appendChild(box);
+    }
+
+    // poner el mensaje en la caja (no reemplazar el contenedor)
+    box.textContent = message;
+
+    // mostrar overlay + caja
+    p.hidden = false;
+    // forzar reflow leve antes de añadir clase para animación consistente
+    void p.offsetWidth;
+    p.classList.add('show');
+
+    // detener timers y demás
+    stopTimer();
+
+    // después de duration ms ocultar y volver al menú
+    setTimeout(()=>{
+        hideWinPopup();
+        // llamar a returnToMenu con el mensaje
+        returnToMenu(message);
+    }, duration);
+}
+
 // Evento click izquierdo: rotar 90° a la izquierda la pieza clickeada
 canvas.addEventListener('click', (ev)=>{
     const rect = canvas.getBoundingClientRect();
@@ -369,11 +416,9 @@ canvas.addEventListener('click', (ev)=>{
                             loadImage(getNextImage());
                         }, 1200);
                     } else {
-                        // cambiado: volver al menú cuando se completaron todos los niveles
-                        statusEl.textContent = '¡Felicidades! Has completado todos los niveles. Volviendo al menú...';
-                        setTimeout(()=>{
-                            returnToMenu('¡Felicidades! Has completado todos los niveles.');
-                        }, 1200);
+                        // Mostrar popup de victoria 2s y luego volver al menú
+                        statusEl.textContent = '¡Felicidades! Has completado todos los niveles.';
+                        showWinPopup('¡Felicidades, ganaste!', 2000);
                     }
                 }, 100);
             }
@@ -402,11 +447,9 @@ canvas.addEventListener('contextmenu', (ev)=>{
                             loadImage(getNextImage());
                         }, 1200);
                     } else {
-                        // cambiado: volver al menú cuando se completaron todos los niveles
-                        statusEl.textContent = '¡Felicidades! Has completado todos los niveles. Volviendo al menú...';
-                        setTimeout(()=>{
-                            returnToMenu('¡Felicidades! Has completado todos los niveles.');
-                        }, 1200);
+                        // Mostrar popup de victoria 2s y luego volver al menú
+                        statusEl.textContent = '¡Felicidades! Has completado todos los niveles.';
+                        showWinPopup('¡Felicidades, ganaste!', 2000);
                     }
                 }, 100);
             }
@@ -454,12 +497,10 @@ function getNextImage() {
 
 function loadImage(url){
     if (!url) {
-        // cambiado: cuando no hay más imagenes, volver al menú igual que el botón
-        statusEl.textContent = '¡Felicidades! Has completado todos los niveles. Volviendo al menú...';
+        // sustituido: mostrar popup de victoria 2s y volver al menú
+        statusEl.textContent = '¡Felicidades! Has completado todos los niveles.';
         stopTimer();
-        setTimeout(()=>{
-            returnToMenu('¡Felicidades! Has completado todos los niveles.');
-        }, 800);
+        showWinPopup('¡Felicidades, ganaste!', 2000);
         return;
     }
     imageLoaded = false;
