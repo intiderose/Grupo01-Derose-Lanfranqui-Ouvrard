@@ -1,0 +1,97 @@
+:root{--bg:#0f172a;--panel:#0b1220;--accent:#60a5fa;color-scheme:dark}
+html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,sans-serif;background:linear-gradient(180deg,#071029 0%,#071a2a 100%);color:#e6eef8}
+.app{max-width:1100px;margin:28px auto;padding:18px;background:rgba(255,255,255,0.02);border-radius:12px;box-shadow:0 8px 30px rgba(2,6,23,0.6)}
+header{display:flex;gap:12px;align-items:center;margin-bottom:14px;justify-content:center;text-align:center}
+h1{font-size:18px;margin:0}
+.controls{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px;justify-content:center;align-items:center;text-align:center}
+select,input,button{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);color:inherit;padding:8px;border-radius:8px}
+button{cursor:pointer}
+
+.layout{display:flex;gap:14px;justify-content:center;align-items:center}
+.layout-centered{justify-content:center;align-items:center}
+.left{flex:none;display:flex;flex-direction:column;align-items:center}
+canvas{background:#111827;border-radius:8px;box-shadow:0 6px 18px rgba(2,6,23,0.6)}
+.right,.panel{display:none!important}
+.section{margin-bottom:12px}
+label{display:block;font-size:12px;margin-bottom:6px;color:#bcd3ff}
+footer{font-size:12px;color:#9fb4da;margin-top:12px}
+.small{font-size:12px;color:#a9c0e9}
+.warning{color:#ffcccb;font-size:13px;margin-top:8px}
+details{margin-top:16px;background:rgba(255,255,255,0.02);padding:12px;border-radius:8px}
+pre{white-space:pre-wrap;color:#dbeafe}
+
+/* Estilos trasladados del HTML */
+.pieces-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Timer Bar Styles (ajustados para el layout) */
+#timer-bar-container {
+    width: 100%;
+    max-width: 720px;
+    height: 18px;
+    margin-bottom: 8px;
+    background: #23395d;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    display: none;
+}
+#timer-bar {
+    height: 100%;
+    background: linear-gradient(90deg,#60a5fa 0%,#2563eb 100%);
+    border-radius: 8px;
+    transition: width 0.2s;
+    width: 100%;
+}
+#timer-bar-container.timeout {
+    animation: shake 0.5s;
+}
+@keyframes shake {
+    0% { transform: translateX(0);}
+    25% { transform: translateX(-4px);}
+    50% { transform: translateX(4px);}
+    75% { transform: translateX(-4px);}
+    100% { transform: translateX(0);}
+}
+
+/* Ajustes para status y warning */
+#status.small {
+    margin-top: 8px;
+}
+#warn.warning {
+    display: none;
+}
+
+/* --- Estilos para botón Jugar sobre el canvas --- */
+/* .canvas-wrapper posicionado para permitir overlay centrado */
+.canvas-wrapper {
+    position: relative;
+    display: inline-block;
+    line-height: 0; /* evita espacio extra alrededor del canvas */
+}
+
+/* Botón grande centrado sobre el canvas al inicio */
+.play-button {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: #FF6B00; /* color pedido */
+    color: #fff; /* texto blanco */
+    border: none;
+    padding: 12px 22px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 16px;
+    box-shadow: 0 6px 18px rgba(255,107,0,0.25);
+    z-index: 10;
+    cursor: pointer;
+}
+
+/* Clase utilitaria para ocultar cuando empieza el juego */
+.hidden { display: none }
+
+/* Nota: se usa este botón solo para iniciar; una vez oculto, el juego carga normalmente */
