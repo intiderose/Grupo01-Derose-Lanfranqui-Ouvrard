@@ -150,11 +150,6 @@ canvas {
     box-shadow: inset 0 0 0 2px rgba(255,107,0,0.12), 0 6px 18px rgba(255,107,0,0.08);
 }
 
-/* Versión compacta para pantallas muy pequeñas */
-@media (max-width: 420px) {
-    #timer-bar-container { height: 10px; border-radius: 10px; }
-    #timer-bar-container { width: 100%; }
-}
 
 /* ============================
    Estilos para el selector de piezas (mejora visual)
@@ -229,11 +224,7 @@ canvas {
     font-weight: 600;
 }
 
-/* Ajustes para pantallas pequeñas */
-@media (max-width: 520px) {
-    .pieces-label { font-size: 13px; gap:8px; padding:6px 8px; }
-    #piecesCount { min-width: 90px; padding-right: 34px; font-size: 12px; }
-}
+
 
 /* ============================
    Inputs: hacerlos naranja como los botones
@@ -298,16 +289,7 @@ input::placeholder,
 textarea::placeholder {
     color: rgba(255,255,255,0.7);
 }
-
-/* En pantallas pequeñas ajustar anchuras */
-@media (max-width: 520px) {
-    input[type="text"],
-    input[type="email"],
-    .comments-block__input,
-    .footer__subscribe-form input {
-        min-width: 120px;
-        padding: 7px 10px;
-        border-radius: 8px;
-    }
-    .header__search input[type="search"] { min-width: 120px; }
+#status{
+    color: white;
 }
+
