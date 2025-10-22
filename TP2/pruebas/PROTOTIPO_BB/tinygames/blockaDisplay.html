@@ -3,12 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Juego - TinyGames</title>
+    <title>Blocka - TinyGames</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka&family=Luckiest+Guy&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/juego.css">
     <link rel="stylesheet" href="css/styles.css">
+     <!-- nuevo: estilos del puzzle -->
+    <link rel="stylesheet" href="css/blocka.css">
 </head>
 <body>
 
@@ -63,13 +65,56 @@
     <div class="breadcrumbs">
         <p><a href="home.html">Home</a> > Juegos  > <span>Peg Solitaire</span></p>
     </div>
+
+    <!-- Añadido: controls igual que en blocka.html -->
+    <div class="controls">
+        <label class="pieces-label">
+            Piezas:
+            <select id="piecesCount">
+                <option value="3">3 x 3</option>
+                <option value="4" selected>4 x 4</option>
+                <option value="5">5 x 5</option>
+                <option value="6">6 x 6</option>
+                <option value="8">8 x 8</option>
+            </select>
+        </label>
+    </div>
+    <!-- Fin añadido -->
+
     <main>
         <div class="game-container">
-            <div class="game-container__image">
-                <img src="assets/solitaire-peg.png" alt="Peg Solitaire">
-                <div class="game-image-overlay">
-                    <button class="btn-jugar">Jugar</button>
+            <div class="game-container__image" id="blocka-embed-target">
+                <!-- ...existing layout code... -->
+                <div class="layout layout-centered" style="gap:24px;">
+                    <div class="left">
+                        <div id="timer-bar-container">
+                            <div id="timer-bar"></div>
+                        </div>
+
+                        <div class="canvas-wrapper">
+                            <canvas id="puzzleCanvas" width="480" height="480" aria-label="Puzzle"></canvas>
+                            <button id="playButton" class="play-button" type="button">Jugar</button>
+                        </div>
+
+                        <!-- Ajustado: eliminado input number y se conserva solo estado/warn -->
+                        <div class="blocka-controls" style="margin-top:12px;">
+                            <div class="blocka-status" style="margin-top:8px;">
+                                <div id="status" aria-live="polite">Estado: esperando</div>
+                                <div id="warn" hidden></div>
+                            </div>
+                        </div>
+                        <!-- Fin ajuste -->
+
+                    </div>
+
+                    <div class="right">
+                        <div class="side-buttons">
+                            <button id="restartLevelBtn" class="side-button">Reiniciar nivel</button>
+                            <button id="returnMenuBtn" class="side-button">Volver al Menú</button>
+                        </div>
+                    </div>
                 </div>
+                <!-- ...existing layout code... -->
             </div>
             <div class="game-container-botonera">
                 <button id="btn-instructions">Mira las instrucciones</button>
@@ -280,5 +325,6 @@
     </footer>
 
     <script src="js/juego.js"></script>
+    <script src="js/blocka.js"></script>
 </body>
 </html>
