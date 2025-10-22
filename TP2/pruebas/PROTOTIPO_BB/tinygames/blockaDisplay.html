@@ -66,20 +66,7 @@
         <p><a href="home.html">Home</a> > Juegos  > <span>Peg Solitaire</span></p>
     </div>
 
-    <!-- Añadido: controls igual que en blocka.html -->
-    <div class="controls">
-        <label class="pieces-label">
-            Piezas:
-            <select id="piecesCount">
-                <option value="3">3 x 3</option>
-                <option value="4" selected>4 x 4</option>
-                <option value="5">5 x 5</option>
-                <option value="6">6 x 6</option>
-                <option value="8">8 x 8</option>
-            </select>
-        </label>
-    </div>
-    <!-- Fin añadido -->
+
 
     <main>
         <div class="game-container">
@@ -90,7 +77,20 @@
                         <div id="timer-bar-container">
                             <div id="timer-bar"></div>
                         </div>
-
+                        <!-- Añadido: controls igual que en blocka.html -->
+                        <div class="controls">
+                            <label class="pieces-label">
+                                Piezas:
+                                <select id="piecesCount">
+                                    <option value="3">3 x 3</option>
+                                    <option value="4" selected>4 x 4</option>
+                                    <option value="5">5 x 5</option>
+                                    <option value="6">6 x 6</option>
+                                    <option value="8">8 x 8</option>
+                                </select>
+                            </label>
+                        </div>
+                        <!-- Fin añadido -->
                         <div class="canvas-wrapper">
                             <canvas id="puzzleCanvas" width="480" height="480" aria-label="Puzzle"></canvas>
                             <button id="playButton" class="play-button" type="button">Jugar</button>

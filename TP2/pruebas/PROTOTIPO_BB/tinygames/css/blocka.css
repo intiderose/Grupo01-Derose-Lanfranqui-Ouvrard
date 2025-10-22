@@ -1,90 +1,57 @@
-:root{--bg:#0f172a;--panel:#0b1220;--accent:#60a5fa;color-scheme:dark}
-html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,sans-serif;background:linear-gradient(180deg,#071029 0%,#071a2a 100%);color:#e6eef8}
-.app{max-width:1100px;margin:28px auto;padding:18px;background:rgba(255,255,255,0.02);border-radius:12px;box-shadow:0 8px 30px rgba(2,6,23,0.6)}
-header{display:flex;gap:12px;align-items:center;margin-bottom:14px;justify-content:center;text-align:center}
-h1{font-size:18px;margin:0}
-.controls{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px;justify-content:center;align-items:center;text-align:center}
-select,input,button{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);color:inherit;padding:8px;border-radius:8px}
-button{cursor:pointer}
+/* Contenido reducido: solo estilos relacionados al canvas para evitar conflictos
+   con juego.css y styles.css. Se eliminaron fondos, tamaños y reglas de layout. */
 
-.layout{display:flex;gap:14px;justify-content:center;align-items:flex-start}
-.layout-centered{justify-content:center;align-items:center}
-.left{flex:none;display:flex;flex-direction:column;align-items:center}
-canvas{background:#111827;border-radius:8px;box-shadow:0 6px 18px rgba(2,6,23,0.6)}
-.right{flex:0 0 180px; display:flex; align-items:flex-start; justify-content:center; margin-left:12px;}
-.side-buttons{display:flex;flex-direction:column;gap:12px;margin-top:40px;}
-.side-button{
-    width:160px;
-    height:48px;
-    background:#0C3966;
-    color:#ffffff;
-    border:none;
-    border-radius:12px;
-    font-weight:700;
-    font-family: Inter, Roboto, Arial, sans-serif;
-    font-size:15px;
-    cursor:pointer;
-    box-shadow: 0 6px 18px rgba(12,57,102,0.2);
+/* =======================
+   Posicionamiento: asegurar los botones a la derecha del canvas
+   (reglas locales y limitadas a .layout.layout-centered)
+   ======================= */
+
+/* Forzar disposición en fila únicamente cuando se use la clase combinada
+   .layout.layout-centered (mínimo impacto global). */
+.layout.layout-centered {
+    display: flex;
+    flex-direction: row;
+    align-items: center; /* cambiado: centrar verticalmente para alinear botones con el canvas */
+    gap: 16px; /* separación entre columnas */
+    flex-wrap: nowrap;
 }
-.section{margin-bottom:12px}
-label{display:block;font-size:12px;margin-bottom:6px;color:#bcd3ff}
-footer{font-size:12px;color:#9fb4da;margin-top:12px}
-.small{font-size:12px;color:#a9c0e9}
-.warning{color:#ffcccb;font-size:13px;margin-top:8px}
-details{margin-top:16px;background:rgba(255,255,255,0.02);padding:12px;border-radius:8px}
-pre{white-space:pre-wrap;color:#dbeafe}
 
-/* Estilos trasladados del HTML */
-.pieces-label {
-    display: inline-flex;
+/* Evitar que la columna izquierda crezca de forma inesperada */
+.layout.layout-centered > .left {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    justify-content: center; /* nuevo: centrar verticalmente el contenido (canvas) dentro de la columna izquierda */
+}
+
+/* Columna derecha: mantener los botones centrados verticalmente junto al canvas */
+.layout.layout-centered > .right {
+    flex: 0 0 auto;
+    display: flex;
     align-items: center;
-    gap: 8px;
+    justify-content: flex-start;
 }
 
-/* Timer Bar Styles (ajustados para el layout) */
-#timer-bar-container {
-    width: 100%;
-    max-width: 720px;
-    height: 18px;
-    margin-bottom: 8px;
-    background: #23395d;
-    border-radius: 8px;
-    overflow: hidden;
-    position: relative;
-    display: none;
-}
-#timer-bar {
-    height: 100%;
-    background: linear-gradient(90deg,#60a5fa 0%,#2563eb 100%);
-    border-radius: 8px;
-    transition: width 0.2s;
-    width: 100%;
-}
-#timer-bar-container.timeout {
-    animation: shake 0.5s;
-}
-@keyframes shake {
-    0% { transform: translateX(0);}
-    25% { transform: translateX(-4px);}
-    50% { transform: translateX(4px);}
-    75% { transform: translateX(-4px);}
-    100% { transform: translateX(0);}
-}
+/* ============================
+   Estilos del canvas y botón (sin tocar otros layouts)
+   ============================ */
 
-/* Ajustes para status y warning */
-#status.small {
-    margin-top: 8px;
-}
-#warn.warning {
-    display: none;
-}
-
-/* --- Estilos para botón Jugar sobre el canvas --- */
-/* .canvas-wrapper posicionado para permitir overlay centrado */
+/* Wrapper para posicionar overlays (botón) sobre el canvas */
 .canvas-wrapper {
     position: relative;
     display: inline-block;
     line-height: 0; /* evita espacio extra alrededor del canvas */
+}
+
+/* Estilos específicos del canvas (únicos y aislados) */
+canvas {
+    background: #111827;
+    border-radius: 8px;
+    box-shadow: 0 6px 18px rgba(2,6,23,0.6);
+    display: block;
+    max-width: 100%; /* responsivo dentro del contenedor */
+    height: auto;
 }
 
 /* Botón grande centrado sobre el canvas al inicio */
@@ -93,8 +60,8 @@ pre{white-space:pre-wrap;color:#dbeafe}
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    background: #FF6B00; /* color pedido */
-    color: #fff; /* texto blanco */
+    background: #FF6B00;
+    color: #fff;
     border: none;
     padding: 12px 22px;
     border-radius: 10px;
@@ -105,7 +72,47 @@ pre{white-space:pre-wrap;color:#dbeafe}
     cursor: pointer;
 }
 
-/* Clase utilitaria para ocultar cuando empieza el juego */
-.hidden { display: none }
+/* Utilitaria para ocultar elementos cuando empieza el juego */
+.hidden { display: none; }
 
-/* Nota: se usa este botón solo para iniciar; una vez oculto, el juego carga normalmente */
+/* ============================
+   Botones a la derecha del canvas
+   ============================ */
+
+/* Contenedor de botones laterales (dentro de la columna derecha). */
+.side-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+    justify-content: center;
+    padding-left: 12px; /* separación respecto al canvas */
+    box-sizing: border-box;
+}
+
+/* Estilo de los botones laterales, mismo color y sensación que .play-button */
+.side-button {
+    background: #FF6B00;
+    color: #fff;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    box-shadow: 0 6px 14px rgba(255,107,0,0.22);
+    cursor: pointer;
+    min-width: 140px; /* ancho mínimo para consistencia visual */
+    text-align: center;
+}
+
+/* Pequeñas variantes de interacción */
+.side-button:hover {
+    filter: brightness(1.03);
+}
+.side-button:active {
+    transform: translateY(1px);
+}
+.side-button:focus {
+    outline: 3px solid rgba(255,107,0,0.18);
+    outline-offset: 2px;
+}
