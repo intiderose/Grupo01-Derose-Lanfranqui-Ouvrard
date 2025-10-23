@@ -937,6 +937,13 @@ main {
     .content-box__see-all {
         font-size: 30px;
         display: block; /* Visible en desktop */
+        color: #0C3966; /* Coincide con el color del título */
+        text-decoration: underline;
+        opacity: 0.5;
+    }
+
+    .content-box__see-all:visited {
+        color: #0C3966; /* Evita el color violeta en enlaces visitados */
     }
 
     /* Contenedor de Tarjetas y Flechas */
