@@ -75,7 +75,7 @@
 
                 <div class="layout layout-centered" style="gap:24px;">
                     <div class="left">
-                        <!-- Añadido: controls igual que en blocka.html -->
+                        <!-- Modificado: controls ahora contiene el select y el botón "Volver al Menú" en la misma línea -->
                         <div class="controls">
                             <label class="pieces-label">
                                 Piezas:
@@ -87,7 +87,13 @@
                                     <option value="8">8 x 8</option>
                                 </select>
                             </label>
+
+                            <!-- Nuevo wrapper a la derecha para alinear el botón en la misma línea -->
+                            <div class="controls-right">
+                                <button id="returnMenuBtn" class="side-button">Volver al Menú</button>
+                            </div>
                         </div>
+
                         <div id="timer-bar-container">
                             <div id="timer-bar"></div>
                         </div>
@@ -111,7 +117,8 @@
 
                     <div class="right">
                         <div class="side-buttons">
-                             <button id="returnMenuBtn" class="side-button">Volver al Menú</button>
+                             <!-- Eliminado botón duplicado de aquí para evitar duplicados -->
+                             <!-- ...existing code (ahora vacío o con otros botones si los hubiera)... -->
                         </div>
                     </div>
                 </div>

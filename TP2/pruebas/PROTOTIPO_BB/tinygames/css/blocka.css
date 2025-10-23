@@ -23,7 +23,7 @@
     flex-direction: column;
     gap: 12px;
     justify-content: center; /* centrar verticalmente el contenido (canvas) dentro de la columna izquierda */
-    padding-left: 150px; /* MODIFICADO: antes 35px, ahora +20px = 55px */
+    padding-left: 50px; /* MODIFICADO: antes 35px, ahora +20px = 55px */
 }
 
 /* Columna derecha: mantener los botones centrados verticalmente junto al canvas */
@@ -167,6 +167,20 @@ canvas {
     display: flex;
     align-items: center;
     gap: 8px;
+    width: 100%; /* añadido: ocupar toda la línea disponible */
+}
+
+/* Nuevo: wrapper que empuja el botón a la derecha en la misma línea */
+.controls .controls-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Opcional: reducir ancho mínimo del botón cuando está en la barra (si se desea) */
+.controls .controls-right .side-button {
+    min-width: 140px; /* conservar consistencia visual; ajustar si se quiere más pequeño */
 }
 
 /* Etiqueta wrapper: fondo oscuro, texto claro y borde redondeado */
