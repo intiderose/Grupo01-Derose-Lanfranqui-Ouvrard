@@ -13,8 +13,10 @@ const FALLBACK_DATAURL = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAB
 // Nuevo: recorte cuadrado en coordenadas de la imagen original
 let srcCrop = { x: 0, y: 0, size: 0 };
 
+// Nuevo: incremento en píxeles que se aplica al tamaño calculado del canvas al iniciar el juego
+let extraCanvasIncrease = 0;
 
- // Controles
+// Controles
 const piecesCount = document.getElementById('piecesCount');
 const statusEl = document.getElementById('status');
 const warnEl = document.getElementById('warn');
@@ -64,9 +66,21 @@ function fitCanvasToImage(){
     const scaledH = Math.round(h * scale);
 
     // Hacer el canvas cuadrado: tamaño = el menor lado escalado
-    const size = Math.min(scaledW, scaledH);
+    // AÑADIDO: sumar extraCanvasIncrease para agrandar el canvas al iniciar el juego
+    let size = Math.min(scaledW, scaledH) + (extraCanvasIncrease || 0);
+
+    // Limitar tamaño para evitar desbordes extremos
+    const MIN_SIZE = 64;
+    const MAX_SIZE = 1400;
+    size = Math.max(MIN_SIZE, Math.min(MAX_SIZE, size));
+
     canvas.width = size;
     canvas.height = size;
+
+    // FORZAR que el tamaño visual (CSS) coincida con la resolución interna
+    // para evitar que el navegador escale el canvas y provoque desajustes
+    canvas.style.width = canvas.width + 'px';
+    canvas.style.height = canvas.height + 'px';
 
     // Calcular recorte cuadrado centrado en la imagen original (coordenadas en la imagen original)
     if ((img.naturalWidth || img.width) >= (img.naturalHeight || img.height)) {
@@ -77,6 +91,78 @@ function fitCanvasToImage(){
         srcCrop.size = img.naturalWidth || img.width;
         srcCrop.x = 0;
         srcCrop.y = Math.floor(((img.naturalHeight || img.height) - srcCrop.size) / 2);
+    }
+}
+
+// Nuevo: dibuja la imagen completa (recortada) escalada exactamente al tamaño del canvas
+function drawFullImage(){
+    if(!imageLoaded) return;
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    // Fondo
+    ctx.fillStyle = '#111827';
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+
+    // Dibujar la porción recortada (srcCrop) escalada para llenar el canvas
+    ctx.drawImage(
+        img,
+        srcCrop.x, srcCrop.y, srcCrop.size, srcCrop.size,
+        0, 0, canvas.width, canvas.height
+    );
+}
+
+// Delay en ms para mostrar la imagen completa antes de mostrar el puzzle
+const previewDelay = 600;
+
+// Modificar loadImage para mostrar la imagen completa del mismo tamaño que el canvas
+function loadImage(url){
+    if (!url) {
+        // sustituido: mostrar popup de victoria 2s y volver al menú
+        statusEl.textContent = '¡Felicidades! Has completado todos los niveles.';
+        stopTimer();
+        showWinPopup('¡Felicidades, ganaste!', 2000);
+        return;
+    }
+    imageLoaded = false;
+    statusEl.textContent = 'Nivel ' + currentLevel + ' de ' + MAX_LEVELS + ': cargando imagen...';
+    stopTimer();
+    try{
+        img = new Image();
+        if(shouldUseCORS()) img.crossOrigin = 'Anonymous';
+        img.onload = () => {
+            imageLoaded = true;
+            statusEl.textContent = 'Nivel ' + currentLevel + ' de ' + MAX_LEVELS + ': imagen cargada';
+
+            // Ajustar canvas al tamaño de la imagen/crop y forzar estilo igual a resolución
+            fitCanvasToImage();
+
+            // Mostrar vista previa completa (exactamente al tamaño del canvas)
+            drawFullImage();
+
+            // Después de un breve delay, crear las piezas y mostrar el puzzle
+            setTimeout(()=>{
+                createPieces();
+                for(let i=0;i<pieces.length;i++){
+                    pieces[i].rotation = [0,90,180,270][Math.floor(Math.random()*4)];
+                }
+                draw();
+
+                // Temporizador para los dos últimos niveles (relativo a MAX_LEVELS)
+                if (currentLevel === MAX_LEVELS - 1) {
+                    startTimer(40);
+                } else if (currentLevel === MAX_LEVELS) {
+                    startTimer(20);
+                }
+            }, previewDelay);
+        };
+        img.onerror = (e)=>{
+            console.warn('Error al cargar imagen', e);
+            statusEl.textContent = 'No se pudo cargar la imagen. Usando fallback.';
+            img.src = FALLBACK_DATAURL;
+        };
+        img.src = url;
+    } catch(e){
+        console.warn('loadImage fallo', e);
+        img.src = FALLBACK_DATAURL;
     }
 }
 
@@ -304,6 +390,10 @@ function returnToMenu(message){
     imageLoaded = false;
     img = new Image();
     ctx.clearRect(0,0,canvas.width,canvas.height);
+    // AÑADIDO: al volver al menú, quitar el incremento y limpiar estilos para restaurar tamaño por defecto
+    extraCanvasIncrease = 0;
+    canvas.style.width = '';
+    canvas.style.height = '';
     // Mostrar mensaje de estado
     statusEl.textContent = message || 'Tiempo agotado. Volviendo al menú...';
     // Mostrar el botón Jugar (obtener directamente del DOM por seguridad)
@@ -512,19 +602,28 @@ function loadImage(url){
         img.onload = () => {
             imageLoaded = true;
             statusEl.textContent = 'Nivel ' + currentLevel + ' de ' + MAX_LEVELS + ': imagen cargada';
-            fitCanvasToImage();
-            createPieces();
-            for(let i=0;i<pieces.length;i++){
-                pieces[i].rotation = [0,90,180,270][Math.floor(Math.random()*4)];
-            }
-            draw();
 
-            // Temporizador para los dos últimos niveles (relativo a MAX_LEVELS)
-            if (currentLevel === MAX_LEVELS - 1) {
-                startTimer(40);
-            } else if (currentLevel === MAX_LEVELS) {
-                startTimer(20);
-            }
+            // Ajustar canvas al tamaño de la imagen/crop y forzar estilo igual a resolución
+            fitCanvasToImage();
+
+            // Mostrar vista previa completa (exactamente al tamaño del canvas)
+            drawFullImage();
+
+            // Después de un breve delay, crear las piezas y mostrar el puzzle
+            setTimeout(()=>{
+                createPieces();
+                for(let i=0;i<pieces.length;i++){
+                    pieces[i].rotation = [0,90,180,270][Math.floor(Math.random()*4)];
+                }
+                draw();
+
+                // Temporizador para los dos últimos niveles (relativo a MAX_LEVELS)
+                if (currentLevel === MAX_LEVELS - 1) {
+                    startTimer(40);
+                } else if (currentLevel === MAX_LEVELS) {
+                    startTimer(20);
+                }
+            }, previewDelay);
         };
         img.onerror = (e)=>{
             console.warn('Error al cargar imagen', e);
@@ -552,6 +651,8 @@ function startGame(){
     // Reiniciar estado de niveles y lista de usados
     usedImages = [];
     currentLevel = 0;
+    // AÑADIDO: al iniciar desde el botón "Jugar" agrandar el canvas 100px
+    extraCanvasIncrease = 100;
     // Ocultar el botón y comenzar el primer nivel
     if (playButton) playButton.classList.add('hidden');
     loadImage(getNextImage());
