@@ -16,6 +16,10 @@ let srcCrop = { x: 0, y: 0, size: 0 };
 // Nuevo: incremento en píxeles que se aplica al tamaño calculado del canvas al iniciar el juego
 let extraCanvasIncrease = 0;
 
+// NUEVO: guardar tamaño original del canvas para poder restaurarlo al volver al menú
+let originalCanvasWidth = canvas.width;
+let originalCanvasHeight = canvas.height;
+
 // Controles
 const piecesCount = document.getElementById('piecesCount');
 const piecesLabel = document.querySelector('.pieces-label'); // NUEVO: referencia al texto/label antes del select
@@ -391,10 +395,28 @@ function returnToMenu(message){
     imageLoaded = false;
     img = new Image();
     ctx.clearRect(0,0,canvas.width,canvas.height);
-    // AÑADIDO: al volver al menú, quitar el incremento y limpiar estilos para restaurar tamaño por defecto
+    // AÑADIDO: al volver al menú, quitar el incremento
     extraCanvasIncrease = 0;
-    canvas.style.width = '';
-    canvas.style.height = '';
+
+    // === NUEVO: Restaurar tamaño original del canvas (resolución interna y tamaño visual) ===
+    try {
+        // If original values exist, restore them; else remove explicit sizing
+        if (originalCanvasWidth && originalCanvasHeight) {
+            canvas.width = originalCanvasWidth;
+            canvas.height = originalCanvasHeight;
+            canvas.style.width = originalCanvasWidth + 'px';
+            canvas.style.height = originalCanvasHeight + 'px';
+        } else {
+            // fallback: remove inline styles so CSS can control sizing
+            canvas.style.width = '';
+            canvas.style.height = '';
+        }
+    } catch(e){
+        // En caso de error, limpiar estilos para evitar que quede agrandado
+        canvas.style.width = '';
+        canvas.style.height = '';
+    }
+
     // Mostrar mensaje de estado
     statusEl.textContent = message || 'Tiempo agotado. Volviendo al menú...';
     // Mostrar el botón Jugar (obtener directamente del DOM por seguridad)
@@ -659,6 +681,14 @@ window.addEventListener('DOMContentLoaded', ()=>{
 
     // También asegurar la visibilidad gestionada por JS (por compatibilidad)
     setGameControlsVisible(false);
+
+    // NUEVO: capturar tamaño original del canvas (si fue cambiado antes que este script corra)
+    try {
+        if (canvas && canvas.width && canvas.height) {
+            originalCanvasWidth = canvas.width;
+            originalCanvasHeight = canvas.height;
+        }
+    } catch(e){ /* ignore */ }
 });
 
 function restartLevel(){
