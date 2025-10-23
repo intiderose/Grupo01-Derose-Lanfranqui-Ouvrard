@@ -44,7 +44,8 @@ function shouldUseCORS() {
 
 img.onload = () => {
     imageLoaded = true;
-    statusEl.textContent = 'Estado: imagen cargada';
+    // Mostrar solo el número de nivel si ya estamos jugando
+    if (currentLevel > 0) showLevelStatus();
     fitCanvasToImage();
     createPieces();
     // Mezclar rotaciones al cargar la imagen
@@ -57,7 +58,9 @@ img.onerror = (e)=>{
     console.warn('No se pudo cargar imagen, usando fallback', e);
     imageLoaded = false;
     img.src = FALLBACK_DATAURL;
-    statusEl.textContent = 'Estado: imagen no disponible, fallback activo';
+    // Mensaje de advertencia (no usar el status principal)
+    if (warnEl) warnEl.textContent = 'Imagen no disponible, usando fallback.';
+    hideStatus();
 };
 
 function fitCanvasToImage(){
@@ -122,20 +125,23 @@ const previewDelay = 600;
 function loadImage(url){
     if (!url) {
         // sustituido: mostrar popup de victoria 2s y volver al menú
-        statusEl.textContent = '¡Felicidades! Has completado todos los niveles.';
+        // ocultar el estado al terminar
+        hideStatus();
         stopTimer();
         showWinPopup('¡Felicidades, ganaste!', 2000);
         return;
     }
     imageLoaded = false;
-    statusEl.textContent = 'Nivel ' + currentLevel + ' de ' + MAX_LEVELS + ': cargando imagen...';
+    // Mostrar sólo el número de nivel durante la carga
+    showLevelStatus();
     stopTimer();
     try{
         img = new Image();
         if(shouldUseCORS()) img.crossOrigin = 'Anonymous';
         img.onload = () => {
             imageLoaded = true;
-            statusEl.textContent = 'Nivel ' + currentLevel + ' de ' + MAX_LEVELS + ': imagen cargada';
+            // Mostrar sólo el nivel (sin texto extra)
+            showLevelStatus();
 
             // Ajustar canvas al tamaño de la imagen/crop y forzar estilo igual a resolución
             fitCanvasToImage();
@@ -161,13 +167,16 @@ function loadImage(url){
         };
         img.onerror = (e)=>{
             console.warn('Error al cargar imagen', e);
-            statusEl.textContent = 'No se pudo cargar la imagen. Usando fallback.';
+            if (warnEl) warnEl.textContent = 'No se pudo cargar la imagen. Usando fallback.';
             img.src = FALLBACK_DATAURL;
+            hideStatus();
         };
         img.src = url;
     } catch(e){
         console.warn('loadImage fallo', e);
         img.src = FALLBACK_DATAURL;
+        if (warnEl) warnEl.textContent = 'Error cargando imagen.';
+        hideStatus();
     }
 }
 
@@ -417,8 +426,8 @@ function returnToMenu(message){
         canvas.style.height = '';
     }
 
-    // Mostrar mensaje de estado
-    statusEl.textContent = message || 'Tiempo agotado. Volviendo al menú...';
+    // Mostrar mensaje de estado general en warnEl en lugar del estado de nivel
+    if (warnEl) warnEl.textContent = message || 'Volviendo al menú...';
     // Mostrar el botón Jugar (obtener directamente del DOM por seguridad)
     const btn = document.getElementById('playButton');
     if(btn) btn.classList.remove('hidden');
@@ -428,6 +437,9 @@ function returnToMenu(message){
 
     // NUEVO: volver a marcar el estado global "no iniciado" para que CSS oculte elementos antes del próximo inicio
     try { document.body.classList.add('game-not-started'); } catch(e){ /* ignore */ }
+
+    // NUEVO: ocultar el estado principal al volver al menú
+    hideStatus();
 }
 
 function startTimer(duration) {
@@ -453,7 +465,9 @@ function startTimer(duration) {
                 timerBarContainer.style.display = 'none';
                 timerBarContainer.classList.remove('timeout');
             }, 800);
-            statusEl.textContent = '¡Tiempo agotado!';
+            // Mostrar advertencia y ocultar status de nivel
+            if (warnEl) warnEl.textContent = '¡Tiempo agotado!';
+            hideStatus();
             // En lugar de pasar al siguiente nivel, volver al menú y mostrar botón Jugar
             setTimeout(()=>{
                 returnToMenu('¡Tiempo agotado! Reiniciando y volviendo al menú.');
@@ -516,6 +530,23 @@ function showWinPopup(message = '¡Felicidades, ganaste!', duration = 2000) {
     }, duration);
 }
 
+// --- NUEVO: utilidades para mostrar/ocultar el texto de estado sólo mientras se juega ---
+function showLevelStatus() {
+    if (!statusEl) return;
+    // Mostrar solo el nivel actual (p. ej. "Nivel 1")
+    if (currentLevel > 0) {
+        statusEl.textContent = 'Nivel ' + currentLevel;
+        statusEl.classList.remove('hidden');
+    } else {
+        // Si no hay nivel activo, ocultar
+        statusEl.classList.add('hidden');
+    }
+}
+function hideStatus() {
+    if (!statusEl) return;
+    statusEl.classList.add('hidden');
+}
+
 // Evento click izquierdo: rotar 90° a la izquierda la pieza clickeada
 canvas.addEventListener('click', (ev)=>{
     const rect = canvas.getBoundingClientRect();
@@ -530,13 +561,13 @@ canvas.addEventListener('click', (ev)=>{
                 setTimeout(()=>{
                     stopTimer();
                     if (usedImages.length < MAX_LEVELS) {
-                        statusEl.textContent = '¡Felicidades! Puzzle resuelto. Pasando al siguiente nivel...';
+                        // ocultamos el estado (no mostrar mensajes extra en status)
+                        hideStatus();
                         setTimeout(()=>{
                             loadImage(getNextImage());
                         }, 1200);
                     } else {
                         // Mostrar popup de victoria 2s y luego volver al menú
-                        statusEl.textContent = '¡Felicidades! Has completado todos los niveles.';
                         showWinPopup('¡Felicidades, ganaste!', 2000);
                     }
                 }, 100);
@@ -561,13 +592,13 @@ canvas.addEventListener('contextmenu', (ev)=>{
                 setTimeout(()=>{
                     stopTimer();
                     if (usedImages.length < MAX_LEVELS) {
-                        statusEl.textContent = '¡Felicidades! Puzzle resuelto. Pasando al siguiente nivel...';
+                        // ocultamos el estado (no mostrar mensajes extra en status)
+                        hideStatus();
                         setTimeout(()=>{
                             loadImage(getNextImage());
                         }, 1200);
                     } else {
                         // Mostrar popup de victoria 2s y luego volver al menú
-                        statusEl.textContent = '¡Felicidades! Has completado todos los niveles.';
                         showWinPopup('¡Felicidades, ganaste!', 2000);
                     }
                 }, 100);
@@ -657,7 +688,7 @@ function setPixel(imageData, x, y, r, g, b, a) {
 }
 
 // Conectar botones laterales (agregados en HTML)
-const restartLevelBtn = document.getElementById('restartLevelBtn');
+// Eliminar la referencia al botón de reiniciar nivel; mantener solo volver al menú
 const returnMenuBtn = document.getElementById('returnMenuBtn');
 
 // --- NUEVO: utilidades para ocultar/mostrar controles antes/después de iniciar ---
@@ -666,7 +697,7 @@ function setGameControlsVisible(visible) {
     const piecesLabel = document.querySelector('.pieces-label');
     const toggle = (el, v) => { if(!el) return; if(v) el.classList.remove('hidden'); else el.classList.add('hidden'); };
 
-    toggle(restartLevelBtn, visible);
+    // quitar toggle(restartLevelBtn, visible);
     toggle(returnMenuBtn, visible);
     toggle(piecesSelect, visible);
     toggle(piecesLabel, visible);
@@ -689,38 +720,13 @@ window.addEventListener('DOMContentLoaded', ()=>{
             originalCanvasHeight = canvas.height;
         }
     } catch(e){ /* ignore */ }
+
+    // NUEVO: ocultar el status principal antes de iniciar el juego
+    hideStatus();
 });
 
-function restartLevel(){
-    // Si no hay un nivel activo, solo mostrar mensaje
-    if(currentLevel === 0){
-        statusEl.textContent = 'No hay nivel activo. Presiona Jugar para comenzar.';
-        return;
-    }
-
-    // Detener temporizador y recrear piezas manteniendo currentLevel y usedImages
-    stopTimer();
-    fitCanvasToImage(); // asegurar dimensiones correctas
-    createPieces();
-    // re-aleatorizar rotaciones
-    for(let i=0;i<pieces.length;i++){
-        pieces[i].rotation = [0,90,180,270][Math.floor(Math.random()*4)];
-    }
-    draw();
-    statusEl.textContent = 'Nivel ' + currentLevel + ' reiniciado';
-
-    // Reiniciar temporizador para los niveles que lo usaban
-    if (currentLevel === MAX_LEVELS - 1) {
-        startTimer(40);
-    } else if (currentLevel === MAX_LEVELS) {
-        startTimer(20);
-    }
-}
-
 // Conectar eventos de los botones (si existen)
-if (restartLevelBtn) {
-    restartLevelBtn.addEventListener('click', restartLevel);
-}
+// quitar binding para restartLevelBtn
 if (returnMenuBtn) {
     returnMenuBtn.addEventListener('click', ()=>{
         returnToMenu('Volviendo al menú...');

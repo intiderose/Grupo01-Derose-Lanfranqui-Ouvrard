@@ -80,7 +80,6 @@ canvas {
    Esto garantiza que estén ocultos incluso antes de que JS pueda ejecutarse. */
 .game-not-started .pieces-label,
 .game-not-started #piecesCount,
-.game-not-started #restartLevelBtn,
 .game-not-started #returnMenuBtn {
     display: none !important;
 }
