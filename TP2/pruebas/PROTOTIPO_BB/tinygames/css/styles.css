@@ -2,7 +2,7 @@
     --header-bg-color: #1E90FF;
     --logo-color: #FFA866;
     --logo-font: 'Luckiest Guy', cursive;
-    --header-edge-gap: 10px;
+    --header-edge-gap: 15px; /* Espaciado consistente para los bordes */
     --logo-spacing: 50px;
     --text-color-light: #FFFFFF;
     --header-height: 62px;
@@ -52,9 +52,9 @@ body h2 {
 .header {
     background-color: var(--header-bg-color);
     color: var(--text-color-light);
-    display: flex;
+    display: grid; /* Cambiado a grid para centrado perfecto */
+    grid-template-columns: auto 1fr auto; /* Izq, Centro (flexible), Der */
     align-items: center;
-    justify-content: space-between;
     padding: 0 var(--header-edge-gap);
     position: relative;
     height: var(--header-height);
@@ -63,10 +63,24 @@ body h2 {
 }
 
 .header__left,
-.header__right,
-.header__center {
+.header__right {
     display: flex;
     align-items: center;
+}
+
+.header__left {
+    justify-self: start;
+    display: flex; /* Añadido para alinear elementos internos */
+    align-items: center;
+}
+
+.header__right {
+    justify-self: end;
+}
+
+.header__logo-container {
+    grid-column: 2 / 3;
+    justify-self: center; /* Centra el logo en la columna del medio */
 }
 
 .header__logo {
@@ -76,18 +90,26 @@ body h2 {
     text-decoration: none;
 }
 
+/* Logo de escritorio oculto en móvil */
+.header__logo--desktop {
+    display: none;
+}
+
 /* El centro (búsqueda) se oculta en móvil */
 .header__center {
     display: none;
 }
 
-.header__right {
-    flex-grow: 0; /* Ajustado para móvil */
-}
-
-/* El botón hamburguesa se oculta en móvil */
+/* El botón hamburguesa ahora es visible en móvil */
 .header__hamburger {
-    display: none; /* Oculto en móvil */
+    display: block; /* Visible en móvil */
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 30;
+    width: 40px;
+    height: 40px;
 }
 
 .hamburger-icon {
@@ -98,7 +120,6 @@ body h2 {
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-    transition: background-image 0.3s ease;
 }
 
 .header__hamburger[aria-expanded="true"] .hamburger-icon {
@@ -186,10 +207,72 @@ img.header-menu__icon {
 /* --------------------------------------------------------------------------
    2.2 Menú Lateral (Categorías en móvil)
    -------------------------------------------------------------------------- */
-.mobile-menu-overlay,
-.side-menu {
-    display: none; /* Oculto en móvil */
+.mobile-menu-overlay {
+    display: none; /* No se usará en este diseño */
 }
+
+.side-menu {
+    /* Estilos base para el menú horizontal móvil */
+    display: block;
+    position: absolute;
+    top: var(--header-height); /* Pegado al header */
+    right: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    background-color: var(--header-bg-color);
+    z-index: 20;
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+    box-sizing: border-box;
+    padding: 5px 0;
+}
+
+.side-menu[aria-hidden="false"] {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.side-menu ul {
+    display: flex;
+    justify-content: flex-end; /* Iconos alineados a la derecha */
+    align-items: center;
+    list-style: none;
+    margin: 0;
+    padding: 0 var(--header-edge-gap);
+    gap: 10px;
+}
+
+.side-menu li {
+    flex-shrink: 0;
+}
+
+.side-menu li a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+}
+
+.side-menu li a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.side-menu__icon {
+    width: 28px;
+    height: 28px;
+}
+
+/* Ocultar texto en móvil */
+.side-menu span {
+    display: none;
+}
+
 
 /* --------------------------------------------------------------------------
    2.3 Contenido Principal y Cajas
@@ -377,46 +460,9 @@ main {
 }
 
 /* --------------------------------------------------------------------------
-   2.4.1 Contenedor de Categorías (Móvil)
+   2.4.1 Contenedor de Categorías (Móvil) - ELIMINADO
    -------------------------------------------------------------------------- */
-.categories-container {
-    display: flex;
-    gap: 10px;
-    overflow-x: auto;
-    padding: 0 20px 15px 20px;
-    margin: 0 -20px; /* Extender para que el scroll llegue a los bordes */
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
-}
-
-.categories-container::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
-}
-
-.category-button {
-    flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    background-color: #4BA6FF;
-    border-radius: 12px;
-    padding: 10px;
-    width: 80px;
-    height: 80px;
-    text-decoration: none;
-    color: white;
-    font-size: 0.8rem;
-    font-weight: bold;
-    box-shadow: -1.65px 1.65px 7.43px rgba(0, 0, 0, 0.15);
-    box-sizing: border-box;
-}
-
-.category-button img {
-    width: 32px;
-    height: 32px;
-}
+/* Se eliminaron los estilos para .categories-container y .category-button */
 
 /* --------------------------------------------------------------------------
    2.5 Tarjetas de Juego
@@ -650,6 +696,19 @@ main {
     /* Header */
     .header {
         z-index: auto;
+        display: flex; /* Volver a flex para escritorio */
+        justify-content: space-between;
+        padding: 0 var(--header-edge-gap);
+    }
+
+    /* Ocultar el contenedor del logo móvil y mostrar el de escritorio */
+    .header__logo-container {
+        display: none;
+    }
+
+    .header__logo--desktop {
+        display: block; /* Mostrar logo de escritorio */
+        margin-left: var(--logo-spacing);
     }
 
     .header__logo {
@@ -705,6 +764,11 @@ main {
 
     .header__left {
         flex-grow: 1;
+        justify-self: unset; /* Restablecer grid */
+    }
+
+    .header__right {
+        justify-self: unset; /* Restablecer grid */
     }
 
     .header__hamburger {
@@ -713,7 +777,7 @@ main {
         border: none;
         cursor: pointer;
         padding: 0;
-        margin-right: var(--logo-spacing);
+        margin-right: 0; /* Eliminado el margen derecho de aquí */
         z-index: 30;
         width: 47px;
         height: 47px;
@@ -744,25 +808,26 @@ main {
     }
 
     .side-menu {
+        /* --- ESTILOS DE ESCRITORIO --- */
+        /* Restablecer y sobreescribir estilos móviles */
         display: block;
         position: absolute;
         top: var(--header-height);
         left: 0;
+        right: auto; /* Restablecer */
         width: 275px;
         height: 400px;
         background-color: var(--header-bg-color);
-        padding: 0; /* <-- Eliminado el padding inferior */
-        padding-bottom: 20px; /* Añadido padding inferior al contenedor del menú */
+        padding: 0;
+        padding-bottom: 20px;
         z-index: 20;
-        transform: translateX(-100%);
+        transform: translateX(-100%); /* Animación de escritorio */
         transition: transform 0.3s ease-in-out;
         border-radius: 0 0 20px 20px;
         box-sizing: border-box;
         margin-top: 0;
-        position: absolute; /* Re-establecer position */
-        height: 400px; /* Re-establecer altura */
-        max-width: none; /* Re-establecer max-width */
-        padding-top: 0; /* Re-establecer padding-top */
+        visibility: visible; /* Siempre visible para la animación de transform */
+        opacity: 1; /* Siempre opaco */
     }
 
     .side-menu[aria-hidden="false"] {
@@ -770,29 +835,24 @@ main {
     }
 
     .side-menu ul {
-        visibility: visible;
-        flex-flow: column;
-        padding: 20px 0 0; /* Eliminado el padding inferior del UL */
-        height: auto; /* La altura se ajustará al contenido */
+        /* Restablecer flexbox a vertical */
+        display: block;
         justify-content: flex-start;
-        flex-direction: column;
+        padding: 20px 0 0;
+        gap: 0;
     }
 
     .side-menu li {
         height: 50px;
         width: 100%;
-        border: none;
-        justify-content: flex-start;
     }
 
     .side-menu li a {
-        color: white;
-        text-decoration: none;
-        font-size: 29.57px;
         justify-content: flex-start;
         gap: 15px;
         padding: 0 20px;
         width: 100%;
+        border-radius: 0; /* Quitar borde redondeado */
     }
 
     .side-menu li a:hover {
@@ -806,7 +866,7 @@ main {
     }
 
     .side-menu span {
-        display: block;
+        display: block; /* Mostrar texto en escritorio */
     }
 
     /* Contenido Principal */

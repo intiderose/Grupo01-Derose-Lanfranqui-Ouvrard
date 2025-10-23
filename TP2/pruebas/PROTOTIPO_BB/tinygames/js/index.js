@@ -7,14 +7,12 @@ class TinyGamesHeader {
     #sideMenu;
     #avatarButton;
     #userMenu;
-    #mobileOverlay;
 
     constructor() {
         this.#hamburgerButton = document.querySelector('.header__hamburger');
         this.#sideMenu = document.getElementById('side-menu');
         this.#avatarButton = document.querySelector('.header__avatar');
         this.#userMenu = document.getElementById('user-menu');
-        this.#mobileOverlay = document.querySelector('.mobile-menu-overlay');
 
         this.#init();
     }
@@ -26,9 +24,8 @@ class TinyGamesHeader {
     #init() {
         if (this.#hamburgerButton && this.#sideMenu) {
             this.#hamburgerButton.addEventListener('click', (e) => {
-                e.stopPropagation(); // Evita que el clic se propague al documento
+                e.stopPropagation();
                 this.#toggleMenu(this.#hamburgerButton, this.#sideMenu);
-                // Si el menú de usuario está abierto, ciérralo
                 if (this.#userMenu.getAttribute('aria-hidden') === 'false') {
                     this.#closeMenu(this.#avatarButton, this.#userMenu);
                 }
@@ -37,34 +34,33 @@ class TinyGamesHeader {
 
         if (this.#avatarButton && this.#userMenu) {
             this.#avatarButton.addEventListener('click', (e) => {
-                e.stopPropagation(); // Evita que el clic se propague al documento
+                e.stopPropagation();
                 this.#toggleMenu(this.#avatarButton, this.#userMenu);
-                // Si el menú lateral está abierto, ciérralo
                 if (this.#sideMenu && this.#sideMenu.getAttribute('aria-hidden') === 'false') {
                     this.#closeMenu(this.#hamburgerButton, this.#sideMenu);
                 }
             });
         }
 
-        // Cierra los menús si se hace clic fuera de ellos
         document.addEventListener('click', (e) => {
-            // Cierra el menú lateral si está abierto y el clic fue fuera
-            if (this.#sideMenu && this.#sideMenu.getAttribute('aria-hidden') === 'false' && !this.#sideMenu.contains(e.target)) {
+            if (this.#sideMenu && this.#sideMenu.getAttribute('aria-hidden') === 'false' && !this.#sideMenu.contains(e.target) && !this.#hamburgerButton.contains(e.target)) {
                 this.#closeMenu(this.#hamburgerButton, this.#sideMenu);
             }
-            // Cierra el menú de usuario si está abierto y el clic fue fuera
-            if (this.#userMenu && this.#userMenu.getAttribute('aria-hidden') === 'false' && !this.#userMenu.contains(e.target)) {
+            if (this.#userMenu && this.#userMenu.getAttribute('aria-hidden') === 'false' && !this.#userMenu.contains(e.target) && !this.#avatarButton.contains(e.target)) {
                 this.#closeMenu(this.#avatarButton, this.#userMenu);
             }
         });
 
-        if (this.#mobileOverlay) {
-            this.#mobileOverlay.addEventListener('click', () => {
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
                 if (this.#sideMenu && this.#sideMenu.getAttribute('aria-hidden') === 'false') {
                     this.#closeMenu(this.#hamburgerButton, this.#sideMenu);
                 }
-            });
-        }
+                if (this.#userMenu && this.#userMenu.getAttribute('aria-hidden') === 'false') {
+                    this.#closeMenu(this.#avatarButton, this.#userMenu);
+                }
+            }
+        });
     }
 
     /**
@@ -72,21 +68,25 @@ class TinyGamesHeader {
      * @private
      * @param {HTMLElement} button - El botón que controla el menú.
      * @param {HTMLElement} menu - El menú a mostrar/ocultar.
-     * @param {boolean} [isSideMenu=false] - Indica si es el menú lateral.
      */
-    #toggleMenu(button, menu, isSideMenu = false) {
+    #toggleMenu(button, menu) {
         const isExpanded = button.getAttribute('aria-expanded') === 'true';
-        button.setAttribute('aria-expanded', !isExpanded);
-        menu.setAttribute('aria-hidden', String(isExpanded));
-
-        if (menu === this.#sideMenu) {
-            this.#mobileOverlay.setAttribute('aria-hidden', String(isExpanded));
-            document.body.classList.toggle('no-scroll', !isExpanded);
+        if (isExpanded) {
+            this.#closeMenu(button, menu);
+        } else {
+            this.#openMenu(button, menu);
         }
+    }
 
-        // Si se abre el menú lateral, cerramos el de usuario si está abierto.
-        if (isSideMenu && !isExpanded && this.#userMenu && !this.#userMenu.hidden) {
-            this.#toggleMenu(this.#avatarButton, this.#userMenu);
+    /**
+     * Abre un menú.
+     * @private
+     */
+    #openMenu(button, menu) {
+        button.setAttribute('aria-expanded', 'true');
+        menu.setAttribute('aria-hidden', 'false');
+        if (menu === this.#sideMenu) {
+            document.body.classList.add('no-scroll');
         }
     }
 
@@ -101,7 +101,6 @@ class TinyGamesHeader {
         menu.setAttribute('aria-hidden', 'true');
 
         if (menu === this.#sideMenu) {
-            this.#mobileOverlay.setAttribute('aria-hidden', 'true');
             document.body.classList.remove('no-scroll');
         }
     }
