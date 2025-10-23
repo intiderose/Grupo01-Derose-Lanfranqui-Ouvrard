@@ -489,7 +489,7 @@ main {
 .game-card {
     width: 100%; /* Ancho completo del grid-cell */
     height: auto; /* Altura automática */
-    aspect-ratio: 2 / 3; /* Proporción para hacerlas un poco más pequeñas */
+    aspect-ratio: 5 / 5; /* Proporción más cuadrada para móvil */
     background-color: white;
     flex-shrink: 0;
     border-radius: 13px;
@@ -516,7 +516,7 @@ main {
     align-items: center;
     justify-content: center;
     flex-grow: 1;
-    padding: 5px;
+    padding: 8px 5px 12px; /* Padding ajustado para acercar el texto a la imagen */
     width: 100%;
     box-sizing: border-box;
 }
