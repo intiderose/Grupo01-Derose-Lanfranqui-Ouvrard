@@ -23,14 +23,44 @@ class TinyGamesHeader {
      */
     #init() {
         if (this.#hamburgerButton && this.#sideMenu) {
-            this.#hamburgerButton.addEventListener('click', () => this.#toggleMenu(this.#hamburgerButton, this.#sideMenu, true));
+            this.#hamburgerButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.#toggleMenu(this.#hamburgerButton, this.#sideMenu);
+                if (this.#userMenu.getAttribute('aria-hidden') === 'false') {
+                    this.#closeMenu(this.#avatarButton, this.#userMenu);
+                }
+            });
         }
 
         if (this.#avatarButton && this.#userMenu) {
-            this.#avatarButton.addEventListener('click', () => this.#toggleMenu(this.#avatarButton, this.#userMenu));
+            this.#avatarButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.#toggleMenu(this.#avatarButton, this.#userMenu);
+                if (this.#sideMenu && this.#sideMenu.getAttribute('aria-hidden') === 'false') {
+                    this.#closeMenu(this.#hamburgerButton, this.#sideMenu);
+                }
+            });
         }
 
-        document.addEventListener('click', (event) => this.#closeMenusOnClickOutside(event));
+        document.addEventListener('click', (e) => {
+            if (this.#sideMenu && this.#sideMenu.getAttribute('aria-hidden') === 'false' && !this.#sideMenu.contains(e.target) && !this.#hamburgerButton.contains(e.target)) {
+                this.#closeMenu(this.#hamburgerButton, this.#sideMenu);
+            }
+            if (this.#userMenu && this.#userMenu.getAttribute('aria-hidden') === 'false' && !this.#userMenu.contains(e.target) && !this.#avatarButton.contains(e.target)) {
+                this.#closeMenu(this.#avatarButton, this.#userMenu);
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (this.#sideMenu && this.#sideMenu.getAttribute('aria-hidden') === 'false') {
+                    this.#closeMenu(this.#hamburgerButton, this.#sideMenu);
+                }
+                if (this.#userMenu && this.#userMenu.getAttribute('aria-hidden') === 'false') {
+                    this.#closeMenu(this.#avatarButton, this.#userMenu);
+                }
+            }
+        });
     }
 
     /**
@@ -38,32 +68,40 @@ class TinyGamesHeader {
      * @private
      * @param {HTMLElement} button - El botón que controla el menú.
      * @param {HTMLElement} menu - El menú a mostrar/ocultar.
-     * @param {boolean} [isSideMenu=false] - Indica si es el menú lateral.
      */
-    #toggleMenu(button, menu, isSideMenu = false) {
+    #toggleMenu(button, menu) {
         const isExpanded = button.getAttribute('aria-expanded') === 'true';
-        button.setAttribute('aria-expanded', !isExpanded);
-        menu.hidden = isExpanded;
-        menu.setAttribute('aria-hidden', String(isExpanded));
-
-        // Si se abre el menú lateral, cerramos el de usuario si está abierto.
-        if (isSideMenu && !isExpanded && this.#userMenu && !this.#userMenu.hidden) {
-            this.#toggleMenu(this.#avatarButton, this.#userMenu);
+        if (isExpanded) {
+            this.#closeMenu(button, menu);
+        } else {
+            this.#openMenu(button, menu);
         }
     }
 
     /**
-     * Cierra los menús si el clic ocurre fuera de ellos.
+     * Abre un menú.
      * @private
-     * @param {MouseEvent} event - El objeto de evento de clic.
      */
-    #closeMenusOnClickOutside(event) {
-        if (this.#userMenu && !this.#userMenu.hidden && !this.#avatarButton.contains(event.target) && !this.#userMenu.contains(event.target)) {
-            this.#toggleMenu(this.#avatarButton, this.#userMenu);
+    #openMenu(button, menu) {
+        button.setAttribute('aria-expanded', 'true');
+        menu.setAttribute('aria-hidden', 'false');
+        if (menu === this.#sideMenu) {
+            document.body.classList.add('no-scroll');
         }
+    }
 
-        if (this.#sideMenu && !this.#sideMenu.hidden && !this.#hamburgerButton.contains(event.target) && !this.#sideMenu.contains(event.target)) {
-            this.#toggleMenu(this.#hamburgerButton, this.#sideMenu, true);
+    /**
+     * Cierra un menú.
+     * @private
+     * @param {HTMLElement} button - El botón que controla el menú.
+     * @param {HTMLElement} menu - El menú a cerrar.
+     */
+    #closeMenu(button, menu) {
+        button.setAttribute('aria-expanded', 'false');
+        menu.setAttribute('aria-hidden', 'true');
+
+        if (menu === this.#sideMenu) {
+            document.body.classList.remove('no-scroll');
         }
     }
 }
@@ -152,12 +190,14 @@ class CardGenerator {
             </div>`;
 
         return `
-            <div class="game-card ${isPremium ? 'game-card--premium' : ''}">
+            <a href="proximamente.html" class="game-card ${isPremium ? 'game-card--premium' : ''}">
                 ${isPremium ? premiumBadge : ''}
                 <img src="${game.imagen}" alt="Imagen de ${game.titulo}" class="game-card__image">
-                <h3 class="game-card__title">${game.titulo}</h3>
-                <a href="proximamente.html" class="game-card__button">Jugar</a>
-            </div>
+                <div class="game-card__content">
+                    <h3 class="game-card__title">${game.titulo}</h3>
+                    <div class="game-card__button">Jugar</div>
+                </div>
+            </a>
         `;
     }
 
@@ -219,6 +259,7 @@ class CardScroller {
     #cardsContainer;
     #leftArrow;
     #rightArrow;
+    #resizeObserver;
 
     /**
      * @param {HTMLElement} contentBoxElement - El elemento de la caja de contenido.
@@ -245,8 +286,13 @@ class CardScroller {
         this.#rightArrow.addEventListener('click', () => this.#scroll(1));
         this.#cardsContainer.addEventListener('scroll', () => this.#updateArrowVisibility());
 
-        // Comprobar visibilidad al inicio y en cada cambio de tamaño
-        this.checkScrollable();
+        // Usar ResizeObserver para detectar cambios de tamaño del contenedor de tarjetas.
+        // Esto es más eficiente que escuchar el evento 'resize' de la ventana.
+        // Se activa al cargar, al redimensionar y cuando se añaden/eliminan tarjetas.
+        this.#resizeObserver = new ResizeObserver(() => {
+            this.checkScrollable();
+        });
+        this.#resizeObserver.observe(this.#cardsContainer);
     }
 
     /**
@@ -268,12 +314,19 @@ class CardScroller {
      */
     checkScrollable() {
         const container = this.#cardsContainer;
-        const isScrollable = container.scrollWidth > container.clientWidth;
+        // Se añade un pequeño umbral (1px) para evitar falsos negativos por subpíxeles.
+        const isScrollable = container.scrollWidth > container.clientWidth + 1;
 
+        // Añade o quita una clase en el contenedor padre para que CSS controle la visibilidad.
         this.#contentBox.classList.toggle('is-scrollable', isScrollable);
 
+        // Actualiza el estado de las flechas solo si el contenedor es desplazable.
         if (isScrollable) {
             this.#updateArrowVisibility();
+        } else {
+            // Si no es desplazable, asegura que ambas flechas estén ocultas.
+            this.#leftArrow.hidden = true;
+            this.#rightArrow.hidden = true;
         }
     }
 
@@ -333,8 +386,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         scrollers.push(new CardScroller(box));
     });
 
-    // Volver a comprobar la visibilidad de las flechas al redimensionar la ventana
+    // El ResizeObserver en CardScroller ya maneja los cambios de tamaño,
+    // por lo que este listener ya no es estrictamente necesario para los scrollers.
+    // Se puede mantener si otros componentes dependen de él.
     window.addEventListener('resize', () => {
-        scrollers.forEach(scroller => scroller.checkScrollable());
+        // scrollers.forEach(scroller => scroller.checkScrollable()); // Esta línea ya no es necesaria
     });
 });
