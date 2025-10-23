@@ -1036,7 +1036,7 @@ main {
 
     .game-card__title {
         font-size: 19.36px;
-        margin: 10px 0; /* Margen ajustado */
+        margin: 0; /* Margen ajustado para un mejor centrado */
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
