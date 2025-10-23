@@ -259,6 +259,7 @@ class CardScroller {
     #cardsContainer;
     #leftArrow;
     #rightArrow;
+    #resizeObserver;
 
     /**
      * @param {HTMLElement} contentBoxElement - El elemento de la caja de contenido.
@@ -285,8 +286,13 @@ class CardScroller {
         this.#rightArrow.addEventListener('click', () => this.#scroll(1));
         this.#cardsContainer.addEventListener('scroll', () => this.#updateArrowVisibility());
 
-        // Comprobar visibilidad al inicio y en cada cambio de tamaño
-        this.checkScrollable();
+        // Usar ResizeObserver para detectar cambios de tamaño del contenedor de tarjetas.
+        // Esto es más eficiente que escuchar el evento 'resize' de la ventana.
+        // Se activa al cargar, al redimensionar y cuando se añaden/eliminan tarjetas.
+        this.#resizeObserver = new ResizeObserver(() => {
+            this.checkScrollable();
+        });
+        this.#resizeObserver.observe(this.#cardsContainer);
     }
 
     /**
@@ -308,12 +314,19 @@ class CardScroller {
      */
     checkScrollable() {
         const container = this.#cardsContainer;
-        const isScrollable = container.scrollWidth > container.clientWidth;
+        // Se añade un pequeño umbral (1px) para evitar falsos negativos por subpíxeles.
+        const isScrollable = container.scrollWidth > container.clientWidth + 1;
 
+        // Añade o quita una clase en el contenedor padre para que CSS controle la visibilidad.
         this.#contentBox.classList.toggle('is-scrollable', isScrollable);
 
+        // Actualiza el estado de las flechas solo si el contenedor es desplazable.
         if (isScrollable) {
             this.#updateArrowVisibility();
+        } else {
+            // Si no es desplazable, asegura que ambas flechas estén ocultas.
+            this.#leftArrow.hidden = true;
+            this.#rightArrow.hidden = true;
         }
     }
 
@@ -373,8 +386,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         scrollers.push(new CardScroller(box));
     });
 
-    // Volver a comprobar la visibilidad de las flechas al redimensionar la ventana
+    // El ResizeObserver en CardScroller ya maneja los cambios de tamaño,
+    // por lo que este listener ya no es estrictamente necesario para los scrollers.
+    // Se puede mantener si otros componentes dependen de él.
     window.addEventListener('resize', () => {
-        scrollers.forEach(scroller => scroller.checkScrollable());
+        // scrollers.forEach(scroller => scroller.checkScrollable()); // Esta línea ya no es necesaria
     });
 });

@@ -938,7 +938,8 @@ main {
     .scroll-arrow--left { left: 5px; }
     .scroll-arrow--right { right: 5px; }
 
-    .content-box:hover .scroll-arrow {
+    /* Mostrar flechas solo si el contenedor es desplazable y se hace hover */
+    .content-box.is-scrollable:hover .scroll-arrow {
         opacity: 0.7;
         visibility: visible;
     }
