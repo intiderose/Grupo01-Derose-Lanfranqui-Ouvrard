@@ -76,6 +76,15 @@ canvas {
 /* Utilitaria para ocultar elementos cuando empieza el juego */
 .hidden { display: none; }
 
+/* NUEVO: estado global antes de iniciar el juego -> ocultar select, su label y botones laterales
+   Esto garantiza que estén ocultos incluso antes de que JS pueda ejecutarse. */
+.game-not-started .pieces-label,
+.game-not-started #piecesCount,
+.game-not-started #restartLevelBtn,
+.game-not-started #returnMenuBtn {
+    display: none !important;
+}
+
 /* ============================
    Botones a la derecha del canvas
    ============================ */

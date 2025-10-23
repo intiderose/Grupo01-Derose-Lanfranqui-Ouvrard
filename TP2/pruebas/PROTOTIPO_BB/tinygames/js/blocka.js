@@ -18,6 +18,7 @@ let extraCanvasIncrease = 0;
 
 // Controles
 const piecesCount = document.getElementById('piecesCount');
+const piecesLabel = document.querySelector('.pieces-label'); // NUEVO: referencia al texto/label antes del select
 const statusEl = document.getElementById('status');
 const warnEl = document.getElementById('warn');
 const timerBarContainer = document.getElementById('timer-bar-container'); /* timer de los ultimos juegos*/
@@ -399,6 +400,12 @@ function returnToMenu(message){
     // Mostrar el botón Jugar (obtener directamente del DOM por seguridad)
     const btn = document.getElementById('playButton');
     if(btn) btn.classList.remove('hidden');
+
+    // NUEVO: ocultar controles de juego cuando volvemos al menú
+    setGameControlsVisible(false);
+
+    // NUEVO: volver a marcar el estado global "no iniciado" para que CSS oculte elementos antes del próximo inicio
+    try { document.body.classList.add('game-not-started'); } catch(e){ /* ignore */ }
 }
 
 function startTimer(duration) {
@@ -585,58 +592,6 @@ function getNextImage() {
     return next;
 }
 
-function loadImage(url){
-    if (!url) {
-        // sustituido: mostrar popup de victoria 2s y volver al menú
-        statusEl.textContent = '¡Felicidades! Has completado todos los niveles.';
-        stopTimer();
-        showWinPopup('¡Felicidades, ganaste!', 2000);
-        return;
-    }
-    imageLoaded = false;
-    statusEl.textContent = 'Nivel ' + currentLevel + ' de ' + MAX_LEVELS + ': cargando imagen...';
-    stopTimer();
-    try{
-        img = new Image();
-        if(shouldUseCORS()) img.crossOrigin = 'Anonymous';
-        img.onload = () => {
-            imageLoaded = true;
-            statusEl.textContent = 'Nivel ' + currentLevel + ' de ' + MAX_LEVELS + ': imagen cargada';
-
-            // Ajustar canvas al tamaño de la imagen/crop y forzar estilo igual a resolución
-            fitCanvasToImage();
-
-            // Mostrar vista previa completa (exactamente al tamaño del canvas)
-            drawFullImage();
-
-            // Después de un breve delay, crear las piezas y mostrar el puzzle
-            setTimeout(()=>{
-                createPieces();
-                for(let i=0;i<pieces.length;i++){
-                    pieces[i].rotation = [0,90,180,270][Math.floor(Math.random()*4)];
-                }
-                draw();
-
-                // Temporizador para los dos últimos niveles (relativo a MAX_LEVELS)
-                if (currentLevel === MAX_LEVELS - 1) {
-                    startTimer(40);
-                } else if (currentLevel === MAX_LEVELS) {
-                    startTimer(20);
-                }
-            }, previewDelay);
-        };
-        img.onerror = (e)=>{
-            console.warn('Error al cargar imagen', e);
-            statusEl.textContent = 'No se pudo cargar la imagen. Usando fallback.';
-            img.src = FALLBACK_DATAURL;
-        };
-        img.src = url;
-    } catch(e){
-        console.warn('loadImage fallo', e);
-        img.src = FALLBACK_DATAURL;
-    }
-}
-
 // --- Cambios ---
 // Antes: al iniciar se cargaba automáticamente una imagen.
 // Ahora: no cargamos al cargar la página; esperamos a que el usuario haga click en "Jugar".
@@ -655,6 +610,13 @@ function startGame(){
     extraCanvasIncrease = 100;
     // Ocultar el botón y comenzar el primer nivel
     if (playButton) playButton.classList.add('hidden');
+
+    // NUEVO: quitar la marca global "no iniciado" para que CSS muestre los controles inmediatamente
+    try { document.body.classList.remove('game-not-started'); } catch(e){ /* ignore */ }
+
+    // NUEVO: mostrar controles relevantes al empezar el juego
+    setGameControlsVisible(true);
+
     loadImage(getNextImage());
 }
 
@@ -675,6 +637,29 @@ function setPixel(imageData, x, y, r, g, b, a) {
 // Conectar botones laterales (agregados en HTML)
 const restartLevelBtn = document.getElementById('restartLevelBtn');
 const returnMenuBtn = document.getElementById('returnMenuBtn');
+
+// --- NUEVO: utilidades para ocultar/mostrar controles antes/después de iniciar ---
+function setGameControlsVisible(visible) {
+    const piecesSelect = document.getElementById('piecesCount');
+    const piecesLabel = document.querySelector('.pieces-label');
+    const toggle = (el, v) => { if(!el) return; if(v) el.classList.remove('hidden'); else el.classList.add('hidden'); };
+
+    toggle(restartLevelBtn, visible);
+    toggle(returnMenuBtn, visible);
+    toggle(piecesSelect, visible);
+    toggle(piecesLabel, visible);
+}
+
+// --- MOVER: inicializar ocultado de controles cuando el DOM esté listo ---
+// Inicialmente ocultar controles hasta que se presione "Jugar" (y asegurar que la clase global
+// aplica incluso antes de que se ejecute JS).
+window.addEventListener('DOMContentLoaded', ()=>{
+    // Marca global que el juego NO empezó: reglas CSS asociadas (blocka.css) ocultarán select/label/botones
+    try { document.body.classList.add('game-not-started'); } catch(e){ /* ignore */ }
+
+    // También asegurar la visibilidad gestionada por JS (por compatibilidad)
+    setGameControlsVisible(false);
+});
 
 function restartLevel(){
     // Si no hay un nivel activo, solo mostrar mensaje
