@@ -560,6 +560,73 @@ main {
     height: 18px;
 }
 
+
+/* Fondo del pop-up */
+.popup {
+    display: none; /* oculto por defecto */
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.6);
+    backdrop-filter: blur(4px); /* difumina el fondo */
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+}
+
+/* Contenido del pop-up */
+.popup-content {
+    background-color: #A3D1FF;
+    padding: 30px 20px;
+    border-radius: 10px;
+    text-align: center;
+    width: 300px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    color: #0C3966;
+    position: relative;
+    animation: fadeIn 0.3s ease;
+}
+
+.price{
+    font-size: 20px;
+    font-weight: bold;
+    margin: 15px 0;
+}
+
+/* Botón de cerrar */
+.popup-content .close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #D9D9E0;
+    transition: transform 0.2s;
+}
+.popup-content .close:hover {
+    transform: rotate(90deg);
+}
+
+/* Botón de acción */
+.popup-content button {
+    border: none;
+    border-radius: 20px;
+    color: var(--text-color-light);
+    font-family: 'Roboto', sans-serif;
+    background: #FF6B00;
+    margin-top: 15px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+/* Animación fade-in */
+@keyframes fadeIn {
+    from {opacity: 0; transform: scale(0.8);}
+    to {opacity: 1; transform: scale(1);}
+}
+
 /* --------------------------------------------------------------------------
    2.6 Footer
    -------------------------------------------------------------------------- */

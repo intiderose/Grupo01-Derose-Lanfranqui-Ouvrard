@@ -372,6 +372,32 @@ async function consumirAPI() {
     }
 }
 
+function showPremiumPopup() {
+    const popup = document.createElement("div");
+    popup.classList.add("popup");
+    popup.style.display = "flex";
+    popup.innerHTML = `
+        <div class="popup-content">
+            <span class="close">&times;</span>
+            <h2>¡Hacete premium!</h2>
+            <p>Hacete premium y accede a todos los juegos disponibles</p>
+            <h4 class="price">$2,99/mes</h4>
+            <button id="upgradeBtn">Actualizar a Premium</button>
+        </div>
+    `;
+    document.body.appendChild(popup);
+
+    // Cerrar pop-up
+    popup.querySelector(".close").addEventListener("click", () => popup.remove());
+    popup.addEventListener("click", e => { if (e.target === popup) popup.remove(); });
+
+    // Botón de actualizar
+    popup.querySelector("#upgradeBtn").addEventListener("click", () => {
+        alert("Redirigiendo a la página de suscripción...");
+        popup.remove();
+    });
+}
+
 // Inicializar todos los componentes cuando el DOM esté listo.
 document.addEventListener('DOMContentLoaded', async () => {
     new TinyGamesHeader();
@@ -391,5 +417,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Se puede mantener si otros componentes dependen de él.
     window.addEventListener('resize', () => {
         // scrollers.forEach(scroller => scroller.checkScrollable()); // Esta línea ya no es necesaria
+    });
+
+    // -----------------------
+    // POP-UP SOLO PARA BOTONES PREMIUM
+    // -----------------------
+    document.querySelectorAll('.game-card--premium').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault(); // Evita ir a "proximamente.html"
+            showPremiumPopup();
+        });
     });
 });
