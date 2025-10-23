@@ -322,7 +322,7 @@ main {
 
 .content-box__title {
     font-family: 'Fredoka', sans-serif;
-    font-size: 1.25rem; /* Ajustado para móvil */
+    font-size: 1.5rem; /* Aumentado de 1.25rem para móvil */
     color: #0C3966;
     margin: 0;
     font-weight: 400;
