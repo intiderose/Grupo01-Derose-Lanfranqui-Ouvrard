@@ -119,7 +119,7 @@ function drawFullImage(){
 }
 
 // Delay en ms para mostrar la imagen completa antes de mostrar el puzzle
-const previewDelay = 600;
+const previewDelay = 2000; //
 
 // Modificar loadImage para mostrar la imagen completa del mismo tamaño que el canvas
 function loadImage(url){
