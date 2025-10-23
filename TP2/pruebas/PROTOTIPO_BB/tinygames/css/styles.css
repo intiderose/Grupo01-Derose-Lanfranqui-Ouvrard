@@ -257,6 +257,12 @@ img.header-menu__icon {
     padding: 8px;
     border-radius: 50%;
     transition: background-color 0.2s ease;
+    /* --- INICIO DE CAMBIOS --- */
+    /* Restablecer la apariencia del enlace para que parezca texto normal en escritorio */
+    color: var(--text-color-light);
+    text-decoration: none;
+    font-size: 29.57px; /* Copiado de .header__menu li a para igualar estilos */
+    /* --- FIN DE CAMBIOS --- */
 }
 
 .side-menu li a:hover {
@@ -853,6 +859,12 @@ main {
         padding: 0 20px;
         width: 100%;
         border-radius: 0; /* Quitar borde redondeado */
+        /* --- INICIO DE CAMBIOS --- */
+        /* Restablecer la apariencia del enlace para que parezca texto normal en escritorio */
+        color: var(--text-color-light);
+        text-decoration: none;
+        font-size: 29.57px; /* Copiado de .header__menu li a para igualar estilos */
+        /* --- FIN DE CAMBIOS --- */
     }
 
     .side-menu li a:hover {
