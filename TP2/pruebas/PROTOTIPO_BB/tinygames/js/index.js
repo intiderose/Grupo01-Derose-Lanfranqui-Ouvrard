@@ -7,12 +7,14 @@ class TinyGamesHeader {
     #sideMenu;
     #avatarButton;
     #userMenu;
+    #mobileOverlay;
 
     constructor() {
         this.#hamburgerButton = document.querySelector('.header__hamburger');
         this.#sideMenu = document.getElementById('side-menu');
         this.#avatarButton = document.querySelector('.header__avatar');
         this.#userMenu = document.getElementById('user-menu');
+        this.#mobileOverlay = document.querySelector('.mobile-menu-overlay');
 
         this.#init();
     }
@@ -38,7 +40,7 @@ class TinyGamesHeader {
                 e.stopPropagation(); // Evita que el clic se propague al documento
                 this.#toggleMenu(this.#avatarButton, this.#userMenu);
                 // Si el menú lateral está abierto, ciérralo
-                if (this.#sideMenu.getAttribute('aria-hidden') === 'false') {
+                if (this.#sideMenu && this.#sideMenu.getAttribute('aria-hidden') === 'false') {
                     this.#closeMenu(this.#hamburgerButton, this.#sideMenu);
                 }
             });
@@ -55,6 +57,14 @@ class TinyGamesHeader {
                 this.#closeMenu(this.#avatarButton, this.#userMenu);
             }
         });
+
+        if (this.#mobileOverlay) {
+            this.#mobileOverlay.addEventListener('click', () => {
+                if (this.#sideMenu && this.#sideMenu.getAttribute('aria-hidden') === 'false') {
+                    this.#closeMenu(this.#hamburgerButton, this.#sideMenu);
+                }
+            });
+        }
     }
 
     /**
@@ -67,8 +77,12 @@ class TinyGamesHeader {
     #toggleMenu(button, menu, isSideMenu = false) {
         const isExpanded = button.getAttribute('aria-expanded') === 'true';
         button.setAttribute('aria-expanded', !isExpanded);
-        menu.hidden = isExpanded;
         menu.setAttribute('aria-hidden', String(isExpanded));
+
+        if (menu === this.#sideMenu) {
+            this.#mobileOverlay.setAttribute('aria-hidden', String(isExpanded));
+            document.body.classList.toggle('no-scroll', !isExpanded);
+        }
 
         // Si se abre el menú lateral, cerramos el de usuario si está abierto.
         if (isSideMenu && !isExpanded && this.#userMenu && !this.#userMenu.hidden) {
@@ -85,6 +99,11 @@ class TinyGamesHeader {
     #closeMenu(button, menu) {
         button.setAttribute('aria-expanded', 'false');
         menu.setAttribute('aria-hidden', 'true');
+
+        if (menu === this.#sideMenu) {
+            this.#mobileOverlay.setAttribute('aria-hidden', 'true');
+            document.body.classList.remove('no-scroll');
+        }
     }
 }
 
@@ -172,12 +191,14 @@ class CardGenerator {
             </div>`;
 
         return `
-            <div class="game-card ${isPremium ? 'game-card--premium' : ''}">
+            <a href="proximamente.html" class="game-card ${isPremium ? 'game-card--premium' : ''}">
                 ${isPremium ? premiumBadge : ''}
                 <img src="${game.imagen}" alt="Imagen de ${game.titulo}" class="game-card__image">
-                <h3 class="game-card__title">${game.titulo}</h3>
-                <a href="proximamente.html" class="game-card__button">Jugar</a>
-            </div>
+                <div class="game-card__content">
+                    <h3 class="game-card__title">${game.titulo}</h3>
+                    <div class="game-card__button">Jugar</div>
+                </div>
+            </a>
         `;
     }
 

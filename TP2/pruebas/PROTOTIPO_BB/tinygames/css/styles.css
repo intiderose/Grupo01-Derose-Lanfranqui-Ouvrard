@@ -21,6 +21,10 @@ body {
     min-height: 100vh;
 }
 
+body.no-scroll {
+    overflow: hidden;
+}
+
 body h2 {
     margin-bottom: 0;
     padding-bottom: 0;
@@ -55,6 +59,7 @@ body h2 {
     position: relative;
     height: var(--header-height);
     box-sizing: border-box;
+    z-index: 20;
 }
 
 .header__left,
@@ -66,7 +71,7 @@ body h2 {
 
 .header__logo {
     font-family: var(--logo-font);
-    font-size: 44.11px;
+    font-size: 2.2rem; /* Ajustado para móvil */
     color: var(--logo-color);
     text-decoration: none;
 }
@@ -77,13 +82,27 @@ body h2 {
 }
 
 .header__right {
-    flex-grow: 1;
-    justify-content: flex-end;
+    flex-grow: 0; /* Ajustado para móvil */
 }
 
 /* El botón hamburguesa se oculta en móvil */
 .header__hamburger {
-    display: none;
+    display: none; /* Oculto en móvil */
+}
+
+.hamburger-icon {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    background-image: url('../assets/HamburgerWhite.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: background-image 0.3s ease;
+}
+
+.header__hamburger[aria-expanded="true"] .hamburger-icon {
+    background-image: url('../assets/cross-icon.png');
 }
 
 /* Avatar y Menú de Usuario */
@@ -98,8 +117,8 @@ body h2 {
     padding: 0;
     border-radius: 50%;
     overflow: hidden;
-    width: 47px;
-    height: 47px;
+    width: 40px; /* Ajustado para móvil */
+    height: 40px; /* Ajustado para móvil */
 }
 
 .header__avatar img {
@@ -167,49 +186,9 @@ img.header-menu__icon {
 /* --------------------------------------------------------------------------
    2.2 Menú Lateral (Categorías en móvil)
    -------------------------------------------------------------------------- */
+.mobile-menu-overlay,
 .side-menu {
-    display: none;
-    margin-top: 5px;
-    width: 100%;
-    height: 80px;
-}
-
-.side-menu ul {
-    visibility: hidden;
-    list-style: none;
-    display: flex;
-    justify-content: space-between;
-    flex-flow: wrap;
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    width: 100%;
-}
-
-.side-menu li {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 50px;
-    height: 50px;
-    border: 1px solid black;
-}
-
-.side-menu li a {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    width: 100%;
-}
-
-.side-menu__icon {
-    width: 100%;
-    height: 100%;
-}
-
-.side-menu span {
-    display: none;
+    display: none; /* Oculto en móvil */
 }
 
 /* --------------------------------------------------------------------------
@@ -231,10 +210,10 @@ main {
 }
 
 .content-box {
-    height: 349px;
+    height: auto; /* Altura automática para móvil */
     border-radius: 16.52px;
     box-shadow: -1.65px 1.65px 7.43px rgba(0, 0, 0, 0.15);
-    padding: 20px;
+    padding: 15px; /* Padding ajustado */
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -247,14 +226,14 @@ main {
 
 .content-box__header {
     display: flex;
-    justify-content: space-between;
+    justify-content: center; /* Centrado en móvil */
     align-items: center;
     margin-bottom: 12px;
 }
 
 .content-box__title {
     font-family: 'Fredoka', sans-serif;
-    font-size: 24px;
+    font-size: 1.25rem; /* Ajustado para móvil */
     color: #0C3966;
     margin: 0;
     font-weight: 400;
@@ -264,15 +243,12 @@ main {
 }
 
 .title-icon {
-    width: 24px;
-    height: 24px;
+    width: 20px; /* Ajustado para móvil */
+    height: 20px; /* Ajustado para móvil */
 }
 
 .content-box__see-all {
-    font-family: 'Fredoka', sans-serif;
-    font-size: 24px;
-    color: rgba(0, 0, 0, 0.5);
-    text-decoration: underline;
+    display: none; /* Oculto en móvil */
 }
 
 /* Flechas de scroll ocultas en móvil */
@@ -401,15 +377,57 @@ main {
 }
 
 /* --------------------------------------------------------------------------
+   2.4.1 Contenedor de Categorías (Móvil)
+   -------------------------------------------------------------------------- */
+.categories-container {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding: 0 20px 15px 20px;
+    margin: 0 -20px; /* Extender para que el scroll llegue a los bordes */
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.categories-container::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+
+.category-button {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background-color: #4BA6FF;
+    border-radius: 12px;
+    padding: 10px;
+    width: 80px;
+    height: 80px;
+    text-decoration: none;
+    color: white;
+    font-size: 0.8rem;
+    font-weight: bold;
+    box-shadow: -1.65px 1.65px 7.43px rgba(0, 0, 0, 0.15);
+    box-sizing: border-box;
+}
+
+.category-button img {
+    width: 32px;
+    height: 32px;
+}
+
+/* --------------------------------------------------------------------------
    2.5 Tarjetas de Juego
    -------------------------------------------------------------------------- */
 .cards-container {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 15px;
     width: 100%;
-    overflow-x: auto;
-    padding-bottom: 10px; /* Espacio para la sombra */
-    scrollbar-width: none; /* Firefox */
+    overflow-x: visible; /* Cambiado para grid */
+    padding-bottom: 0; /* No necesario para grid */
 }
 
 .cards-container::-webkit-scrollbar {
@@ -417,8 +435,9 @@ main {
 }
 
 .game-card {
-    width: 157px;
-    height: 214px;
+    width: 100%; /* Ancho completo del grid-cell */
+    height: auto; /* Altura automática */
+    aspect-ratio: 2 / 3; /* Proporción para hacerlas un poco más pequeñas */
     background-color: white;
     flex-shrink: 0;
     border-radius: 13px;
@@ -427,43 +446,46 @@ main {
     flex-direction: column;
     align-items: center;
     overflow: hidden;
-    padding-bottom: 10px;
     box-sizing: border-box;
     position: relative;
+    text-decoration: none;
+    color: inherit;
 }
 
 .game-card__image {
     width: 100%;
-    height: 125px;
+    height: 60%; /* Proporción de la imagen ajustada */
     object-fit: cover;
+}
+
+.game-card__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+    padding: 5px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .game-card__title {
     font-family: 'Fredoka', sans-serif;
     font-weight: 400;
-    font-size: 16px;
+    font-size: 0.9rem; /* Ajustado para móvil */
     color: #000000;
-    margin: 10px 5px;
+    margin: 0;
     text-align: center;
-    white-space: nowrap;
+    white-space: normal; /* Permitir salto de línea */
     overflow: hidden;
     text-overflow: ellipsis;
-    width: calc(100% - 10px);
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Limitar a 2 líneas */
+    -webkit-box-orient: vertical;
 }
 
 .game-card__button {
-    background-color: #FF6B00;
-    color: white;
-    font-family: 'Fredoka', sans-serif;
-    font-size: 15px;
-    text-decoration: none;
-    padding: 8px 28px;
-    border-radius: 436.22px;
-    box-shadow: -1.65px 1.65px 7.43px rgba(0, 0, 0, 0.15);
-    display: inline-block;
-    transition: transform 0.2s ease-in-out;
-    position: relative; /* Para efecto hover */
-    overflow: hidden; /* Para efecto hover */
+    display: none; /* Oculto en móvil */
 }
 
 .game-card__premium-badge {
@@ -626,6 +648,14 @@ main {
    -------------------------------------------------------------------------- */
 @media (min-width: 768px) {
     /* Header */
+    .header {
+        z-index: auto;
+    }
+
+    .header__logo {
+        font-size: 44.11px;
+    }
+
     .header__center {
         display: flex;
         position: absolute;
@@ -703,7 +733,16 @@ main {
         background-image: url('../assets/cross-icon.png');
     }
 
+    .header__avatar {
+        width: 47px;
+        height: 47px;
+    }
+
     /* Menú Lateral */
+    .mobile-menu-overlay {
+        display: none;
+    }
+
     .side-menu {
         display: block;
         position: absolute;
@@ -720,6 +759,10 @@ main {
         border-radius: 0 0 20px 20px;
         box-sizing: border-box;
         margin-top: 0;
+        position: absolute; /* Re-establecer position */
+        height: 400px; /* Re-establecer altura */
+        max-width: none; /* Re-establecer max-width */
+        padding-top: 0; /* Re-establecer padding-top */
     }
 
     .side-menu[aria-hidden="false"] {
@@ -732,6 +775,7 @@ main {
         padding: 20px 0 0; /* Eliminado el padding inferior del UL */
         height: auto; /* La altura se ajustará al contenido */
         justify-content: flex-start;
+        flex-direction: column;
     }
 
     .side-menu li {
@@ -748,6 +792,7 @@ main {
         justify-content: flex-start;
         gap: 15px;
         padding: 0 20px;
+        width: 100%;
     }
 
     .side-menu li a:hover {
@@ -769,8 +814,18 @@ main {
         padding: 20px 78px;
     }
 
+    .categories-container {
+        display: none;
+    }
+
     .content-box {
         display: block;
+        height: 349px;
+        padding: 20px;
+    }
+
+    .content-box__header {
+        justify-content: space-between;
     }
 
     .content-box__title {
@@ -784,10 +839,15 @@ main {
 
     .content-box__see-all {
         font-size: 30px;
+        display: block; /* Visible en desktop */
     }
 
     /* Contenedor de Tarjetas y Flechas */
     .cards-container {
+        display: flex;
+        grid-template-columns: none;
+        overflow-x: auto;
+        padding-bottom: 10px;
         gap: 22px;
         scroll-behavior: smooth;
     }
@@ -835,7 +895,19 @@ main {
         width: 196.42px;
         height: 267px;
         border-radius: 16.17px;
-        padding-bottom: 14px;
+        padding-bottom: 0; /* Eliminado padding inferior */
+        flex-direction: column;
+        aspect-ratio: auto;
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        flex-shrink: 0;
+        justify-content: flex-start; /* Alineación del contenido */
+    }
+
+    .game-card:hover {
+        transform: translateY(-5px);
+        box-shadow: -2px 6px 15px rgba(0, 0, 0, 0.2);
     }
 
     .game-card:hover .game-card__button {
@@ -846,14 +918,42 @@ main {
         height: 156.64px;
     }
 
+    .game-card__content {
+        padding: 0 5px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
     .game-card__title {
         font-size: 19.36px;
-        margin: 14px 0;
+        margin: 10px 0; /* Margen ajustado */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: calc(100% - 10px);
+        display: block; /* Revertir de -webkit-box */
+        -webkit-line-clamp: unset;
+        -webkit-box-orient: unset;
     }
 
     .game-card__button {
+        background-color: #FF6B00;
+        color: white;
+        font-family: 'Fredoka', sans-serif;
         font-size: 16px;
+        text-decoration: none;
         padding: 8px 30px;
+        border-radius: 436.22px;
+        box-shadow: -1.65px 1.65px 7.43px rgba(0, 0, 0, 0.15);
+        display: inline-block;
+        transition: transform 0.2s ease-in-out;
+        position: relative; /* Para efecto hover */
+        overflow: hidden; /* Para efecto hover */
     }
 
     .game-card__button {
