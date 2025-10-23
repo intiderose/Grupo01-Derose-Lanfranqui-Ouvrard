@@ -160,7 +160,7 @@ body h2 {
     margin: 0;
     border-radius: 0 0 20px 20px;
     width: 275px;
-    height: 380px;
+    height: 480px;
     z-index: 10;
     box-sizing: border-box;
     opacity: 0;
@@ -681,6 +681,31 @@ main {
 /* ==========================================================================
    3. MEDIA QUERIES (TABLET Y SUPERIORES)
    ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   3.0 Móvil (<= 767px) - Ajustes específicos
+   -------------------------------------------------------------------------- */
+@media (max-width: 767px) {
+    /* Escalar el menú del avatar para que ocupe menos espacio en móvil */
+    .header__menu {
+        /* Se aplica un origen en la esquina superior derecha para que el menú se encoja hacia su punto de anclaje */
+        transform-origin: top right;
+        /* Se escala el menú al 72% (aumento del 20% sobre el 60% anterior) */
+        transform: translateY(-10px) scale(0.72);
+        /* Se apilan los items desde el inicio para que no "floten" */
+        justify-content: flex-start;
+    }
+
+    /* Cuando el menú está abierto, se ajusta la transformación para que se muestre correctamente escalado */
+    .header__menu[aria-hidden="false"] {
+        transform: translateY(0) scale(0.72);
+    }
+
+    /* Se ajusta el padding para el nuevo tamaño, manteniendo un área táctil grande (>= 44px) */
+    .header__menu li a {
+        padding: 20px 25px; /* Padding ajustado para un área táctil efectiva más grande */
+    }
+}
 
 /* --------------------------------------------------------------------------
    3.1 Tablet pequeña (>= 577px)
