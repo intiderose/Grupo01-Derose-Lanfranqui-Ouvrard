@@ -48,7 +48,7 @@
 
 /* Estilos específicos del canvas (únicos y aislados) */
 canvas {
-    background-image: url('/assets/blocka.png');
+    background-image: url('../assets/blocka.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
