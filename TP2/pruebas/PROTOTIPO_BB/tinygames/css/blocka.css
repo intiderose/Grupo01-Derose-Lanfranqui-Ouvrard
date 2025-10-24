@@ -42,12 +42,16 @@
 .canvas-wrapper {
     position: relative;
     display: inline-block;
-    line-height: 0; /* evita espacio extra alrededor del canvas */
+    line-height: 0;
+    /* evita espacio extra alrededor del canvas */
 }
 
 /* Estilos específicos del canvas (únicos y aislados) */
 canvas {
-    background: #111827;
+    background-image: url('/assets/blocka.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     border-radius: 8px;
     box-shadow: 0 6px 18px rgba(2,6,23,0.6);
     display: block;
