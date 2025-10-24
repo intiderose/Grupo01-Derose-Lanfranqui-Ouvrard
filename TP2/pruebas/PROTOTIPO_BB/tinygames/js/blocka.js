@@ -561,13 +561,20 @@ canvas.addEventListener('click', (ev)=>{
                 setTimeout(()=>{
                     stopTimer();
                     if (usedImages.length < MAX_LEVELS) {
-                        // ocultamos el estado (no mostrar mensajes extra en status)
-                        hideStatus();
+                        // Mostrar "Muy bien" en el estado mientras se prepara el siguiente nivel
+                        if (statusEl) {
+                            statusEl.textContent = 'Muy bien';
+                            statusEl.classList.remove('hidden');
+                        }
                         setTimeout(()=>{
                             loadImage(getNextImage());
                         }, 1200);
                     } else {
-                        // Mostrar popup de victoria 2s y luego volver al menú
+                        // Último nivel completado: mostrar mensaje de victoria
+                        if (statusEl) {
+                            statusEl.textContent = 'Muy bien';
+                            statusEl.classList.remove('hidden');
+                        }
                         showWinPopup('¡Felicidades, ganaste!', 2000);
                     }
                 }, 100);
@@ -592,13 +599,20 @@ canvas.addEventListener('contextmenu', (ev)=>{
                 setTimeout(()=>{
                     stopTimer();
                     if (usedImages.length < MAX_LEVELS) {
-                        // ocultamos el estado (no mostrar mensajes extra en status)
-                        hideStatus();
+                        // Mostrar "Muy bien" en el estado mientras se prepara el siguiente nivel
+                        if (statusEl) {
+                            statusEl.textContent = 'Muy bien';
+                            statusEl.classList.remove('hidden');
+                        }
                         setTimeout(()=>{
                             loadImage(getNextImage());
                         }, 1200);
                     } else {
-                        // Mostrar popup de victoria 2s y luego volver al menú
+                        // Último nivel completado: mostrar mensaje de victoria
+                        if (statusEl) {
+                            statusEl.textContent = 'Muy bien';
+                            statusEl.classList.remove('hidden');
+                        }
                         showWinPopup('¡Felicidades, ganaste!', 2000);
                     }
                 }, 100);
