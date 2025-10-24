@@ -1,76 +1,58 @@
-:root{--bg:#0f172a;--panel:#0b1220;--accent:#60a5fa;color-scheme:dark}
-html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,sans-serif;background:linear-gradient(180deg,#071029 0%,#071a2a 100%);color:#e6eef8}
-.app{max-width:1100px;margin:28px auto;padding:18px;background:rgba(255,255,255,0.02);border-radius:12px;box-shadow:0 8px 30px rgba(2,6,23,0.6)}
-header{display:flex;gap:12px;align-items:center;margin-bottom:14px;justify-content:center;text-align:center}
-h1{font-size:18px;margin:0}
-.controls{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px;justify-content:center;align-items:center;text-align:center}
-select,input,button{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);color:inherit;padding:8px;border-radius:8px}
-button{cursor:pointer}
+/* Contenido reducido: solo estilos relacionados al canvas para evitar conflictos
+   con juego.css y styles.css. Se eliminaron fondos, tamaños y reglas de layout. */
 
-.layout{display:flex;gap:14px;justify-content:center;align-items:center}
-.layout-centered{justify-content:center;align-items:center}
-.left{flex:none;display:flex;flex-direction:column;align-items:center}
-canvas{background:#111827;border-radius:8px;box-shadow:0 6px 18px rgba(2,6,23,0.6)}
-.right,.panel{display:none!important}
-.section{margin-bottom:12px}
-label{display:block;font-size:12px;margin-bottom:6px;color:#bcd3ff}
-footer{font-size:12px;color:#9fb4da;margin-top:12px}
-.small{font-size:12px;color:#a9c0e9}
-.warning{color:#ffcccb;font-size:13px;margin-top:8px}
-details{margin-top:16px;background:rgba(255,255,255,0.02);padding:12px;border-radius:8px}
-pre{white-space:pre-wrap;color:#dbeafe}
+/* =======================
+   Posicionamiento: asegurar los botones a la derecha del canvas
+   (reglas locales y limitadas a .layout.layout-centered)
+   ======================= */
 
-/* Estilos trasladados del HTML */
-.pieces-label {
-    display: inline-flex;
+/* Forzar disposición en fila únicamente cuando se use la clase combinada
+   .layout.layout-centered (mínimo impacto global). */
+.layout.layout-centered {
+    display: flex;
+    flex-direction: row;
+    align-items: center; /* cambiado: centrar verticalmente para alinear botones con el canvas */
+    gap: 16px; /* separación entre columnas */
+    flex-wrap: nowrap;
+}
+
+/* Evitar que la columna izquierda crezca de forma inesperada */
+.layout.layout-centered > .left {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    justify-content: center; /* centrar verticalmente el contenido (canvas) dentro de la columna izquierda */
+    padding-left: 50px; /* MODIFICADO: antes 35px, ahora +20px = 55px */
+}
+
+/* Columna derecha: mantener los botones centrados verticalmente junto al canvas */
+.layout.layout-centered > .right {
+    flex: 0 0 auto;
+    display: flex;
     align-items: center;
-    gap: 8px;
+    justify-content: flex-start;
 }
 
-/* Timer Bar Styles (ajustados para el layout) */
-#timer-bar-container {
-    width: 100%;
-    max-width: 720px;
-    height: 18px;
-    margin-bottom: 8px;
-    background: #23395d;
-    border-radius: 8px;
-    overflow: hidden;
-    position: relative;
-    display: none;
-}
-#timer-bar {
-    height: 100%;
-    background: linear-gradient(90deg,#60a5fa 0%,#2563eb 100%);
-    border-radius: 8px;
-    transition: width 0.2s;
-    width: 100%;
-}
-#timer-bar-container.timeout {
-    animation: shake 0.5s;
-}
-@keyframes shake {
-    0% { transform: translateX(0);}
-    25% { transform: translateX(-4px);}
-    50% { transform: translateX(4px);}
-    75% { transform: translateX(-4px);}
-    100% { transform: translateX(0);}
-}
+/* ============================
+   Estilos del canvas y botón (sin tocar otros layouts)
+   ============================ */
 
-/* Ajustes para status y warning */
-#status.small {
-    margin-top: 8px;
-}
-#warn.warning {
-    display: none;
-}
-
-/* --- Estilos para botón Jugar sobre el canvas --- */
-/* .canvas-wrapper posicionado para permitir overlay centrado */
+/* Wrapper para posicionar overlays (botón) sobre el canvas */
 .canvas-wrapper {
     position: relative;
     display: inline-block;
     line-height: 0; /* evita espacio extra alrededor del canvas */
+}
+
+/* Estilos específicos del canvas (únicos y aislados) */
+canvas {
+    background: #111827;
+    border-radius: 8px;
+    box-shadow: 0 6px 18px rgba(2,6,23,0.6);
+    display: block;
+    max-width: 100%; /* responsivo dentro del contenedor */
+    height: auto;
 }
 
 /* Botón grande centrado sobre el canvas al inicio */
@@ -79,8 +61,8 @@ pre{white-space:pre-wrap;color:#dbeafe}
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    background: #FF6B00; /* color pedido */
-    color: #fff; /* texto blanco */
+    background: #FF6B00;
+    color: #fff;
     border: none;
     padding: 12px 22px;
     border-radius: 10px;
@@ -91,7 +73,285 @@ pre{white-space:pre-wrap;color:#dbeafe}
     cursor: pointer;
 }
 
-/* Clase utilitaria para ocultar cuando empieza el juego */
-.hidden { display: none }
+/* Utilitaria para ocultar elementos cuando empieza el juego */
+.hidden { display: none; }
 
-/* Nota: se usa este botón solo para iniciar; una vez oculto, el juego carga normalmente */
+/* NUEVO: estado global antes de iniciar el juego -> ocultar select, su label y botones laterales
+   Esto garantiza que estén ocultos incluso antes de que JS pueda ejecutarse. */
+.game-not-started .pieces-label,
+.game-not-started #piecesCount,
+.game-not-started #returnMenuBtn {
+    display: none !important;
+}
+
+/* ============================
+   Botones a la derecha del canvas
+   ============================ */
+
+/* Contenedor de botones laterales (dentro de la columna derecha). */
+.side-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+    justify-content: center;
+    padding-left: 12px; /* separación respecto al canvas */
+    box-sizing: border-box;
+}
+
+/* Estilo de los botones laterales, mismo color y sensación que .play-button */
+.side-button {
+    background: #FF6B00;
+    color: #fff;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    box-shadow: 0 6px 14px rgba(255,107,0,0.22);
+    cursor: pointer;
+    min-width: 140px; /* ancho mínimo para consistencia visual */
+    text-align: center;
+}
+
+/* Pequeñas variantes de interacción */
+.side-button:hover {
+    filter: brightness(1.03);
+}
+.side-button:active {
+    transform: translateY(1px);
+}
+.side-button:focus {
+    outline: 3px solid rgba(255,107,0,0.18);
+    outline-offset: 2px;
+}
+
+/* ============================
+   NUEVOS ESTILOS: Barra de tiempo visible y naranja
+   ============================ */
+
+/* Contenedor de la barra: tamaño responsivo, fondo tenue y redondeo */
+#timer-bar-container {
+    width: min(420px, 90%); /* responsivo: máximo 420px o 90% del contenedor */
+    height: 12px;
+    background: rgba(255,255,255,0.08); /* fondo tenue para contraste */
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.03), 0 4px 10px rgba(0,0,0,0.45);
+    transition: opacity 0.25s ease;
+    display: none; /* controlado por JS: startTimer / stopTimer */
+    margin-bottom: 6px;
+}
+
+/* Barra interna: degradado naranja y transición suave al reducirse */
+#timer-bar {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(90deg, #FF8A00 0%, #FF6B00 60%, #FF4B00 100%);
+    box-shadow: 0 6px 14px rgba(255,107,0,0.14);
+    transition: width 0.1s linear;
+    transform-origin: left center;
+}
+
+/* Estado de timeout: borde más visible (JS añade la clase .timeout) */
+#timer-bar-container.timeout {
+    box-shadow: inset 0 0 0 2px rgba(255,107,0,0.12), 0 6px 18px rgba(255,107,0,0.08);
+}
+
+
+/* ============================
+   Estilos para el selector de piezas (mejora visual)
+   ============================ */
+
+.controls { /* contenedor donde está .pieces-label */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%; /* añadido: ocupar toda la línea disponible */
+}
+
+/* Nuevo: wrapper que empuja el botón a la derecha en la misma línea */
+.controls .controls-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Opcional: reducir ancho mínimo del botón cuando está en la barra (si se desea) */
+.controls .controls-right .side-button {
+    min-width: 140px; /* conservar consistencia visual; ajustar si se quiere más pequeño */
+}
+
+/* Etiqueta wrapper: fondo oscuro, texto claro y borde redondeado */
+.pieces-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(90deg, #FF8A00 0%, #FF6B00 60%, #FF4B00 100%);
+    padding: 8px 10px;
+    border-radius: 12px;
+    color: #e6eef8;
+    font-weight: 600;
+    font-family: 'Fredoka', sans-serif;
+    box-shadow: 0 6px 18px rgba(2,6,23,0.45);
+    border: 1px solid rgba(255,107,0,0.06);
+    user-select: none;
+    font-size: 14px;
+}
+
+/* Select estilizado: fondo naranja, texto blanco y flecha SVG personalizada */
+#piecesCount {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: linear-gradient(90deg, #FF8A00 0%, #FF6B00 60%, #FF4B00 100%);
+    color: #fff;
+    border: none;
+    padding: 6px 36px 6px 10px; /* espacio extra a la derecha para la flecha */
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 6px 14px rgba(255,107,0,0.12);
+    min-width: 110px;
+    font-size: 13px;
+    line-height: 1;
+    transition: transform 120ms ease, box-shadow 120ms ease;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px;
+}
+
+/* Hover y active para sensación interactiva */
+#piecesCount:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 22px rgba(255,107,0,0.15);
+}
+#piecesCount:active {
+    transform: translateY(0);
+}
+
+/* Focus accesible (mismo estilo que otros botones) */
+#piecesCount:focus {
+    outline: 3px solid rgba(255,107,0,0.18);
+    outline-offset: 2px;
+    box-shadow: 0 10px 26px rgba(255,107,0,0.12);
+}
+
+/* Opciones: asegurar legibilidad cuando se abre el menú nativo */
+#piecesCount option {
+    color: #111827;
+    background: #fff;
+    font-weight: 600;
+}
+
+
+
+/* ============================
+   Inputs: hacerlos naranja como los botones
+   ============================ */
+
+/* Aplica a buscador, inputs de comentarios y suscripción */
+input[type="text"],
+input[type="email"],
+input[type="search"],
+.comments-block__input,
+.footer__subscribe-form input {
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 10px;
+    box-shadow: 0 6px 14px rgba(255,107,0,0.12);
+    font-weight: 600;
+    font-family: 'Fredoka', sans-serif;
+    outline: none;
+    transition: box-shadow 120ms ease, transform 120ms ease;
+    min-width: 160px;
+}
+
+/* Ajustes para el buscador (layout distinto) */
+.header__search input[type="search"] {
+    min-width: 180px;
+    padding: 8px 10px;
+    background: rgba(255,255,255,0.06); /* mantener contraste en header pero cambiar texto a naranja */
+    color: #ffedd6;
+    box-shadow: none;
+    border-radius: 8px;
+}
+
+/* Hover/active sensible en inputs principales */
+input[type="text"]:hover,
+input[type="email"]:hover,
+.comments-block__input:hover,
+.footer__subscribe-form input:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 22px rgba(255,107,0,0.16);
+}
+input[type="text"]:active,
+input[type="email"]:active,
+.comments-block__input:active,
+.footer__subscribe-form input:active {
+    transform: translateY(0);
+}
+
+/* Focus accesible: misma familia de outline que botones */
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="search"]:focus,
+.comments-block__input:focus,
+.footer__subscribe-form input:focus {
+    outline: 3px solid rgba(255,107,0,0.18);
+    outline-offset: 2px;
+    box-shadow: 0 10px 26px rgba(255,107,0,0.12);
+}
+
+/* Placeholder más tenue para mantener legibilidad */
+input::placeholder,
+textarea::placeholder {
+    color: rgba(255,255,255,0.7);
+}
+#status{
+    color: white;
+}
+
+/* Estilos popup de victoria (ajustados para caja rectángulo y tipografía mayor) */
+.win-popup {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    pointer-events: none; /* overlay no captura clics; la caja sí */
+    opacity: 0;
+    transition: opacity 180ms ease;
+    background: rgba(0,0,0,0.40); /* overlay semitransparente */
+}
+.win-popup[hidden] { display: none; } /* mantener hidden por accesibilidad inicial */
+
+.win-popup .win-box {
+    pointer-events: auto;
+    background: linear-gradient(90deg,#FF8A00,#FF6B00);
+    color: #fff;
+    padding: 18px 28px;
+    border-radius: 12px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.45);
+    font-weight: 800;
+    font-size: 28px; /* aumentado: tipografía más grande */
+    font-family: 'Fredoka', sans-serif;
+    min-width: 260px;
+    max-width: 86%;
+    text-align: center;
+    transform: translateY(-8px) scale(0.98);
+    transition: transform 200ms ease, opacity 180ms ease;
+    opacity: 0.98;
+}
+
+/* estado visible (JS remueve hidden y añade clase .show) */
+.win-popup.show {
+    opacity: 1;
+}
+.win-popup.show .win-box {
+    transform: translateY(0) scale(1);
+}

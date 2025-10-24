@@ -13,9 +13,16 @@ const FALLBACK_DATAURL = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAB
 // Nuevo: recorte cuadrado en coordenadas de la imagen original
 let srcCrop = { x: 0, y: 0, size: 0 };
 
+// Nuevo: incremento en píxeles que se aplica al tamaño calculado del canvas al iniciar el juego
+let extraCanvasIncrease = 0;
+
+// NUEVO: guardar tamaño original del canvas para poder restaurarlo al volver al menú
+let originalCanvasWidth = canvas.width;
+let originalCanvasHeight = canvas.height;
 
 // Controles
 const piecesCount = document.getElementById('piecesCount');
+const piecesLabel = document.querySelector('.pieces-label'); // NUEVO: referencia al texto/label antes del select
 const statusEl = document.getElementById('status');
 const warnEl = document.getElementById('warn');
 const timerBarContainer = document.getElementById('timer-bar-container'); /* timer de los ultimos juegos*/
@@ -37,7 +44,8 @@ function shouldUseCORS() {
 
 img.onload = () => {
     imageLoaded = true;
-    statusEl.textContent = 'Estado: imagen cargada';
+    // Mostrar solo el número de nivel si ya estamos jugando
+    if (currentLevel > 0) showLevelStatus();
     fitCanvasToImage();
     createPieces();
     // Mezclar rotaciones al cargar la imagen
@@ -50,7 +58,9 @@ img.onerror = (e)=>{
     console.warn('No se pudo cargar imagen, usando fallback', e);
     imageLoaded = false;
     img.src = FALLBACK_DATAURL;
-    statusEl.textContent = 'Estado: imagen no disponible, fallback activo';
+    // Mensaje de advertencia (no usar el status principal)
+    if (warnEl) warnEl.textContent = 'Imagen no disponible, usando fallback.';
+    hideStatus();
 };
 
 function fitCanvasToImage(){
@@ -64,9 +74,21 @@ function fitCanvasToImage(){
     const scaledH = Math.round(h * scale);
 
     // Hacer el canvas cuadrado: tamaño = el menor lado escalado
-    const size = Math.min(scaledW, scaledH);
+    // AÑADIDO: sumar extraCanvasIncrease para agrandar el canvas al iniciar el juego
+    let size = Math.min(scaledW, scaledH) + (extraCanvasIncrease || 0);
+
+    // Limitar tamaño para evitar desbordes extremos
+    const MIN_SIZE = 64;
+    const MAX_SIZE = 1400;
+    size = Math.max(MIN_SIZE, Math.min(MAX_SIZE, size));
+
     canvas.width = size;
     canvas.height = size;
+
+    // FORZAR que el tamaño visual (CSS) coincida con la resolución interna
+    // para evitar que el navegador escale el canvas y provoque desajustes
+    canvas.style.width = canvas.width + 'px';
+    canvas.style.height = canvas.height + 'px';
 
     // Calcular recorte cuadrado centrado en la imagen original (coordenadas en la imagen original)
     if ((img.naturalWidth || img.width) >= (img.naturalHeight || img.height)) {
@@ -77,6 +99,84 @@ function fitCanvasToImage(){
         srcCrop.size = img.naturalWidth || img.width;
         srcCrop.x = 0;
         srcCrop.y = Math.floor(((img.naturalHeight || img.height) - srcCrop.size) / 2);
+    }
+}
+
+// Nuevo: dibuja la imagen completa (recortada) escalada exactamente al tamaño del canvas
+function drawFullImage(){
+    if(!imageLoaded) return;
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    // Fondo
+    ctx.fillStyle = '#111827';
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+
+    // Dibujar la porción recortada (srcCrop) escalada para llenar el canvas
+    ctx.drawImage(
+        img,
+        srcCrop.x, srcCrop.y, srcCrop.size, srcCrop.size,
+        0, 0, canvas.width, canvas.height
+    );
+}
+
+// Delay en ms para mostrar la imagen completa antes de mostrar el puzzle
+const previewDelay = 2000; //
+
+// Modificar loadImage para mostrar la imagen completa del mismo tamaño que el canvas
+function loadImage(url){
+    if (!url) {
+        // sustituido: mostrar popup de victoria 2s y volver al menú
+        // ocultar el estado al terminar
+        hideStatus();
+        stopTimer();
+        showWinPopup('¡Felicidades, ganaste!', 2000);
+        return;
+    }
+    imageLoaded = false;
+    // Mostrar sólo el número de nivel durante la carga
+    showLevelStatus();
+    stopTimer();
+    try{
+        img = new Image();
+        if(shouldUseCORS()) img.crossOrigin = 'Anonymous';
+        img.onload = () => {
+            imageLoaded = true;
+            // Mostrar sólo el nivel (sin texto extra)
+            showLevelStatus();
+
+            // Ajustar canvas al tamaño de la imagen/crop y forzar estilo igual a resolución
+            fitCanvasToImage();
+
+            // Mostrar vista previa completa (exactamente al tamaño del canvas)
+            drawFullImage();
+
+            // Después de un breve delay, crear las piezas y mostrar el puzzle
+            setTimeout(()=>{
+                createPieces();
+                for(let i=0;i<pieces.length;i++){
+                    pieces[i].rotation = [0,90,180,270][Math.floor(Math.random()*4)];
+                }
+                draw();
+
+                // Temporizador para los dos últimos niveles (relativo a MAX_LEVELS)
+                if (currentLevel === MAX_LEVELS - 1) {
+                    startTimer(40);
+                } else if (currentLevel === MAX_LEVELS) {
+                    startTimer(20);
+                }
+            }, previewDelay);
+        };
+        img.onerror = (e)=>{
+            console.warn('Error al cargar imagen', e);
+            if (warnEl) warnEl.textContent = 'No se pudo cargar la imagen. Usando fallback.';
+            img.src = FALLBACK_DATAURL;
+            hideStatus();
+        };
+        img.src = url;
+    } catch(e){
+        console.warn('loadImage fallo', e);
+        img.src = FALLBACK_DATAURL;
+        if (warnEl) warnEl.textContent = 'Error cargando imagen.';
+        hideStatus();
     }
 }
 
@@ -292,6 +392,56 @@ let timerActive = false;
 let timerDuration = 0;
 let timerStart = 0;
 
+function returnToMenu(message){
+    // Detener cualquier temporizador/animación
+    stopTimer();
+    // Ocultar popup si está visible
+    hideWinPopup();
+    // Reiniciar estado de niveles
+    usedImages = [];
+    currentLevel = 0;
+    // Marcar imagen como no cargada y limpiar canvas
+    imageLoaded = false;
+    img = new Image();
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    // AÑADIDO: al volver al menú, quitar el incremento
+    extraCanvasIncrease = 0;
+
+    // === NUEVO: Restaurar tamaño original del canvas (resolución interna y tamaño visual) ===
+    try {
+        // If original values exist, restore them; else remove explicit sizing
+        if (originalCanvasWidth && originalCanvasHeight) {
+            canvas.width = originalCanvasWidth;
+            canvas.height = originalCanvasHeight;
+            canvas.style.width = originalCanvasWidth + 'px';
+            canvas.style.height = originalCanvasHeight + 'px';
+        } else {
+            // fallback: remove inline styles so CSS can control sizing
+            canvas.style.width = '';
+            canvas.style.height = '';
+        }
+    } catch(e){
+        // En caso de error, limpiar estilos para evitar que quede agrandado
+        canvas.style.width = '';
+        canvas.style.height = '';
+    }
+
+    // Mostrar mensaje de estado general en warnEl en lugar del estado de nivel
+    if (warnEl) warnEl.textContent = message || 'Volviendo al menú...';
+    // Mostrar el botón Jugar (obtener directamente del DOM por seguridad)
+    const btn = document.getElementById('playButton');
+    if(btn) btn.classList.remove('hidden');
+
+    // NUEVO: ocultar controles de juego cuando volvemos al menú
+    setGameControlsVisible(false);
+
+    // NUEVO: volver a marcar el estado global "no iniciado" para que CSS oculte elementos antes del próximo inicio
+    try { document.body.classList.add('game-not-started'); } catch(e){ /* ignore */ }
+
+    // NUEVO: ocultar el estado principal al volver al menú
+    hideStatus();
+}
+
 function startTimer(duration) {
     timerDuration = duration;
     timerStart = Date.now();
@@ -315,9 +465,12 @@ function startTimer(duration) {
                 timerBarContainer.style.display = 'none';
                 timerBarContainer.classList.remove('timeout');
             }, 800);
-            statusEl.textContent = '¡Tiempo agotado! Pasando al siguiente nivel...';
+            // Mostrar advertencia y ocultar status de nivel
+            if (warnEl) warnEl.textContent = '¡Tiempo agotado!';
+            hideStatus();
+            // En lugar de pasar al siguiente nivel, volver al menú y mostrar botón Jugar
             setTimeout(()=>{
-                loadImage(getNextImage());
+                returnToMenu('¡Tiempo agotado! Reiniciando y volviendo al menú.');
             }, 1200);
         }
     }, 100);
@@ -330,6 +483,68 @@ function stopTimer() {
     timerBarContainer.style.display = 'none';
     timerBar.style.width = '100%';
     timerBarContainer.classList.remove('timeout');
+}
+
+// Nuevo: mostrar/ocultar popup de victoria y regresar al menú después de X ms
+function hideWinPopup() {
+    const p = document.getElementById('winPopup');
+    if (!p) return;
+    p.classList.remove('show');
+    // dejarlo hidden por accesibilidad tras animación corta
+    setTimeout(()=>{ p.hidden = true; }, 220);
+}
+
+function showWinPopup(message = '¡Felicidades, ganaste!', duration = 2000) {
+    const p = document.getElementById('winPopup');
+    if (!p) {
+        // fallback directo si el elemento no existe
+        returnToMenu(message);
+        return;
+    }
+
+    // asegurar que exista la caja interna .win-box
+    let box = p.querySelector('.win-box');
+    if (!box) {
+        box = document.createElement('div');
+        box.className = 'win-box';
+        p.appendChild(box);
+    }
+
+    // poner el mensaje en la caja (no reemplazar el contenedor)
+    box.textContent = message;
+
+    // mostrar overlay + caja
+    p.hidden = false;
+    // forzar reflow leve antes de añadir clase para animación consistente
+    void p.offsetWidth;
+    p.classList.add('show');
+
+    // detener timers y demás
+    stopTimer();
+
+    // después de duration ms ocultar y volver al menú
+    setTimeout(()=>{
+        hideWinPopup();
+        // llamar a returnToMenu con el mensaje
+        returnToMenu(message);
+    }, duration);
+}
+
+// --- NUEVO: utilidades para mostrar/ocultar el texto de estado sólo mientras se juega ---
+function showLevelStatus() {
+    if (!statusEl) return;
+    // Mostrar solo el nivel actual (p. ej. "Nivel 1")
+    if (currentLevel > 0) {
+        statusEl.textContent = 'Nivel ' + currentLevel;
+        statusEl.classList.remove('hidden');
+    } else {
+        // Si no hay nivel activo, ocultar
+        statusEl.classList.add('hidden');
+    }
+}
+function hideStatus() {
+    if (!statusEl) return;
+    statusEl.classList.add('hidden');
 }
 
 // Evento click izquierdo: rotar 90° a la izquierda la pieza clickeada
@@ -346,12 +561,21 @@ canvas.addEventListener('click', (ev)=>{
                 setTimeout(()=>{
                     stopTimer();
                     if (usedImages.length < MAX_LEVELS) {
-                        statusEl.textContent = '¡Felicidades! Puzzle resuelto. Pasando al siguiente nivel...';
+                        // Mostrar "Muy bien" en el estado mientras se prepara el siguiente nivel
+                        if (statusEl) {
+                            statusEl.textContent = 'Muy bien';
+                            statusEl.classList.remove('hidden');
+                        }
                         setTimeout(()=>{
                             loadImage(getNextImage());
                         }, 1200);
                     } else {
-                        statusEl.textContent = '¡Felicidades! Has completado todos los niveles.';
+                        // Último nivel completado: mostrar mensaje de victoria
+                        if (statusEl) {
+                            statusEl.textContent = 'Muy bien';
+                            statusEl.classList.remove('hidden');
+                        }
+                        showWinPopup('¡Felicidades, ganaste!', 2000);
                     }
                 }, 100);
             }
@@ -375,12 +599,21 @@ canvas.addEventListener('contextmenu', (ev)=>{
                 setTimeout(()=>{
                     stopTimer();
                     if (usedImages.length < MAX_LEVELS) {
-                        statusEl.textContent = '¡Felicidades! Puzzle resuelto. Pasando al siguiente nivel...';
+                        // Mostrar "Muy bien" en el estado mientras se prepara el siguiente nivel
+                        if (statusEl) {
+                            statusEl.textContent = 'Muy bien';
+                            statusEl.classList.remove('hidden');
+                        }
                         setTimeout(()=>{
                             loadImage(getNextImage());
                         }, 1200);
                     } else {
-                        statusEl.textContent = '¡Felicidades! Has completado todos los niveles.';
+                        // Último nivel completado: mostrar mensaje de victoria
+                        if (statusEl) {
+                            statusEl.textContent = 'Muy bien';
+                            statusEl.classList.remove('hidden');
+                        }
+                        showWinPopup('¡Felicidades, ganaste!', 2000);
                     }
                 }, 100);
             }
@@ -426,47 +659,6 @@ function getNextImage() {
     return next;
 }
 
-function loadImage(url){
-    if (!url) {
-        statusEl.textContent = '¡Felicidades! Has completado todos los niveles.';
-        stopTimer();
-        return;
-    }
-    imageLoaded = false;
-    statusEl.textContent = 'Nivel ' + currentLevel + ' de ' + MAX_LEVELS + ': cargando imagen...';
-    stopTimer();
-    try{
-        img = new Image();
-        if(shouldUseCORS()) img.crossOrigin = 'Anonymous';
-        img.onload = () => {
-            imageLoaded = true;
-            statusEl.textContent = 'Nivel ' + currentLevel + ' de ' + MAX_LEVELS + ': imagen cargada';
-            fitCanvasToImage();
-            createPieces();
-            for(let i=0;i<pieces.length;i++){
-                pieces[i].rotation = [0,90,180,270][Math.floor(Math.random()*4)];
-            }
-            draw();
-
-            // Temporizador para los dos últimos niveles (relativo a MAX_LEVELS)
-            if (currentLevel === MAX_LEVELS - 1) {
-                startTimer(40);
-            } else if (currentLevel === MAX_LEVELS) {
-                startTimer(20);
-            }
-        };
-        img.onerror = (e)=>{
-            console.warn('Error al cargar imagen', e);
-            statusEl.textContent = 'No se pudo cargar la imagen. Usando fallback.';
-            img.src = FALLBACK_DATAURL;
-        };
-        img.src = url;
-    } catch(e){
-        console.warn('loadImage fallo', e);
-        img.src = FALLBACK_DATAURL;
-    }
-}
-
 // --- Cambios ---
 // Antes: al iniciar se cargaba automáticamente una imagen.
 // Ahora: no cargamos al cargar la página; esperamos a que el usuario haga click en "Jugar".
@@ -481,8 +673,17 @@ function startGame(){
     // Reiniciar estado de niveles y lista de usados
     usedImages = [];
     currentLevel = 0;
+    // AÑADIDO: al iniciar desde el botón "Jugar" agrandar el canvas 100px
+    extraCanvasIncrease = 100;
     // Ocultar el botón y comenzar el primer nivel
     if (playButton) playButton.classList.add('hidden');
+
+    // NUEVO: quitar la marca global "no iniciado" para que CSS muestre los controles inmediatamente
+    try { document.body.classList.remove('game-not-started'); } catch(e){ /* ignore */ }
+
+    // NUEVO: mostrar controles relevantes al empezar el juego
+    setGameControlsVisible(true);
+
     loadImage(getNextImage());
 }
 
@@ -498,4 +699,50 @@ function setPixel(imageData, x, y, r, g, b, a) {
     imageData.data[index + 1] = g;
     imageData.data[index + 2] = b;
     imageData.data[index + 3] = a;
+}
+
+// Conectar botones laterales (agregados en HTML)
+// Eliminar la referencia al botón de reiniciar nivel; mantener solo volver al menú
+const returnMenuBtn = document.getElementById('returnMenuBtn');
+
+// --- NUEVO: utilidades para ocultar/mostrar controles antes/después de iniciar ---
+function setGameControlsVisible(visible) {
+    const piecesSelect = document.getElementById('piecesCount');
+    const piecesLabel = document.querySelector('.pieces-label');
+    const toggle = (el, v) => { if(!el) return; if(v) el.classList.remove('hidden'); else el.classList.add('hidden'); };
+
+    // quitar toggle(restartLevelBtn, visible);
+    toggle(returnMenuBtn, visible);
+    toggle(piecesSelect, visible);
+    toggle(piecesLabel, visible);
+}
+
+// --- MOVER: inicializar ocultado de controles cuando el DOM esté listo ---
+// Inicialmente ocultar controles hasta que se presione "Jugar" (y asegurar que la clase global
+// aplica incluso antes de que se ejecute JS).
+window.addEventListener('DOMContentLoaded', ()=>{
+    // Marca global que el juego NO empezó: reglas CSS asociadas (blocka.css) ocultarán select/label/botones
+    try { document.body.classList.add('game-not-started'); } catch(e){ /* ignore */ }
+
+    // También asegurar la visibilidad gestionada por JS (por compatibilidad)
+    setGameControlsVisible(false);
+
+    // NUEVO: capturar tamaño original del canvas (si fue cambiado antes que este script corra)
+    try {
+        if (canvas && canvas.width && canvas.height) {
+            originalCanvasWidth = canvas.width;
+            originalCanvasHeight = canvas.height;
+        }
+    } catch(e){ /* ignore */ }
+
+    // NUEVO: ocultar el status principal antes de iniciar el juego
+    hideStatus();
+});
+
+// Conectar eventos de los botones (si existen)
+// quitar binding para restartLevelBtn
+if (returnMenuBtn) {
+    returnMenuBtn.addEventListener('click', ()=>{
+        returnToMenu('Volviendo al menú...');
+    });
 }
