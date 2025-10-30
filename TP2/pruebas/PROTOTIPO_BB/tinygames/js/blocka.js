@@ -42,27 +42,6 @@ function shouldUseCORS() {
     }
 }
 
-img.onload = () => {
-    imageLoaded = true;
-    // Mostrar solo el número de nivel si ya estamos jugando
-    if (currentLevel > 0) showLevelStatus();
-    fitCanvasToImage();
-    createPieces();
-    // Mezclar rotaciones al cargar la imagen
-    for(let i=0;i<pieces.length;i++){
-        pieces[i].rotation = [0,90,180,270][Math.floor(Math.random()*4)];
-    }
-    draw();
-};
-img.onerror = (e)=>{
-    console.warn('No se pudo cargar imagen, usando fallback', e);
-    imageLoaded = false;
-    img.src = FALLBACK_DATAURL;
-    // Mensaje de advertencia (no usar el status principal)
-    if (warnEl) warnEl.textContent = 'Imagen no disponible, usando fallback.';
-    hideStatus();
-};
-
 function fitCanvasToImage(){
     const maxW = 720, maxH = 480;
     let w = img.naturalWidth || img.width || maxW;
@@ -164,12 +143,6 @@ function loadImage(url){
                     startTimer(20);
                 }
             }, previewDelay);
-        };
-        img.onerror = (e)=>{
-            console.warn('Error al cargar imagen', e);
-            if (warnEl) warnEl.textContent = 'No se pudo cargar la imagen. Usando fallback.';
-            img.src = FALLBACK_DATAURL;
-            hideStatus();
         };
         img.src = url;
     } catch(e){
@@ -659,12 +632,7 @@ function getNextImage() {
     return next;
 }
 
-// --- Cambios ---
-// Antes: al iniciar se cargaba automáticamente una imagen.
-// Ahora: no cargamos al cargar la página; esperamos a que el usuario haga click en "Jugar".
-// Inicializar arrays/contadores pero no lanzar loadImage automáticamente.
-usedImages = [];
-currentLevel = 0;
+
 
 // Conectar el botón "Jugar" (está en el HTML encima del canvas)
 const playButton = document.getElementById('playButton');

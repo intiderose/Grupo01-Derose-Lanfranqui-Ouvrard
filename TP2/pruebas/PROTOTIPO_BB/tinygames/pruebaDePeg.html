@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peg Solitaire - Juego de Estrategia</title>
+    <link rel="stylesheet" href="css/peg.css">
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>🎯 Peg Solitaire</h1>
+        <p class="subtitle">Juego de estrategia medieval</p>
+    </header>
+
+    <div class="game-container">
+        <div class="game-info">
+            <div class="info-box">
+                <span class="label">Fichas restantes:</span>
+                <span id="fichas-count" class="value">32</span>
+            </div>
+            <div class="info-box">
+                <span class="label">Tiempo:</span>
+                <span id="timer" class="value">00:00</span>
+            </div>
+            <button id="btn-reiniciar" class="btn-primary">Reiniciar Juego</button>
+        </div>
+
+        <canvas id="gameCanvas" width="700" height="700"></canvas>
+
+        <div id="game-over" class="game-over hidden">
+            <div class="game-over-content">
+                <h2 id="game-over-title">¡Juego Terminado!</h2>
+                <p id="game-over-message"></p>
+                <button id="btn-reiniciar-gameover" class="btn-primary">Jugar de Nuevo</button>
+            </div>
+        </div>
+    </div>
+
+    <section class="instructions">
+        <h2>📖 ¿Cómo Jugar?</h2>
+        <div class="instructions-content">
+            <div class="instruction-item">
+                <h3>Objetivo</h3>
+                <p>Eliminar todas las fichas del tablero excepto una, que debe quedar en el centro.</p>
+            </div>
+            <div class="instruction-item">
+                <h3>Reglas</h3>
+                <ul>
+                    <li>Haz click en una ficha para seleccionarla</li>
+                    <li>Arrastra la ficha sobre otra ficha adyacente (horizontal o vertical)</li>
+                    <li>Suelta la ficha en el espacio vacío del otro lado</li>
+                    <li>La ficha que saltaste desaparecerá del tablero</li>
+                    <li>Solo puedes saltar sobre fichas adyacentes (no en diagonal)</li>
+                </ul>
+            </div>
+            <div class="instruction-item">
+                <h3>Hints Visuales</h3>
+                <p>Al seleccionar una ficha, verás flechas animadas que te indican dónde puedes moverla. ¡Úsalas para planear tu estrategia!</p>
+            </div>
+        </div>
+    </section>
+</div>
+<script src="js/Ficha.js"></script>
+<script src="js/Tablero.js"></script>
+<script src="js/Juego.js"></script>
+<script src="js/peg.js"></script>
+</body>
+</html>
